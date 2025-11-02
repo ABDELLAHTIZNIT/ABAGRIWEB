@@ -1,55 +1,9 @@
-<!-- LOGIN -->
-<section id="loginCard" class="card">
-  <h3 style="margin:0 0 14px">Connexion</h3>
-  <div class="form">
-    <div class="field">
-      <span class="label">Nom d'utilisateur</span>
-      <input id="username" class="input" placeholder="ex: abdellah" autocomplete="username">
-    </div>
-    <div class="field">
-      <span class="label">Mot de passe</span>
-      <div class="helper" style="gap:10px">
-        <input id="password" class="input" type="password" placeholder="••••••••" autocomplete="current-password" style="flex:1">
-        <button class="btn ghost" id="togglePwd" type="button">Afficher</button>
-      </div>
-    </div>
-
-    <div class="helper">
-      <label class="label" style="display:flex; gap:8px; align-items:center">
-        <input id="remember" type="checkbox"> Se souvenir de moi
-      </label>
-      <a class="btn ghost" href="#" onclick="alert('Placeholder: reset via admin.');return false;">Mot de passe oublié?</a>
-    </div>
-
-    <div class="actions-login">
-      <button class="btn btn-wide" id="loginBtn">Se connecter</button>
-    </div>
-  </div>
-  <div class="note">D émo locale sans serveur. سنربطها بالحقيقي لاحقًا.</div>
-</section>
-
-<!-- SELECTION after login -->
-<section id="selectCard" class="card hidden">
-  <h3 style="margin:0 0 10px">Sélection</h3>
-  <div class="form">
-    <div class="field">
-      <span class="label">Ferme</span>
-      <input id="ferme" class="input" placeholder="ex: Karam 16">
-    </div>
-    <div class="field">
-      <span class="label">Serre</span>
-      <input id="serre" class="input" type="number" min="1" placeholder="1">
-    </div>
-    <div class="field">
-      <span class="label">Point</span>
-      <input id="point" class="input" type="number" min="1" placeholder="1">
-    </div>
-  </div>
-
-  <div class="helper" style="margin-top:14px">
-    <button class="btn" id="paramBtn">Paramètres</button>
-    <button class="btn" id="validerBtn">Validé</button>
-  </div>
-  <div class="note" id="helloNote"></div>
-</section>
-
+<style>
+/* --- Mobile app-like form --- */
+.form {display:grid; gap:14px}
+.field {display:grid; gap:6px}
+.label {font-size:13px; color:#c8d3e8}
+.input {width:100%; padding:14px 14px; border-radius:12px; border:1px solid #263656; background:#091227; color:var(--text)}
+.actions-login {display:grid; gap:12px}
+.btn-wide {width:100%; padding:14px 18px; font-weight:600}
+.helper {display:flex; align-items:center; justify-content:space-between}
