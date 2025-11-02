@@ -19,13 +19,10 @@ body{
   transition:background .2s ease;
 }
 .card{
-  width:min(420px,92vw);
-  background:#0b1220cc;
-  border:1px solid #1f2937;
-  border-radius:16px;
-  padding:22px;
-  box-shadow:0 10px 24px rgba(0,0,0,.35);
-}
+  <div class="banner hidden" id="loginBanner"><img id="loginBannerImg" alt=""></div>
+<!-- logo -->
+<div id="loginLogoWrap" class="banner hidden"><img id="loginLogoImg" alt=""></div>
+<h1 id="appTitle" class="hidden">AB AGRIWEB</h1>
 h1{margin:0 0 12px;color:var(--accent);text-align:center}
 .banner{margin:-4px -4px 14px -4px}
 .banner img{width:100%;border-radius:12px;border:1px solid #1f2937}
@@ -98,7 +95,14 @@ function loadImgs(){try{return JSON.parse(localStorage.getItem(LS_IMG)||'{}')}ca
   }
 
   const imgs=loadImgs();
-
+// شعار التطبيق (appLogo)
+if (imgs.logo && /^data:image\/(png|gif);/i.test(imgs.logo) || (typeof imgs.logo==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.logo))) {
+  const logo=document.getElementById('loginLogoImg');
+  const wrap=document.getElementById('loginLogoWrap');
+  logo.src=imgs.logo; wrap.classList.remove('hidden');
+} else {
+  document.getElementById('appTitle').classList.remove('hidden');
+}
   // Banner (png/gif فقط)
   if(imgs.login && (/^data:image\/(png|gif);/i.test(imgs.login) || (typeof imgs.login==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.login)))){
     const wrap=document.getElementById('loginBanner');
