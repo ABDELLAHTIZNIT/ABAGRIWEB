@@ -8,13 +8,11 @@
 :root{--bg:#0f172a;--panel:#0b1220;--text:#e2e8f0;--accent:#22c55e;--border:#243046;--tile:#0c1526;--tileIcon:#0f1a2e;--warn:#fde68a1a}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden}
 .hidden{display:none!important}
-/* Header */
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:12px 18px;border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.25)}
 .menu-btn{background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
 .brand{display:flex;align-items:center;gap:10px}
 .title{font-weight:800;color:var(--accent);letter-spacing:.5px;display:flex;align-items:center;gap:10px}
 .badge-img{height:22px;border-radius:6px;border:1px solid #1f2937}
-/* Sidebar */
 .sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#0b1220;border-right:1px solid var(--border);transition:left .35s ease;display:flex;flex-direction:column;padding-top:56px;box-shadow:4px 0 20px rgba(0,0,0,.4);z-index:15}
 .sidebar.active{left:0}
 .side-header{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #1e293b;background:#0b1220}
@@ -24,39 +22,31 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 .sidebar a.active{background:var(--accent);color:#0b1220!important;font-weight:700}
 .sidebar-brand{padding:12px 18px;border-bottom:1px solid #1e293b}
 .sidebar-brand img{width:100%;border-radius:10px;border:1px solid #1f2937}
-/* Overlay */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10}
 .overlay.active{opacity:1;pointer-events:all}
-/* Cards */
 .content{padding:24px}
 .card{max-width:1000px;margin:16px auto;background:#0b1220;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 10px 24px rgba(0,0,0,.25);position:relative}
 .muted{opacity:.8}
 .hint{background:var(--warn);border:1px dashed #fbbf24;color:#fcd34d;padding:8px 10px;border-radius:8px;font-size:13px}
-/* Tiles */
 .stack{display:grid;gap:12px}
 .tile{display:flex;align-items:center;gap:12px;background:var(--tile);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer}
 .tile:hover{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.25) inset}
 .tile .icon{width:36px;height:36px;display:grid;place-items:center;background:var(--tileIcon);border:1px solid #1f2a44;border-radius:10px}
 .tile h4{margin:0;font-size:16px}.tile p{margin:2px 0 0;font-size:12px;color:#94a3b8}
-/* Top actions */
 .actions-top{position:absolute;top:16px;right:16px;display:flex;gap:8px}
 .btn{padding:10px 12px;border-radius:10px;border:1px solid #22c55e;color:#22c55e;background:transparent;cursor:pointer}
 .btn:hover{background:#22c55e;color:#0b1220}.btn.icon{width:40px;height:40px;display:grid;place-items:center;padding:0}
 .btn.danger{border-color:#3b1f1f;color:#fca5a5}.btn.danger:hover{background:#ef4444;color:#0b1220;border-color:#ef4444}
-/* Forms */
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .input,select,textarea{width:100%;max-width:360px;padding:12px;border-radius:10px;border:1px solid #334155;background:#091227;color:#e2e8f0}
 .list{display:grid;gap:10px;margin-top:14px}
 .item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;background:#0c1526;border:1px solid #243046;border-radius:10px;padding:12px 14px}
 .meta{display:flex;gap:12px;flex-wrap:wrap;font-size:14px;color:#cbd5e1}.meta b{color:#e2e8f0}
 .actions{display:flex;gap:8px}.actions .btn{min-width:42px}
-/* Settings grid */
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .label{font-size:13px;color:#9fb2cc;margin-bottom:6px;display:block}.sectionTitle{margin:16px 0 8px;font-weight:700;color:#cde4d5}
-/* Combo dropdown */
 .combo{position:relative}.combo-list{position:absolute;left:0;right:0;top:100%;background:#0b1220;border:1px solid #334155;border-radius:10px;max-height:220px;overflow:auto;z-index:30;margin-top:6px}
 .combo-item{padding:10px 12px;border-bottom:1px solid #1e293b;cursor:pointer}.combo-item:hover{background:#0f172a}
-/* Modal */
 .modal-wrap{position:fixed;inset:0;display:grid;place-items:center;z-index:60}
 .modal-wrap:not(.show){display:none}
 .modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
@@ -88,20 +78,20 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <!-- Accueil -->
   <section id="page-home" class="card">
     <h2>Bienvenue 👋</h2>
-    <p class="muted">هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
+    <p class="muted">Page d’accueil temporaire.</p>
   </section>
 
   <!-- Paramètres -->
   <section id="page-settings" class="card hidden">
     <h2 id="title-settings">Paramètres</h2>
-    <p class="muted">اختر أحد الإعدادات التالية:</p>
+    <p class="muted">Choisissez un module.</p>
     <div class="stack">
       <div class="tile" onclick="showPage('operators');setActiveTile()"><div class="icon">👥</div><div><h4 id="lbl-tile-operators">OPÉRATEUR</h4><p>Gestion des utilisateurs</p></div></div>
       <div class="tile" onclick="showPage('profiles');setActiveTile()"><div class="icon">🧩</div><div><h4 id="lbl-tile-profiles">PROFILE</h4><p>Gestion des profils</p></div></div>
       <div class="tile" onclick="showPage('refs');setActiveTile()"><div class="icon">🗂️</div><div><h4 id="lbl-tile-refs">RÉFÉRENTIELS</h4><p>Listes maîtres</p></div></div>
       <div class="tile" onclick="alert('DROITS ACCÈS (à compléter)')"><div class="icon">🛡️</div><div><h4 id="lbl-tile-rights">DROITS ACCÈS</h4><p>Permissions</p></div></div>
       <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')"><div class="icon">🔑</div><div><h4 id="lbl-tile-pass">MOT DE PASSE</h4><p>Changer le mot de passe</p></div></div>
-      <div class="tile" onclick="showPage('appcfg');setActiveTile()"><div class="icon">⚙️</div><div><h4 id="lbl-tile-appcfg">RÉGLAGES APP</h4><p>Logo & labels</p></div></div>
+      <div class="tile" onclick="showPage('appcfg');setActiveTile()"><div class="icon">⚙️</div><div><h4 id="lbl-tile-appcfg">RÉGLAGES APP</h4><p>Logo, labels & sécurité</p></div></div>
     </div>
   </section>
 
@@ -109,7 +99,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <section id="page-profiles" class="card hidden">
     <div class="actions-top"><button class="btn icon" title="Ajouter" onclick="toggleAddForm(true)">➕</button><button class="btn icon" title="Aide" onclick="showProfilesHint()">✏️</button></div>
     <h2>Profiles</h2>
-    <div id="profilesHint" class="hint hidden">لتعديل عنصر، استعمل زر ✏️ بجانبه.</div>
+    <div id="profilesHint" class="hint hidden">استعمل ✏️ للتعديل.</div>
     <div id="addForm" class="row hidden" style="margin-top:12px">
       <input id="profileName" class="input" placeholder="Ex: Admin, Magasinier, Pointeur, Directeur">
       <button class="btn" onclick="addProfile()">Confirmer</button>
@@ -122,7 +112,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <section id="page-operators" class="card hidden">
     <div class="actions-top"><button class="btn icon" onclick="opToggleForm(true)">➕</button><button class="btn icon" onclick="showOpsHint()">✏️</button></div>
     <h2>Opérateurs</h2>
-    <div id="opsHint" class="hint hidden">لتعديل مستخدم، استعمل زر ✏️ داخل اللائحة.</div>
+    <div id="opsHint" class="hint hidden">لتعديل مستخدم، استعمل ✏️.</div>
     <div id="opAddForm" class="row hidden" style="margin-top:12px">
       <input id="op_username" class="input" placeholder="Nom d’utilisateur">
       <input id="op_password" type="password" class="input" placeholder="Mot de passe">
@@ -142,7 +132,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <section id="page-farms" class="card hidden">
     <div class="actions-top"><button class="btn icon" onclick="farmToggleForm(true)">➕</button><button class="btn icon" onclick="showFarmsHint()">✏️</button></div>
     <h2>Fermes</h2>
-    <div id="farmsHint" class="hint hidden">لتعديل ضيعة، استعمل زر ✏️ في اللائحة.</div>
+    <div id="farmsHint" class="hint hidden">استعمل ✏️ للتعديل.</div>
     <div id="farmAddForm" class="row hidden" style="margin-top:12px">
       <input id="farm_name" class="input" placeholder="Nom de la ferme (ex: Karam 16)">
       <input id="farm_area" class="input" placeholder="Surface (ex: 12 ha)">
@@ -176,7 +166,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
     <div id="refsCat" class="hidden">
       <div class="actions-top"><button class="btn icon" onclick="refsToggleForm(true)">➕</button><button class="btn icon" onclick="toggleRefsHint()">✏️</button></div>
       <h3 id="refsCatTitle" style="margin-top:0">Catégorie</h3>
-      <div id="refsHint" class="hint hidden">استعمل ✏️ لتعديل العنصر و 🗑️ للحذف.</div>
+      <div id="refsHint" class="hint hidden">استعمل ✏️ للتعديل و 🗑️ للحذف.</div>
       <div id="refsAddForm" class="row hidden" style="margin-top:12px">
         <input id="refsInput" class="input" placeholder="Nom à ajouter">
         <button class="btn" onclick="refsAdd()">Confirmer</button>
@@ -189,7 +179,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <!-- Réglages app -->
   <section id="page-appcfg" class="card hidden">
     <h2>Réglages de l’application</h2>
-    <p class="muted">بدّل الشعار (PNG/GIF)، تسميات القوائم، وصور القوالب لواجهة الدخول.</p>
+    <p class="muted">Logo (PNG/GIF)، تسميات، وصِف sécurité للاسترجاع.</p>
 
     <div class="sectionTitle">Général</div>
     <div class="grid">
@@ -218,28 +208,28 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
       <div><label class="label">Mot de passe</label><input id="cfg-tile-pass" class="input" placeholder="MOT DE PASSE"></div>
     </div>
 
-    <div class="sectionTitle">Branding / القوالب (PNG أو GIF فقط)</div>
+    <div class="sectionTitle">Sécurité (récupération du compte)</div>
     <div class="grid">
+      <div><label class="label">Email de récupération</label><input id="sec-email" class="input" placeholder="ex: admin@example.com"></div>
+      <div><label class="label">Téléphone</label><input id="sec-phone" class="input" placeholder="+2126..."></div>
+      <div><label class="label">Question secrète</label><input id="sec-question" class="input" placeholder="Ex: Ville de naissance ?"></div>
+      <div><label class="label">Réponse</label><input id="sec-answer" class="input" placeholder="Votre réponse"></div>
       <div>
-        <label class="label">Badge header (صغير بجانب العنوان)</label>
-        <input id="cfg-badge-url" class="input" placeholder="URL (png/gif)">
-        <input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input">
+        <label class="label">Code de récupération</label>
+        <div class="row">
+          <input id="sec-code" class="input" placeholder="Générer pour créer un code" disabled>
+          <button class="btn" onclick="secGenCode()">Générer</button>
+        </div>
+        <div class="muted" style="margin-top:6px">يحفظ محليًا. استعمله من “Forgot password”.</div>
       </div>
-      <div>
-        <label class="label">Sidebar banner (فوق Accueil)</label>
-        <input id="cfg-side-url" class="input" placeholder="URL (png/gif)">
-        <input id="cfg-side-file" type="file" accept="image/png,image/gif" class="input">
-      </div>
-      <div>
-        <label class="label">Login banner (فوق حقول الدخول)</label>
-        <input id="cfg-login-url" class="input" placeholder="URL (png/gif)">
-        <input id="cfg-login-file" type="file" accept="image/png,image/gif" class="input">
-      </div>
-      <div>
-        <label class="label">Login background (خلفية صفحة الدخول كاملة)</label>
-        <input id="cfg-loginbg-url" class="input" placeholder="URL (png/gif)">
-        <input id="cfg-loginbg-file" type="file" accept="image/png,image/gif" class="input">
-      </div>
+    </div>
+
+    <div class="sectionTitle">Branding (PNG/GIF)</div>
+    <div class="grid">
+      <div><label class="label">Badge header</label><input id="cfg-badge-url" class="input" placeholder="URL (png/gif)"><input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input"></div>
+      <div><label class="label">Sidebar banner</label><input id="cfg-side-url" class="input" placeholder="URL (png/gif)"><input id="cfg-side-file" type="file" accept="image/png,image/gif" class="input"></div>
+      <div><label class="label">Login banner</label><input id="cfg-login-url" class="input" placeholder="URL (png/gif)"><input id="cfg-login-file" type="file" accept="image/png,image/gif" class="input"></div>
+      <div><label class="label">Login background</label><input id="cfg-loginbg-url" class="input" placeholder="URL (png/gif)"><input id="cfg-loginbg-file" type="file" accept="image/png,image/gif" class="input"></div>
     </div>
 
     <div class="row" style="margin-top:14px">
@@ -249,7 +239,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   </section>
 </main>
 
-<!-- Modals -->
+<!-- Modals (unchanged for crud) -->
 <div id="opModal" class="modal-wrap"><div class="modal-bg" onclick="opCloseModal()"></div>
   <div class="modal"><h3>Modifier l’opérateur</h3>
     <div class="row"><input id="edit_username" class="input" placeholder="Nom d’utilisateur"><input id="edit_password" type="password" class="input" placeholder="Mot de passe"></div>
@@ -298,12 +288,12 @@ g('logout').onclick=(e)=>{e.preventDefault();location='index.html'}
 function setActiveTile(){setActiveLink(navSet)}
 
 /* Storage helpers */
-const LS_PROFILES='ab_profiles',LS_FARMS='ab_farms',LS_OPERATORS='ab_operators',LS_REFS='ab_refs',LS_APP='ab_appcfg',LS_IMG='ab_appimg';
+const LS_PROFILES='ab_profiles',LS_FARMS='ab_farms',LS_OPERATORS='ab_operators',LS_REFS='ab_refs',LS_APP='ab_appcfg',LS_IMG='ab_appimg',LS_SEC='ab_security';
 const DEFAULT_PROFILES=["Admin","Magasinier","Pointeur","Directeur"];
 function g(id){return document.getElementById(id)}function v(id){return g(id).value.trim()}function s(id,val){g(id).value=val}
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-/* Defaults (اسم يبقى للاحتياط فقط) */
+/* Defaults */
 const APP_DEFAULT={appTitle:"AB AGRIWEB",
   nav:{home:"Accueil",irrig:"Irrigation",trait:"Traitement",settings:"Paramètres",logout:"Logout"},
   tiles:{operators:"OPÉRATEUR",profiles:"PROFILE",refs:"RÉFÉRENTIELS",rights:"DROITS ACCÈS",pass:"MOT DE PASSE",appcfg:"RÉGLAGES APP"},
@@ -311,7 +301,7 @@ const APP_DEFAULT={appTitle:"AB AGRIWEB",
 };
 function appcfgLoad(){try{return Object.assign({},APP_DEFAULT,JSON.parse(localStorage.getItem(LS_APP)||'{}'))}catch{return {...APP_DEFAULT}}}
 function appcfgSaveToLS(o){localStorage.setItem(LS_APP,JSON.stringify(o))}
-function appcfgReset(){appcfgSaveToLS(APP_DEFAULT);localStorage.removeItem(LS_IMG);appcfgApply();appcfgFillForm();alert('رجعنا للإعدادات الافتراضية')}
+function appcfgReset(){appcfgSaveToLS(APP_DEFAULT);localStorage.removeItem(LS_IMG);localStorage.removeItem(LS_SEC);appcfgApply();appcfgFillForm();secFillForm();alert('رجعنا للإعدادات الافتراضية')}
 
 /* images in LS */
 function loadImgs(){try{return Object.assign({},{badge:null,sidebar:null,login:null,loginBg:null,logo:null},JSON.parse(localStorage.getItem(LS_IMG)||'{}'))}catch{return {badge:null,sidebar:null,login:null,loginBg:null,logo:null}}}
@@ -338,19 +328,16 @@ function appcfgApply(){
   const c=appcfgLoad(); const imgs=loadImgs();
   document.title=c.appTitle+' - Dashboard';
 
-  // الشعار في الهيدر (أو الاسم الاحتياطي)
+  // شعار الهيدر أو الاسم الاحتياطي
   const titleTop=g('appTitleTop');
-  if(imgs.logo){
-    titleTop.innerHTML=`<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`;
-  }else{
-    titleTop.textContent=c.appTitle;
-  }
+  if(imgs.logo){ titleTop.innerHTML=`<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`; }
+  else { titleTop.textContent=c.appTitle; }
 
   // تسميات
   g('lbl-nav-home').textContent='🏠 '+c.nav.home;g('lbl-nav-irrig').textContent='🌿 '+c.nav.irrig;g('lbl-nav-trait').textContent='💧 '+c.nav.trait;g('lbl-nav-settings').textContent='⚙️ '+c.nav.settings;g('lbl-nav-logout').textContent='🚪 '+c.nav.logout;
   g('lbl-tile-operators').textContent=c.tiles.operators;g('lbl-tile-profiles').textContent=c.tiles.profiles;g('lbl-tile-refs').textContent=c.tiles.refs;g('lbl-tile-rights').textContent=c.tiles.rights;g('lbl-tile-pass').textContent=c.tiles.pass;g('lbl-tile-appcfg').textContent=c.tiles.appcfg;
 
-  // labels référentiel
+  // référentiels
   g('lbl-ref-ferme').textContent=c.refLabels.ferme;g('lbl-ref-companies').textContent=c.refLabels.companies;g('lbl-ref-responsables').textContent=c.refLabels.responsables;g('lbl-ref-stations').textContent=c.refLabels.stations;g('lbl-ref-secteurs').textContent=c.refLabels.secteurs;g('lbl-ref-parcelles').textContent=c.refLabels.parcelles;g('lbl-ref-transports').textContent=c.refLabels.transports;g('lbl-ref-varietes').textContent=c.refLabels.varietes;g('lbl-ref-varietes_champ').textContent=c.refLabels.varietes_champ;g('lbl-ref-gestions').textContent=c.refLabels.gestions;g('lbl-ref-achats').textContent=c.refLabels.achats;
 
   const badge=g('appBadgeImg'); if(imgs.badge){badge.src=imgs.badge;badge.classList.remove('hidden')} else badge.classList.add('hidden');
@@ -363,8 +350,26 @@ function appcfgFillForm(){
   s('cfg-tile-operators',c.tiles.operators);s('cfg-tile-profiles',c.tiles.profiles);s('cfg-tile-refs',c.tiles.refs);s('cfg-tile-rights',c.tiles.rights);s('cfg-tile-pass',c.tiles.pass);
 }
 
+/* ==== Security (Local) ==== */
+function loadSec(){try{return JSON.parse(localStorage.getItem(LS_SEC)||'{}')}catch{return{}}}
+function saveSec(o){localStorage.setItem(LS_SEC,JSON.stringify(o))}
+function hashLite(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return String(h)}
+function secFillForm(){
+  const sec=loadSec();
+  s('sec-email',sec.email||''); s('sec-phone',sec.phone||'');
+  s('sec-question',sec.question||''); s('sec-answer',''); // ماكنعرضوش الجواب المخزن
+  s('sec-code', sec.recoveryCode? String(sec.recoveryCode):'');
+}
+function secGenCode(){
+  const code = Math.floor(100000 + Math.random()*900000);
+  const sec = loadSec(); sec.recoveryCode = code; saveSec(sec);
+  s('sec-code', String(code));
+  alert('Code généré: '+code+'\nخزّنو في مكان آمن.');
+}
+
 function appcfgSave(){
   const o=appcfgLoad();
+
   // labels
   o.nav.home=v('cfg-nav-home')||APP_DEFAULT.nav.home;
   o.nav.irrig=v('cfg-nav-irrig')||APP_DEFAULT.nav.irrig;
@@ -378,20 +383,28 @@ function appcfgSave(){
   o.tiles.rights=v('cfg-tile-rights')||APP_DEFAULT.tiles.rights;
   o.tiles.pass=v('cfg-tile-pass')||APP_DEFAULT.tiles.pass;
 
-  // URL الصور (PNG/GIF فقط)
+  // images URL (PNG/GIF)
   const imgs=loadImgs();
   const urlOk = u => !u || /\.(png|gif)(\?|#|$)/i.test(u);
+  const badgeUrl=v('cfg-badge-url'); if(!urlOk(badgeUrl)) return alert('Badge: URL doit être PNG ou GIF'); if(badgeUrl) imgs.badge=badgeUrl;
+  const sideUrl=v('cfg-side-url'); if(!urlOk(sideUrl)) return alert('Sidebar: URL doit être PNG ou GIF'); if(sideUrl) imgs.sidebar=sideUrl;
+  const loginUrl=v('cfg-login-url'); if(!urlOk(loginUrl)) return alert('Login banner: URL doit être PNG ou GIF'); if(loginUrl) imgs.login=loginUrl;
+  const loginBgUrl=v('cfg-loginbg-url'); if(!urlOk(loginBgUrl)) return alert('Login background: URL doit être PNG ou GIF'); if(loginBgUrl) imgs.loginBg=loginBgUrl;
+  const logoUrl=v('cfg-logo-url'); if(!urlOk(logoUrl)) return alert('Logo: URL doit être PNG ou GIF'); if(logoUrl) imgs.logo=logoUrl;
 
-  const badgeUrl=v('cfg-badge-url'); if(!urlOk(badgeUrl)) return alert('Badge: URL يجب أن يكون PNG أو GIF'); if(badgeUrl) imgs.badge=badgeUrl;
-  const sideUrl=v('cfg-side-url'); if(!urlOk(sideUrl)) return alert('Sidebar: URL يجب أن يكون PNG أو GIF'); if(sideUrl) imgs.sidebar=sideUrl;
-  const loginUrl=v('cfg-login-url'); if(!urlOk(loginUrl)) return alert('Login banner: URL يجب أن يكون PNG أو GIF'); if(loginUrl) imgs.login=loginUrl;
-  const loginBgUrl=v('cfg-loginbg-url'); if(!urlOk(loginBgUrl)) return alert('Login background: URL يجب أن يكون PNG أو GIF'); if(loginBgUrl) imgs.loginBg=loginBgUrl;
-  const logoUrl=v('cfg-logo-url'); if(!urlOk(logoUrl)) return alert('Logo: URL يجب أن يكون PNG أو GIF'); if(logoUrl) imgs.logo=logoUrl;
+  // Security save
+  const sec = loadSec();
+  sec.email = v('sec-email');
+  sec.phone = v('sec-phone');
+  sec.question = v('sec-question');
+  const ans = v('sec-answer');
+  if(ans) sec.answerHash = hashLite(ans.toLowerCase());
+  saveSec(sec);
 
-  saveImgs(imgs); appcfgSaveToLS(o); appcfgApply(); alert('تم الحفظ ✅')
+  saveImgs(imgs); appcfgSaveToLS(o); appcfgApply(); secFillForm(); alert('تم الحفظ ✅')
 }
 
-/* === Profiles / Farms / Operators / Référentiels === */
+/* === Profiles / Farms / Operators / Référentiels (كما سبق) === */
 function loadProfiles(){try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[]}catch{return []}}
 function saveProfiles(a){localStorage.setItem(LS_PROFILES,JSON.stringify(a))}
 function renderProfiles(){const list=g('profilesList'),d=loadProfiles();if(d.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return}
@@ -446,7 +459,6 @@ function opSaveEdit(){if(editIndex===null)return;const d=loadOps(),u=d[editIndex
 function opAdd(){const username=v('op_username'),password=v('op_password'),profile=g('op_profile').value.trim(),ferme=v('op_ferme');if(!username||!password||!profile||!ferme){alert('Remplir tous les champs.');return}
   const d=loadOps();if(d.some(x=>x.username.toLowerCase()===username.toLowerCase())){alert('Cet utilisateur existe déjà.');return}
   d.push({username,password,profile,ferme});saveOps(d);s('op_username','');s('op_password','');s('op_ferme_input','');s('op_ferme','');opToggleForm(false);renderOps()}
-function opDelete(i){const d=loadOps();if(!confirm('Supprimer l’utilisateur: '+d[i].username+' ?'))return;d.splice(i,1);saveOps(d);renderOps()}
 
 /* Référentiels */
 const LS_REFS_KEYS_DEFAULT={companies:[],responsables:[],stations:[],secteurs:[],parcelles:[],transports:[],varietes:[],varietes_champ:[],gestions:[],achats:[]};
@@ -468,7 +480,7 @@ function refsDelete(i){const refs=loadRefs(),arr=refs[currentRefKey]||[];if(!con
 /* INIT */
 (function init(){
   if(!localStorage.getItem(LS_PROFILES)) saveProfiles(DEFAULT_PROFILES.slice());
-  saveRefs(loadRefs()); appcfgApply(); appcfgFillForm();
+  saveRefs(loadRefs()); appcfgApply(); appcfgFillForm(); secFillForm();
   renderProfiles(); renderFarms(); renderOps();
 })();
 </script>
