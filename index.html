@@ -23,9 +23,9 @@ a{display:block;text-align:center;margin-top:10px;color:#93c5fd;text-decoration:
 </head>
 <body>
   <div class="card">
-    <!-- شعار التطبيق (من الإعدادات) -->
+    <!-- شعار التطبيق من الإعدادات -->
     <div id="loginLogoWrap" class="banner hidden"><img id="loginLogoImg" alt=""></div>
-    <!-- بانر أعلى الحقول -->
+    <!-- بانر اختياري فوق الحقول -->
     <div class="banner hidden" id="loginBanner"><img id="loginBannerImg" alt=""></div>
     <!-- اسم احتياطي إن لم يوجد شعار -->
     <h1 id="appTitle" class="hidden">AB AGRIWEB</h1>
@@ -54,7 +54,7 @@ function loadImgs(){try{return JSON.parse(localStorage.getItem(LS_IMG)||'{}')}ca
 
   const imgs=loadImgs();
 
-  // شعار التطبيق (PNG/GIF)
+  // شعار التطبيق (PNG/GIF) أو fallback للاسم
   if( (imgs.logo && /^data:image\/(png|gif);/i.test(imgs.logo)) ||
       (typeof imgs.logo==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.logo)) ){
     const wrap=document.getElementById('loginLogoWrap');
@@ -85,7 +85,7 @@ function loadImgs(){try{return JSON.parse(localStorage.getItem(LS_IMG)||'{}')}ca
 function togglePass(){ const i=document.getElementById('p'); i.type=i.type==='password'?'text':'password'; }
 function login(){ const url=new URL('main.html',window.location.href).toString(); window.location.href=url; }
 
-// دعم إذا البلجن كتبلع onclick
+// دعم في حال إضافة تمنع onclick
 document.addEventListener('DOMContentLoaded',()=>{
   const btn=document.getElementById('loginBtn');
   if(btn) btn.addEventListener('click',(e)=>{ if(!btn.getAttribute('href')){ e.preventDefault(); login(); } });
