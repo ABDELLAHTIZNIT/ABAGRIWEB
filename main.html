@@ -45,13 +45,13 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 .actions{display:flex;gap:8px}.actions .btn{min-width:42px}
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .label{font-size:13px;color:#9fb2cc;margin-bottom:6px;display:block}.sectionTitle{margin:16px 0 8px;font-weight:700;color:#cde4d5}
-.combo{position:relative}.combo-list{position:absolute;left:0;right:0;top:100%;background:#0b1220;border:1px solid #334155;border-radius:10px;max-height:220px;overflow:auto;z-index:30;margin-top:6px}
-.combo-item{padding:10px 12px;border-bottom:1px solid #1e293b;cursor:pointer}.combo-item:hover{background:#0f172a}
-.modal-wrap{position:fixed;inset:0;display:grid;place-items:center;z-index:60}
-.modal-wrap:not(.show){display:none}
-.modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
-.modal{position:relative;width:min(520px,92vw);background:#0b1220;border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
-.modal h3{margin:0 0 12px}.right{display:flex;gap:8px;justify-content:flex-end}
+
+/* Accordion */
+.accordion{border:1px solid var(--border);border-radius:12px;margin:12px 0;background:#0b1220}
+.acc-hd{width:100%;text-align:left;padding:12px 14px;background:#0c1526;border-bottom:1px solid #1e293b;border-radius:12px 12px 0 0;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.acc-bd{padding:14px;display:none}
+.acc.open .acc-bd{display:block}
+.acc-hd span{opacity:.8}
 </style>
 </head>
 <body>
@@ -79,9 +79,10 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <section id="page-home" class="card">
     <h2>Bienvenue 👋</h2>
     <p class="muted">Page d’accueil temporaire.</p>
+    <div id="firstRunHint" class="hint hidden" style="margin-top:10px">🔐 لم يتم العثور على أي مستخدم. اذهب إلى <b>Paramètres → Opérateurs</b> وأضف أول مستخدم.</div>
   </section>
 
-  <!-- Paramètres -->
+  <!-- Paramètres (menu tuiles) -->
   <section id="page-settings" class="card hidden">
     <h2 id="title-settings">Paramètres</h2>
     <p class="muted">Choisissez un module.</p>
@@ -176,60 +177,71 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
     </div>
   </section>
 
-  <!-- Réglages app -->
+  <!-- Réglages app (Accordion) -->
   <section id="page-appcfg" class="card hidden">
     <h2>Réglages de l’application</h2>
-    <p class="muted">Logo (PNG/GIF)، تسميات، وصِف sécurité للاسترجاع.</p>
+    <p class="muted">Logo (PNG/GIF)، تسميات، أمان، وصور الواجهة.</p>
 
-    <div class="sectionTitle">Général</div>
-    <div class="grid">
-      <div>
-        <label class="label">Logo de l’application (PNG/GIF)</label>
-        <input id="cfg-logo-url" class="input" placeholder="URL (png/gif)">
-        <input id="cfg-logo-file" type="file" accept="image/png,image/gif" class="input">
-      </div>
-    </div>
-
-    <div class="sectionTitle">Sidebar (labels)</div>
-    <div class="grid">
-      <div><label class="label">Accueil</label><input id="cfg-nav-home" class="input" placeholder="Accueil"></div>
-      <div><label class="label">Irrigation</label><input id="cfg-nav-irrig" class="input" placeholder="Irrigation"></div>
-      <div><label class="label">Traitement</label><input id="cfg-nav-trait" class="input" placeholder="Traitement"></div>
-      <div><label class="label">Paramètres</label><input id="cfg-nav-settings" class="input" placeholder="Paramètres"></div>
-      <div><label class="label">Logout</label><input id="cfg-nav-logout" class="input" placeholder="Logout"></div>
-    </div>
-
-    <div class="sectionTitle">Tuiles Paramètres</div>
-    <div class="grid">
-      <div><label class="label">Opérateur</label><input id="cfg-tile-operators" class="input" placeholder="OPÉRATEUR"></div>
-      <div><label class="label">Profile</label><input id="cfg-tile-profiles" class="input" placeholder="PROFILE"></div>
-      <div><label class="label">Référentiels</label><input id="cfg-tile-refs" class="input" placeholder="RÉFÉRENTIELS"></div>
-      <div><label class="label">Droits accès</label><input id="cfg-tile-rights" class="input" placeholder="DROITS ACCÈS"></div>
-      <div><label class="label">Mot de passe</label><input id="cfg-tile-pass" class="input" placeholder="MOT DE PASSE"></div>
-    </div>
-
-    <div class="sectionTitle">Sécurité (récupération du compte)</div>
-    <div class="grid">
-      <div><label class="label">Email de récupération</label><input id="sec-email" class="input" placeholder="ex: admin@example.com"></div>
-      <div><label class="label">Téléphone</label><input id="sec-phone" class="input" placeholder="+2126..."></div>
-      <div><label class="label">Question secrète</label><input id="sec-question" class="input" placeholder="Ex: Ville de naissance ?"></div>
-      <div><label class="label">Réponse</label><input id="sec-answer" class="input" placeholder="Votre réponse"></div>
-      <div>
-        <label class="label">Code de récupération</label>
-        <div class="row">
-          <input id="sec-code" class="input" placeholder="Générer pour créer un code" disabled>
-          <button class="btn" onclick="secGenCode()">Générer</button>
+    <!-- Général -->
+    <div class="accordion acc open" id="acc-general">
+      <button class="acc-hd" onclick="toggleAcc('acc-general')">Général <span>déployé</span></button>
+      <div class="acc-bd">
+        <div class="grid">
+          <div>
+            <label class="label">Logo de l’application (PNG/GIF)</label>
+            <input id="cfg-logo-url" class="input" placeholder="URL (png/gif)">
+            <input id="cfg-logo-file" type="file" accept="image/png,image/gif" class="input">
+          </div>
         </div>
-        <div class="muted" style="margin-top:6px">يحفظ محليًا. استعمله من “Forgot password”.</div>
       </div>
     </div>
 
-    <div class="sectionTitle">Branding (PNG/GIF)</div>
-    <div class="grid">
-      <div><label class="label">Badge header</label><input id="cfg-badge-url" class="input" placeholder="URL (png/gif)"><input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input"></div>
-      <div><label class="label">Sidebar banner</label><input id="cfg-side-url" class="input" placeholder="URL (png/gif)"><input id="cfg-side-file" type="file" accept="image/png,image/gif" class="input"></div>
-      <div><label class="label">Login banner</label><input id="cfg-login-url" class="input" placeholder="URL (png/gif)"><input id="cfg-login-file" type="file" accept="image/png,image/gif" class="input"></div>
-      <div><label class="label">Login background</label><input id="cfg-loginbg-url" class="input" placeholder="URL (png/gif)"><input id="cfg-loginbg-file" type="file" accept="image/png,image/gif" class="input"></div>
+    <!-- Tuiles Paramètres -->
+    <div class="accordion acc" id="acc-tiles">
+      <button class="acc-hd" onclick="toggleAcc('acc-tiles')">Tuiles Paramètres <span>OPÉRATEUR • PROFILE • RÉFÉRENTIEL • DROITS ACCÈS • MOT DE PASSE</span></button>
+      <div class="acc-bd">
+        <div class="grid">
+          <div><label class="label">Opérateur</label><input id="cfg-tile-operators" class="input" placeholder="OPÉRATEUR"></div>
+          <div><label class="label">Profile</label><input id="cfg-tile-profiles" class="input" placeholder="PROFILE"></div>
+          <div><label class="label">Référentiels</label><input id="cfg-tile-refs" class="input" placeholder="RÉFÉRENTIELS"></div>
+          <div><label class="label">Droits accès</label><input id="cfg-tile-rights" class="input" placeholder="DROITS ACCÈS"></div>
+          <div><label class="label">Mot de passe</label><input id="cfg-tile-pass" class="input" placeholder="MOT DE PASSE"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sécurité -->
+    <div class="accordion acc" id="acc-sec">
+      <button class="acc-hd" onclick="toggleAcc('acc-sec')">Sécurité <span>email • téléphone • question secrète • code</span></button>
+      <div class="acc-bd">
+        <div class="grid">
+          <div><label class="label">Email de récupération</label><input id="sec-email" class="input" placeholder="ex: admin@example.com"></div>
+          <div><label class="label">Téléphone</label><input id="sec-phone" class="input" placeholder="+2126..."></div>
+          <div><label class="label">Question secrète</label><input id="sec-question" class="input" placeholder="Ex: Ville de naissance ?"></div>
+          <div><label class="label">Réponse</label><input id="sec-answer" class="input" placeholder="Votre réponse"></div>
+          <div>
+            <label class="label">Code de récupération</label>
+            <div class="row">
+              <input id="sec-code" class="input" placeholder="Générer pour créer un code" disabled>
+              <button class="btn" onclick="secGenCode()">Générer</button>
+            </div>
+            <div class="muted" style="margin-top:6px">يحفظ محليًا. يُستخدم عبر “Forgot password”.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branding -->
+    <div class="accordion acc" id="acc-brand">
+      <button class="acc-hd" onclick="toggleAcc('acc-brand')">Branding <span>badge • sidebar • login banner • login background</span></button>
+      <div class="acc-bd">
+        <div class="grid">
+          <div><label class="label">Badge header</label><input id="cfg-badge-url" class="input" placeholder="URL (png/gif)"><input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input"></div>
+          <div><label class="label">Sidebar banner</label><input id="cfg-side-url" class="input" placeholder="URL (png/gif)"><input id="cfg-side-file" type="file" accept="image/png,image/gif" class="input"></div>
+          <div><label class="label">Login banner</label><input id="cfg-login-url" class="input" placeholder="URL (png/gif)"><input id="cfg-login-file" type="file" accept="image/png,image/gif" class="input"></div>
+          <div><label class="label">Login background</label><input id="cfg-loginbg-url" class="input" placeholder="URL (png/gif)"><input id="cfg-loginbg-file" type="file" accept="image/png,image/gif" class="input"></div>
+        </div>
+      </div>
     </div>
 
     <div class="row" style="margin-top:14px">
@@ -239,7 +251,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   </section>
 </main>
 
-<!-- Modals (unchanged for crud) -->
+<!-- Modals (edit operator / farm) -->
 <div id="opModal" class="modal-wrap"><div class="modal-bg" onclick="opCloseModal()"></div>
   <div class="modal"><h3>Modifier l’opérateur</h3>
     <div class="row"><input id="edit_username" class="input" placeholder="Nom d’utilisateur"><input id="edit_password" type="password" class="input" placeholder="Mot de passe"></div>
@@ -287,7 +299,7 @@ navSet.onclick=(e)=>{e.preventDefault();setActiveLink(navSet);showPage('settings
 g('logout').onclick=(e)=>{e.preventDefault();location='index.html'}
 function setActiveTile(){setActiveLink(navSet)}
 
-/* Storage helpers */
+/* Helpers + Storage */
 const LS_PROFILES='ab_profiles',LS_FARMS='ab_farms',LS_OPERATORS='ab_operators',LS_REFS='ab_refs',LS_APP='ab_appcfg',LS_IMG='ab_appimg',LS_SEC='ab_security';
 const DEFAULT_PROFILES=["Admin","Magasinier","Pointeur","Directeur"];
 function g(id){return document.getElementById(id)}function v(id){return g(id).value.trim()}function s(id,val){g(id).value=val}
@@ -303,7 +315,7 @@ function appcfgLoad(){try{return Object.assign({},APP_DEFAULT,JSON.parse(localSt
 function appcfgSaveToLS(o){localStorage.setItem(LS_APP,JSON.stringify(o))}
 function appcfgReset(){appcfgSaveToLS(APP_DEFAULT);localStorage.removeItem(LS_IMG);localStorage.removeItem(LS_SEC);appcfgApply();appcfgFillForm();secFillForm();alert('رجعنا للإعدادات الافتراضية')}
 
-/* images in LS */
+/* imgs */
 function loadImgs(){try{return Object.assign({},{badge:null,sidebar:null,login:null,loginBg:null,logo:null},JSON.parse(localStorage.getItem(LS_IMG)||'{}'))}catch{return {badge:null,sidebar:null,login:null,loginBg:null,logo:null}}}
 function saveImgs(obj){localStorage.setItem(LS_IMG,JSON.stringify(obj))}
 function fileToDataURL(file,cb){const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
@@ -312,7 +324,7 @@ function acceptPngGif(file){return file && (file.type==='image/png' || file.type
   const el=g(id); if(!el) return;
   el.addEventListener('change',e=>{
     const f=e.target.files&&e.target.files[0]; if(!f) return;
-    if(!acceptPngGif(f)){alert('المرجو اختيار صورة PNG أو GIF فقط'); e.target.value=''; return;}
+    if(!acceptPngGif(f)){alert('PNG أو GIF فقط'); e.target.value=''; return;}
     fileToDataURL(f,(data)=>{const imgs=loadImgs();
       if(id==='cfg-badge-file') imgs.badge=data;
       if(id==='cfg-side-file') imgs.sidebar=data;
@@ -324,87 +336,80 @@ function acceptPngGif(file){return file && (file.type==='image/png' || file.type
   });
 });
 
+/* Accordion */
+function toggleAcc(id){ const acc=g(id); acc.classList.toggle('open'); }
+
+/* Apply UI */
 function appcfgApply(){
   const c=appcfgLoad(); const imgs=loadImgs();
   document.title=c.appTitle+' - Dashboard';
 
-  // شعار الهيدر أو الاسم الاحتياطي
   const titleTop=g('appTitleTop');
   if(imgs.logo){ titleTop.innerHTML=`<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`; }
   else { titleTop.textContent=c.appTitle; }
 
-  // تسميات
   g('lbl-nav-home').textContent='🏠 '+c.nav.home;g('lbl-nav-irrig').textContent='🌿 '+c.nav.irrig;g('lbl-nav-trait').textContent='💧 '+c.nav.trait;g('lbl-nav-settings').textContent='⚙️ '+c.nav.settings;g('lbl-nav-logout').textContent='🚪 '+c.nav.logout;
   g('lbl-tile-operators').textContent=c.tiles.operators;g('lbl-tile-profiles').textContent=c.tiles.profiles;g('lbl-tile-refs').textContent=c.tiles.refs;g('lbl-tile-rights').textContent=c.tiles.rights;g('lbl-tile-pass').textContent=c.tiles.pass;g('lbl-tile-appcfg').textContent=c.tiles.appcfg;
 
-  // référentiels
   g('lbl-ref-ferme').textContent=c.refLabels.ferme;g('lbl-ref-companies').textContent=c.refLabels.companies;g('lbl-ref-responsables').textContent=c.refLabels.responsables;g('lbl-ref-stations').textContent=c.refLabels.stations;g('lbl-ref-secteurs').textContent=c.refLabels.secteurs;g('lbl-ref-parcelles').textContent=c.refLabels.parcelles;g('lbl-ref-transports').textContent=c.refLabels.transports;g('lbl-ref-varietes').textContent=c.refLabels.varietes;g('lbl-ref-varietes_champ').textContent=c.refLabels.varietes_champ;g('lbl-ref-gestions').textContent=c.refLabels.gestions;g('lbl-ref-achats').textContent=c.refLabels.achats;
 
   const badge=g('appBadgeImg'); if(imgs.badge){badge.src=imgs.badge;badge.classList.remove('hidden')} else badge.classList.add('hidden');
   const sbWrap=g('sidebarBrand'), sbImg=g('sidebarBrandImg'); if(imgs.sidebar){sbImg.src=imgs.sidebar;sbWrap.classList.remove('hidden')} else sbWrap.classList.add('hidden');
-}
 
+  // إشعار الصفحة الرئيسية إذا ماكانش أوبراتور
+  const ops = loadOps(); if(ops.length===0){ g('firstRunHint').classList.remove('hidden'); } else { g('firstRunHint').classList.add('hidden'); }
+}
 function appcfgFillForm(){
   const c=appcfgLoad();
-  s('cfg-nav-home',c.nav.home);s('cfg-nav-irrig',c.nav.irrig);s('cfg-nav-trait',c.nav.trait);s('cfg-nav-settings',c.nav.settings);s('cfg-nav-logout',c.nav.logout);
   s('cfg-tile-operators',c.tiles.operators);s('cfg-tile-profiles',c.tiles.profiles);s('cfg-tile-refs',c.tiles.refs);s('cfg-tile-rights',c.tiles.rights);s('cfg-tile-pass',c.tiles.pass);
 }
 
-/* ==== Security (Local) ==== */
+/* Security */
 function loadSec(){try{return JSON.parse(localStorage.getItem(LS_SEC)||'{}')}catch{return{}}}
 function saveSec(o){localStorage.setItem(LS_SEC,JSON.stringify(o))}
 function hashLite(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return String(h)}
 function secFillForm(){
   const sec=loadSec();
   s('sec-email',sec.email||''); s('sec-phone',sec.phone||'');
-  s('sec-question',sec.question||''); s('sec-answer',''); // ماكنعرضوش الجواب المخزن
+  s('sec-question',sec.question||''); s('sec-answer','');
   s('sec-code', sec.recoveryCode? String(sec.recoveryCode):'');
 }
 function secGenCode(){
   const code = Math.floor(100000 + Math.random()*900000);
   const sec = loadSec(); sec.recoveryCode = code; saveSec(sec);
   s('sec-code', String(code));
-  alert('Code généré: '+code+'\nخزّنو في مكان آمن.');
+  alert('Code généré: '+code);
 }
 
+/* Save app cfg */
 function appcfgSave(){
   const o=appcfgLoad();
 
-  // labels
-  o.nav.home=v('cfg-nav-home')||APP_DEFAULT.nav.home;
-  o.nav.irrig=v('cfg-nav-irrig')||APP_DEFAULT.nav.irrig;
-  o.nav.trait=v('cfg-nav-trait')||APP_DEFAULT.nav.trait;
-  o.nav.settings=v('cfg-nav-settings')||APP_DEFAULT.nav.settings;
-  o.nav.logout=v('cfg-nav-logout')||APP_DEFAULT.nav.logout;
-
+  // tiles فقط هنا (الباقي ثابت)
   o.tiles.operators=v('cfg-tile-operators')||APP_DEFAULT.tiles.operators;
   o.tiles.profiles=v('cfg-tile-profiles')||APP_DEFAULT.tiles.profiles;
   o.tiles.refs=v('cfg-tile-refs')||APP_DEFAULT.tiles.refs;
   o.tiles.rights=v('cfg-tile-rights')||APP_DEFAULT.tiles.rights;
   o.tiles.pass=v('cfg-tile-pass')||APP_DEFAULT.tiles.pass;
 
-  // images URL (PNG/GIF)
   const imgs=loadImgs();
   const urlOk = u => !u || /\.(png|gif)(\?|#|$)/i.test(u);
-  const badgeUrl=v('cfg-badge-url'); if(!urlOk(badgeUrl)) return alert('Badge: URL doit être PNG ou GIF'); if(badgeUrl) imgs.badge=badgeUrl;
-  const sideUrl=v('cfg-side-url'); if(!urlOk(sideUrl)) return alert('Sidebar: URL doit être PNG ou GIF'); if(sideUrl) imgs.sidebar=sideUrl;
-  const loginUrl=v('cfg-login-url'); if(!urlOk(loginUrl)) return alert('Login banner: URL doit être PNG ou GIF'); if(loginUrl) imgs.login=loginUrl;
-  const loginBgUrl=v('cfg-loginbg-url'); if(!urlOk(loginBgUrl)) return alert('Login background: URL doit être PNG ou GIF'); if(loginBgUrl) imgs.loginBg=loginBgUrl;
-  const logoUrl=v('cfg-logo-url'); if(!urlOk(logoUrl)) return alert('Logo: URL doit être PNG ou GIF'); if(logoUrl) imgs.logo=logoUrl;
+  const badgeUrl=v('cfg-badge-url'); if(badgeUrl && !urlOk(badgeUrl)) return alert('Badge URL: PNG/GIF'); if(badgeUrl) imgs.badge=badgeUrl;
+  const sideUrl=v('cfg-side-url'); if(sideUrl && !urlOk(sideUrl)) return alert('Sidebar URL: PNG/GIF'); if(sideUrl) imgs.sidebar=sideUrl;
+  const loginUrl=v('cfg-login-url'); if(loginUrl && !urlOk(loginUrl)) return alert('Login banner URL: PNG/GIF'); if(loginUrl) imgs.login=loginUrl;
+  const loginBgUrl=v('cfg-loginbg-url'); if(loginBgUrl && !urlOk(loginBgUrl)) return alert('Login background URL: PNG/GIF'); if(loginBgUrl) imgs.loginBg=loginBgUrl;
+  const logoUrl=v('cfg-logo-url'); if(logoUrl && !urlOk(logoUrl)) return alert('Logo URL: PNG/GIF'); if(logoUrl) imgs.logo=logoUrl;
 
-  // Security save
+  // security
   const sec = loadSec();
-  sec.email = v('sec-email');
-  sec.phone = v('sec-phone');
-  sec.question = v('sec-question');
-  const ans = v('sec-answer');
-  if(ans) sec.answerHash = hashLite(ans.toLowerCase());
+  sec.email = v('sec-email'); sec.phone = v('sec-phone'); sec.question = v('sec-question');
+  const ans = v('sec-answer'); if(ans) sec.answerHash = hashLite(ans.toLowerCase());
   saveSec(sec);
 
-  saveImgs(imgs); appcfgSaveToLS(o); appcfgApply(); secFillForm(); alert('تم الحفظ ✅')
+  saveImgs(imgs); appcfgSaveToLS(o); appcfgApply(); secFillForm(); alert('تم الحفظ ✅');
 }
 
-/* === Profiles / Farms / Operators / Référentiels (كما سبق) === */
+/* Data modules */
 function loadProfiles(){try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[]}catch{return []}}
 function saveProfiles(a){localStorage.setItem(LS_PROFILES,JSON.stringify(a))}
 function renderProfiles(){const list=g('profilesList'),d=loadProfiles();if(d.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return}
@@ -415,7 +420,7 @@ function addProfile(){const name=v('profileName');if(!name){alert('Entrer un nom
   d.push(name);saveProfiles(d);s('profileName','');toggleAddForm(false);renderProfiles();opRefreshProfileSelects()}
 function removeProfile(i){const d=loadProfiles();if(!confirm('Supprimer le profil : '+d[i]+' ?'))return;d.splice(i,1);saveProfiles(d);renderProfiles()}
 function toggleAddForm(sh){const f=g('addForm');sh?f.classList.remove('hidden'):f.classList.add('hidden')}
-function showProfilesHint(){g('profilesHint').classList.toggle('hidden')}
+function showProfilesHint(){alert('أضف/عدّل البروفايلات واستعملها مع المستخدمين.')}
 
 function loadFarms(){try{return JSON.parse(localStorage.getItem(LS_FARMS))||[]}catch{return []}}
 function saveFarms(a){localStorage.setItem(LS_FARMS,JSON.stringify(a))}
@@ -433,7 +438,7 @@ function farmSaveEdit(){if(farmEditIndex===null)return;const d=loadFarms(),vobj=
   if(vobj.name.toLowerCase()!==d[farmEditIndex].name.toLowerCase()&&d.some(x=>x.name.toLowerCase()===vobj.name.toLowerCase())){alert('Nom de ferme déjà utilisé.');return}
   d[farmEditIndex]=vobj;saveFarms(d);farmCloseModal();renderFarms();opRefreshFarmCombos()}
 function farmDelete(i){const d=loadFarms();if(!confirm('Supprimer la ferme: '+d[i].name+' ?'))return;d.splice(i,1);saveFarms(d);renderFarms();opRefreshFarmCombos()}
-function showFarmsHint(){g('farmsHint').classList.toggle('hidden')}
+function showFarmsHint(){alert('أضف ضيعاتك هنا واستعملها عند إنشاء المستخدمين.')}
 
 function loadOps(){try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[]}catch{return []}}
 function saveOps(a){localStorage.setItem(LS_OPERATORS,JSON.stringify(a))}
