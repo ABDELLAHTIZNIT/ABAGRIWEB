@@ -6,7 +6,7 @@
 <title>AB AGRIWEB - Dashboard</title>
 <style>
 :root{--bg:#0f172a;--panel:#0b1220;--text:#e2e8f0;--accent:#22c55e;--border:#243046;--tile:#0c1526;--tileIcon:#0f1a2e;--warn:#fde68a1a}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#1e293b);color:var(--text);min-height:100vh;overflow-x:hidden}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden}
 .hidden{display:none!important}
 /* Header */
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:12px 18px;border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.25)}
@@ -101,7 +101,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
       <div class="tile" onclick="showPage('refs');setActiveTile()"><div class="icon">🗂️</div><div><h4 id="lbl-tile-refs">RÉFÉRENTIELS</h4><p>Listes maîtres</p></div></div>
       <div class="tile" onclick="alert('DROITS ACCÈS (à compléter)')"><div class="icon">🛡️</div><div><h4 id="lbl-tile-rights">DROITS ACCÈS</h4><p>Permissions</p></div></div>
       <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')"><div class="icon">🔑</div><div><h4 id="lbl-tile-pass">MOT DE PASSE</h4><p>Changer le mot de passe</p></div></div>
-      <div class="tile" onclick="showPage('appcfg');setActiveTile()"><div class="icon">⚙️</div><div><h4 id="lbl-tile-appcfg">RÉGLAGES APP</h4><p>Nom التطبيق و تسميات</p></div></div>
+      <div class="tile" onclick="showPage('appcfg');setActiveTile()"><div class="icon">⚙️</div><div><h4 id="lbl-tile-appcfg">RÉGLAGES APP</h4><p>Logo & labels</p></div></div>
     </div>
   </section>
 
@@ -303,7 +303,7 @@ const DEFAULT_PROFILES=["Admin","Magasinier","Pointeur","Directeur"];
 function g(id){return document.getElementById(id)}function v(id){return g(id).value.trim()}function s(id,val){g(id).value=val}
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-/* App defaults (اسم يبقى احتياطي فقط) */
+/* Defaults (اسم يبقى للاحتياط فقط) */
 const APP_DEFAULT={appTitle:"AB AGRIWEB",
   nav:{home:"Accueil",irrig:"Irrigation",trait:"Traitement",settings:"Paramètres",logout:"Logout"},
   tiles:{operators:"OPÉRATEUR",profiles:"PROFILE",refs:"RÉFÉRENTIELS",rights:"DROITS ACCÈS",pass:"MOT DE PASSE",appcfg:"RÉGLAGES APP"},
@@ -318,7 +318,7 @@ function loadImgs(){try{return Object.assign({},{badge:null,sidebar:null,login:n
 function saveImgs(obj){localStorage.setItem(LS_IMG,JSON.stringify(obj))}
 function fileToDataURL(file,cb){const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
 function acceptPngGif(file){return file && (file.type==='image/png' || file.type==='image/gif')}
-['cfg-badge-file','cfg-side-file','cfg-login-file','cfg-loginbg-file','cfg-logo-file'].forEach(id=>{
+;['cfg-badge-file','cfg-side-file','cfg-login-file','cfg-loginbg-file','cfg-logo-file'].forEach(id=>{
   const el=g(id); if(!el) return;
   el.addEventListener('change',e=>{
     const f=e.target.files&&e.target.files[0]; if(!f) return;
@@ -338,12 +338,12 @@ function appcfgApply(){
   const c=appcfgLoad(); const imgs=loadImgs();
   document.title=c.appTitle+' - Dashboard';
 
-  // شعار أعلى الواجهة (إن وجد صورة، نستعملها؛ وإلا نعرض اسم افتراضي)
+  // الشعار في الهيدر (أو الاسم الاحتياطي)
   const titleTop=g('appTitleTop');
   if(imgs.logo){
-    titleTop.innerHTML = `<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`;
+    titleTop.innerHTML=`<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`;
   }else{
-    titleTop.textContent = c.appTitle;
+    titleTop.textContent=c.appTitle;
   }
 
   // تسميات
@@ -352,9 +352,7 @@ function appcfgApply(){
 
   // labels référentiel
   g('lbl-ref-ferme').textContent=c.refLabels.ferme;g('lbl-ref-companies').textContent=c.refLabels.companies;g('lbl-ref-responsables').textContent=c.refLabels.responsables;g('lbl-ref-stations').textContent=c.refLabels.stations;g('lbl-ref-secteurs').textContent=c.refLabels.secteurs;g('lbl-ref-parcelles').textContent=c.refLabels.parcelles;g('lbl-ref-transports').textContent=c.refLabels.transports;g('lbl-ref-varietes').textContent=c.refLabels.varietes;g('lbl-ref-varietes_champ').textContent=c.refLabels.varietes_champ;g('lbl-ref-gestions').textContent=c.refLabels.gestions;g('lbl-ref-achats').textContent=c.refLabels.achats;
-  Object.assign(REF_LABELS,c.refLabels);
 
-  // صور إضافية
   const badge=g('appBadgeImg'); if(imgs.badge){badge.src=imgs.badge;badge.classList.remove('hidden')} else badge.classList.add('hidden');
   const sbWrap=g('sidebarBrand'), sbImg=g('sidebarBrandImg'); if(imgs.sidebar){sbImg.src=imgs.sidebar;sbWrap.classList.remove('hidden')} else sbWrap.classList.add('hidden');
 }
@@ -380,9 +378,6 @@ function appcfgSave(){
   o.tiles.rights=v('cfg-tile-rights')||APP_DEFAULT.tiles.rights;
   o.tiles.pass=v('cfg-tile-pass')||APP_DEFAULT.tiles.pass;
 
-  // ref labels تبقى نفسها
-  o.refLabels = APP_DEFAULT.refLabels;
-
   // URL الصور (PNG/GIF فقط)
   const imgs=loadImgs();
   const urlOk = u => !u || /\.(png|gif)(\?|#|$)/i.test(u);
@@ -396,7 +391,7 @@ function appcfgSave(){
   saveImgs(imgs); appcfgSaveToLS(o); appcfgApply(); alert('تم الحفظ ✅')
 }
 
-/* === Profiles / Farms / Operators / Référentiels (كما في الإصدارات السابقة) === */
+/* === Profiles / Farms / Operators / Référentiels === */
 function loadProfiles(){try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[]}catch{return []}}
 function saveProfiles(a){localStorage.setItem(LS_PROFILES,JSON.stringify(a))}
 function renderProfiles(){const list=g('profilesList'),d=loadProfiles();if(d.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return}
