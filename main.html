@@ -84,9 +84,9 @@
   .tile h4{ margin:0; font-size:16px; }
   .tile p{ margin:2px 0 0; font-size:12px; color:#94a3b8; }
 
-  /* Forms & list */
+  /* Forms & lists */
   .row{ display:flex; gap:10px; flex-wrap:wrap; }
-  .input, select{ width:100%; max-width:300px; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
+  .input, select{ width:100%; max-width:320px; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
   .btn{ padding:12px 14px; border-radius:10px; border:1px solid #22c55e; color:#22c55e; background:transparent; cursor:pointer }
   .btn:hover{ background:#22c55e; color:#0b1220 }
   .btn.icon{ padding:8px 10px; border-radius:8px; }
@@ -112,7 +112,7 @@
   .right{ display:flex; justify-content:flex-end; gap:10px }
 
   /* Searchable Combo (Ferme) */
-  .combo{ position:relative; width:100%; max-width:300px; }
+  .combo{ position:relative; width:100%; max-width:320px; }
   .combo-input{ width:100%; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
   .combo-list{
     position:absolute; left:0; right:0; top:100%; background:#0b1220; border:1px solid #243046;
@@ -165,10 +165,7 @@
               <path d="M4 20c1.6-3 4.5-4.2 7-4.2S16.4 17 18 20" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <div>
-            <h4>OPÉRATEUR</h4>
-            <p>Gestion des utilisateurs</p>
-          </div>
+          <div><h4>OPÉRATEUR</h4><p>Gestion des utilisateurs</p></div>
         </div>
 
         <div class="tile" onclick="showPage('profiles'); setActiveTile()">
@@ -180,10 +177,30 @@
               <path d="M8 17c1.2-1.5 3-2.3 4-2.3s2.8.8 4 2.3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <div>
-            <h4>PROFILE</h4>
-            <p>Gestion des profils (rôles)</p>
+          <div><h4>PROFILE</h4><p>Gestion des profils (rôles)</p></div>
+        </div>
+
+        <div class="tile" onclick="showPage('farms'); setActiveTile()">
+          <div class="icon">
+            <!-- farm -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M3 20h18M3 14l6-4 6 4 6-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 20v-6m12 6v-6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </div>
+          <div><h4>FERME</h4><p>Gestion des fermes</p></div>
+        </div>
+
+        <!-- NEW: Référentiels -->
+        <div class="tile" onclick="showPage('refs'); setActiveTile()">
+          <div class="icon">
+            <!-- book/list -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="16" height="16" rx="2" stroke="#22c55e" stroke-width="2"/>
+              <path d="M8 8h8M8 12h8M8 16h5" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div><h4>RÉFÉRENTIELS</h4><p>Sociétés & Responsables</p></div>
         </div>
 
         <div class="tile" onclick="alert('DROITS ACCÈS (à compléter)')">
@@ -194,24 +211,7 @@
               <path d="M9 12l2 2 4-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <div>
-            <h4>DROITS ACCÈS</h4>
-            <p>Permissions & rôles</p>
-          </div>
-        </div>
-
-        <div class="tile" onclick="showPage('farms'); setActiveTile()">
-          <div class="icon">
-            <!-- farm/field -->
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M3 20h18M3 14l6-4 6 4 6-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M6 20v-6m12 6v-6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div>
-            <h4>FERME</h4>
-            <p>Gestion des fermes</p>
-          </div>
+          <div><h4>DROITS ACCÈS</h4><p>Permissions & rôles</p></div>
         </div>
 
         <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')">
@@ -222,10 +222,7 @@
               <path d="M11 12h9M17 12v3M20 12v3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <div>
-            <h4>MOT DE PASSE</h4>
-            <p>Changer le mot de passe</p>
-          </div>
+          <div><h4>MOT DE PASSE</h4><p>Changer le mot de passe</p></div>
         </div>
       </div>
     </section>
@@ -297,9 +294,50 @@
 
       <div id="farmsList" class="list" style="margin-top:14px"></div>
     </section>
+
+    <!-- PAGE: Référentiels (Sociétés & Responsables + Explorateur Ferme) -->
+    <section id="page-refs" class="card hidden">
+      <h2>Référentiels</h2>
+      <p class="muted">إدارة القوائم المرجعية (الشركات، المسؤولون) + استكشاف بيانات الضيعات.</p>
+
+      <!-- Sociétés -->
+      <h3 style="margin-top:6px">Sociétés</h3>
+      <div class="row" style="margin-top:8px">
+        <input id="company_name" class="input" placeholder="Nom de la société">
+        <button class="btn" onclick="companyAdd()">Ajouter</button>
+      </div>
+      <div id="companiesList" class="list" style="margin-top:10px"></div>
+
+      <!-- Responsables -->
+      <h3 style="margin-top:18px">Responsables</h3>
+      <div class="row" style="margin-top:8px">
+        <input id="resp_name" class="input" placeholder="Nom du responsable">
+        <input id="resp_phone" class="input" placeholder="Téléphone">
+        <button class="btn" onclick="respAdd()">Ajouter</button>
+      </div>
+      <div id="responsablesList" class="list" style="margin-top:10px"></div>
+
+      <!-- Explorateur Ferme -->
+      <h3 style="margin-top:18px">Explorateur Ferme</h3>
+      <p class="muted">اختر ضيعة أو استعمل القوائم المنسدلة أدناه لعرض القيم المخزنة من قبل (من لائحة FERME).</p>
+
+      <!-- Select farm (searchable) -->
+      <div class="combo" id="combo-ref-ferme" style="margin-top:8px">
+        <input id="ref_ferme_input" class="combo-input" placeholder="Chercher/choisir une ferme...">
+        <div id="ref_ferme_list" class="combo-list hidden"></div>
+        <input type="hidden" id="ref_ferme" />
+      </div>
+
+      <!-- 3 dropdowns fed from ab_farms -->
+      <div class="row" style="margin-top:12px">
+        <select id="ref_nomferme" class="input" title="Nom de ferme"></select>
+        <select id="ref_emplacement" class="input" title="Emplacement"></select>
+        <select id="ref_responsable" class="input" title="Responsable"></select>
+      </div>
+    </section>
   </main>
 
-  <!-- MODAL: edit operator -->
+  <!-- MODALs (operators & farms) -->
   <div id="opModal" class="modal-wrap">
     <div class="modal-bg" onclick="opCloseModal()"></div>
     <div class="modal">
@@ -310,8 +348,6 @@
       </div>
       <div class="row">
         <select id="edit_profile" class="input"></select>
-
-        <!-- Ferme combobox in modal -->
         <div class="combo" id="combo-edit-ferme">
           <input id="edit_ferme_input" class="combo-input" placeholder="Chercher/choisir une ferme...">
           <div id="edit_ferme_list" class="combo-list hidden"></div>
@@ -325,7 +361,6 @@
     </div>
   </div>
 
-  <!-- MODAL: edit farm -->
   <div id="farmModal" class="modal-wrap">
     <div class="modal-bg" onclick="farmCloseModal()"></div>
     <div class="modal">
@@ -353,11 +388,9 @@
   /* ---------- Sidebar + overlay ---------- */
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
-
   function openMenu(){ sidebar.classList.add('active'); overlay.classList.add('active'); }
   function closeMenu(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); }
   function toggleMenu(){ sidebar.classList.contains('active') ? closeMenu() : openMenu(); }
-
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
   overlay.addEventListener('click', closeMenu);
 
@@ -369,34 +402,31 @@
   const pageProf=document.getElementById('page-profiles');
   const pageOps=document.getElementById('page-operators');
   const pageFarms=document.getElementById('page-farms');
-
-  function setActiveLink(link){
-    document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
-    link.classList.add('active');
-  }
+  const pageRefs=document.getElementById('page-refs');
+  function setActiveLink(link){ document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active')); link.classList.add('active'); }
   function showPage(name){
-    [pageHome,pageSet,pageProf,pageOps,pageFarms].forEach(p=>p.classList.add('hidden'));
+    [pageHome,pageSet,pageProf,pageOps,pageFarms,pageRefs].forEach(p=>p.classList.add('hidden'));
     if(name==='home') pageHome.classList.remove('hidden');
     if(name==='settings') pageSet.classList.remove('hidden');
     if(name==='profiles') pageProf.classList.remove('hidden');
     if(name==='operators') pageOps.classList.remove('hidden');
     if(name==='farms') pageFarms.classList.remove('hidden');
+    if(name==='refs') pageRefs.classList.remove('hidden');
     closeMenu();
   }
   navHome.addEventListener('click',e=>{e.preventDefault();setActiveLink(navHome);showPage('home');});
   navSet.addEventListener('click',e=>{e.preventDefault();setActiveLink(navSet);showPage('settings');});
-  function setActiveTile(){setActiveLink(navSet);} // نبقى داخل Paramètres
+  function setActiveTile(){setActiveLink(navSet);} // stay under Paramètres
+  document.getElementById('logout').addEventListener('click',e=>{ e.preventDefault(); window.location='index.html'; });
 
-  document.getElementById('logout').addEventListener('click',e=>{
-    e.preventDefault();window.location='index.html';
-  });
-
-  /* ---------- Profiles CRUD (localStorage) ---------- */
-  const LS_PROFILES='ab_profiles';
+  /* ---------- Storage helpers ---------- */
+  const LS_PROFILES='ab_profiles', LS_FARMS='ab_farms', LS_OPERATORS='ab_operators', LS_COMPANIES='ab_companies', LS_RESP='ab_responsables';
   const DEFAULT_PROFILES=["Admin","Magasinier","Pointeur","Directeur"];
+  function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 
+  // Profiles
   function loadProfiles(){ try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[];}catch{return [];} }
-  function saveProfiles(arr){ localStorage.setItem(LS_PROFILES, JSON.stringify(arr)); }
+  function saveProfiles(a){ localStorage.setItem(LS_PROFILES, JSON.stringify(a)); }
   function renderProfiles(){
     const list=document.getElementById('profilesList'); if(!list) return;
     const data=loadProfiles();
@@ -404,9 +434,7 @@
     list.innerHTML=data.map((n,i)=>`
       <div class="item">
         <div class="meta"><b>${escapeHtml(n)}</b></div>
-        <div class="actions">
-          <button class="btn danger icon" onclick="removeProfile(${i})">🗑️</button>
-        </div>
+        <div class="actions"><button class="btn danger icon" onclick="removeProfile(${i})">🗑️</button></div>
       </div>`).join('');
   }
   function addProfile(){
@@ -414,52 +442,33 @@
     if(!name){alert('Entrer un nom de profil.');return;}
     const data=loadProfiles();
     if(data.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Ce profil existe déjà.');return;}
-    data.push(name); saveProfiles(data);
-    inp.value=''; toggleAddForm(false); renderProfiles(); opRefreshProfileSelects();
+    data.push(name); saveProfiles(data); inp.value=''; toggleAddForm(false); renderProfiles(); opRefreshProfileSelects();
   }
   function removeProfile(i){
     const data=loadProfiles(); if(!confirm('Supprimer le profil : '+data[i]+' ?'))return;
     data.splice(i,1); saveProfiles(data); renderProfiles(); opRefreshProfileSelects();
   }
-  function resetDefaults(){
-    if(!confirm('Réinitialiser aux rôles par défaut ?'))return;
-    saveProfiles(DEFAULT_PROFILES.slice()); renderProfiles(); opRefreshProfileSelects();
-  }
+  function resetDefaults(){ if(!confirm('Réinitialiser aux rôles par défaut ?'))return; saveProfiles(DEFAULT_PROFILES.slice()); renderProfiles(); opRefreshProfileSelects(); }
   function toggleAddForm(show){
     const form=document.getElementById('addForm'); const btn=document.getElementById('showAddFormBtn');
-    if(!form||!btn)return;
-    if(show){form.classList.remove('hidden');btn.classList.add('hidden');document.getElementById('profileName').focus();}
-    else{form.classList.add('hidden');btn.classList.remove('hidden');}
+    if(!form||!btn)return; if(show){form.classList.remove('hidden');btn.classList.add('hidden');document.getElementById('profileName').focus();} else {form.classList.add('hidden');btn.classList.remove('hidden');}
   }
 
-  /* ---------- Farms CRUD (localStorage) ---------- */
-  const LS_FARMS='ab_farms';
+  // Farms
   function loadFarms(){ try{return JSON.parse(localStorage.getItem(LS_FARMS))||[];}catch{return [];} }
-  function saveFarms(arr){ localStorage.setItem(LS_FARMS, JSON.stringify(arr)); }
-
-  function farmToggleForm(show){
-    const f=document.getElementById('farmAddForm'); const b=document.getElementById('farmShowAddBtn');
-    if(show){f.classList.remove('hidden'); b.classList.add('hidden'); document.getElementById('farm_name').focus();}
-    else{f.classList.add('hidden'); b.classList.remove('hidden');}
-  }
+  function saveFarms(a){ localStorage.setItem(LS_FARMS, JSON.stringify(a)); }
+  function farmToggleForm(show){ const f=document.getElementById('farmAddForm'), b=document.getElementById('farmShowAddBtn'); if(show){f.classList.remove('hidden');b.classList.add('hidden');document.getElementById('farm_name').focus();} else {f.classList.add('hidden');b.classList.remove('hidden');} }
   function farmAdd(){
-    const name=document.getElementById('farm_name').value.trim();
-    const area=document.getElementById('farm_area').value.trim();
-    const company=document.getElementById('farm_company').value.trim();
-    const location=document.getElementById('farm_location').value.trim();
-    const manager=document.getElementById('farm_manager').value.trim();
-    const phone=document.getElementById('farm_phone').value.trim();
+    const name=v('farm_name'), area=v('farm_area'), company=v('farm_company'), location=v('farm_location'), manager=v('farm_manager'), phone=v('farm_phone');
     if(!name){ alert('Nom de la ferme requis.'); return; }
-    const data=loadFarms();
-    if(data.some(x=>x.name.toLowerCase()===name.toLowerCase())){ alert('Cette ferme existe déjà.'); return; }
-    data.push({name,area,company,location,manager,phone}); saveFarms(data);
-    farmToggleForm(false); renderFarms(); opRefreshFarmCombos();
+    const d=loadFarms(); if(d.some(x=>x.name.toLowerCase()===name.toLowerCase())){ alert('Cette ferme existe déjà.'); return; }
+    d.push({name,area,company,location,manager,phone}); saveFarms(d); farmToggleForm(false); renderFarms(); opRefreshFarmCombos(); refsBuildChoices();
   }
   function renderFarms(){
     const wrap=document.getElementById('farmsList'); if(!wrap) return;
-    const data=loadFarms();
-    if(data.length===0){ wrap.innerHTML='<div class="item"><span class="muted">لا توجد ضيعات بعد.</span></div>'; return; }
-    wrap.innerHTML = data.map((f,i)=>`
+    const d=loadFarms();
+    if(d.length===0){ wrap.innerHTML='<div class="item"><span class="muted">لا توجد ضيعات بعد.</span></div>'; return; }
+    wrap.innerHTML = d.map((f,i)=>`
       <div class="item">
         <div class="meta">
           <span><b>Ferme:</b> ${escapeHtml(f.name)}</span>
@@ -476,110 +485,38 @@
       </div>
     `).join('');
   }
-  // edit farm (modal)
   let farmEditIndex=null;
-  function farmEdit(i){
-    const f=loadFarms()[i]; farmEditIndex=i;
-    document.getElementById('edit_farm_name').value=f.name||'';
-    document.getElementById('edit_farm_area').value=f.area||'';
-    document.getElementById('edit_farm_company').value=f.company||'';
-    document.getElementById('edit_farm_location').value=f.location||'';
-    document.getElementById('edit_farm_manager').value=f.manager||'';
-    document.getElementById('edit_farm_phone').value=f.phone||'';
-    farmOpenModal();
-  }
-  function farmOpenModal(){ document.getElementById('farmModal').classList.add('show'); }
-  function farmCloseModal(){ document.getElementById('farmModal').classList.remove('show'); farmEditIndex=null; }
+  function farmEdit(i){ const f=loadFarms()[i]; farmEditIndex=i; s('edit_farm_name',f.name||''); s('edit_farm_area',f.area||''); s('edit_farm_company',f.company||''); s('edit_farm_location',f.location||''); s('edit_farm_manager',f.manager||''); s('edit_farm_phone',f.phone||''); farmOpenModal(); }
+  function farmOpenModal(){ g('farmModal').classList.add('show'); }
+  function farmCloseModal(){ g('farmModal').classList.remove('show'); farmEditIndex=null; }
   function farmSaveEdit(){
     if(farmEditIndex===null) return;
-    const data=loadFarms();
-    const v={
-      name:document.getElementById('edit_farm_name').value.trim(),
-      area:document.getElementById('edit_farm_area').value.trim(),
-      company:document.getElementById('edit_farm_company').value.trim(),
-      location:document.getElementById('edit_farm_location').value.trim(),
-      manager:document.getElementById('edit_farm_manager').value.trim(),
-      phone:document.getElementById('edit_farm_phone').value.trim(),
-    };
-    if(!v.name){ alert('Nom de la ferme requis.'); return; }
-    // check duplicate name (excluding current)
-    if(v.name.toLowerCase()!==data[farmEditIndex].name.toLowerCase() &&
-       data.some(x=>x.name.toLowerCase()===v.name.toLowerCase())){
-      alert('Nom de ferme déjà utilisé.'); return;
-    }
-    data[farmEditIndex]=v; saveFarms(data); farmCloseModal(); renderFarms(); opRefreshFarmCombos();
+    const d=loadFarms();
+    const vobj={ name:v('edit_farm_name'), area:v('edit_farm_area'), company:v('edit_farm_company'), location:v('edit_farm_location'), manager:v('edit_farm_manager'), phone:v('edit_farm_phone') };
+    if(!vobj.name){ alert('Nom de la ferme requis.'); return; }
+    if(vobj.name.toLowerCase()!==d[farmEditIndex].name.toLowerCase() && d.some(x=>x.name.toLowerCase()===vobj.name.toLowerCase())){ alert('Nom de ferme déjà utilisé.'); return; }
+    d[farmEditIndex]=vobj; saveFarms(d); farmCloseModal(); renderFarms(); opRefreshFarmCombos(); refsBuildChoices();
   }
-  function farmDelete(i){
-    const data=loadFarms(); if(!confirm('Supprimer la ferme: '+data[i].name+' ?')) return;
-    const removedName=data[i].name;
-    data.splice(i,1); saveFarms(data); renderFarms(); opRefreshFarmCombos();
-    // If operators were using this farm, keep their value as text (no hard unlink here)
-    // You can later add validation to prevent orphaned farm refs.
-  }
+  function farmDelete(i){ const d=loadFarms(); if(!confirm('Supprimer la ferme: '+d[i].name+' ?')) return; d.splice(i,1); saveFarms(d); renderFarms(); opRefreshFarmCombos(); refsBuildChoices(); }
 
-  /* ---------- Operators CRUD (localStorage) ---------- */
-  const LS_OPERATORS='ab_operators';
+  // Operators
   function loadOps(){ try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[];}catch{return [];} }
-  function saveOps(arr){ localStorage.setItem(LS_OPERATORS, JSON.stringify(arr)); }
-
-  function opToggleForm(show){
-    const form=document.getElementById('opAddForm');
-    const btn=document.getElementById('opShowAddBtn');
-    if(show){
-      form.classList.remove('hidden'); btn.classList.add('hidden');
-      opRefreshProfileSelects(); opRefreshFarmCombos();
-      document.getElementById('op_username').focus();
-    } else {
-      form.classList.add('hidden'); btn.classList.remove('hidden');
-    }
-  }
-
-  function opBuildProfileOptions(selectId){
-    const sel=document.getElementById(selectId); if(!sel) return;
-    const prof=loadProfiles();
-    sel.innerHTML = prof.length ? prof.map(p=>`<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('') : `<option value="">(Aucun profil)</option>`;
-  }
+  function saveOps(a){ localStorage.setItem(LS_OPERATORS, JSON.stringify(a)); }
+  function opToggleForm(show){ const f=g('opAddForm'), b=g('opShowAddBtn'); if(show){f.classList.remove('hidden');b.classList.add('hidden'); opRefreshProfileSelects(); opRefreshFarmCombos(); g('op_username').focus();} else {f.classList.add('hidden');b.classList.remove('hidden');} }
+  function opBuildProfileOptions(id){ const sel=g(id); if(!sel) return; const p=loadProfiles(); sel.innerHTML=p.length?p.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join(''):`<option value="">(Aucun profil)</option>`; }
   function opRefreshProfileSelects(){ opBuildProfileOptions('op_profile'); opBuildProfileOptions('edit_profile'); }
-
-  // ----- Searchable combo helpers -----
   function comboFill(idBase, items){
-    const input=document.getElementById(idBase+'_input');
-    const list=document.getElementById(idBase+'_list');
-    const hidden=document.getElementById(idBase);
-    function render(filter=''){
-      const q=filter.toLowerCase();
-      const matched=items.filter(x=>x.toLowerCase().includes(q));
-      list.innerHTML = matched.map(v=>`<div class="combo-item" data-v="${escapeHtml(v)}">${escapeHtml(v)}</div>`).join('') || `<div class="combo-item muted">(aucun résultat)</div>`;
-    }
-    render('');
-    input.oninput = ()=> render(input.value);
-    input.onfocus = ()=> { list.classList.remove('hidden'); render(input.value); };
-    document.addEventListener('click', (e)=>{
-      if(!list.contains(e.target) && e.target!==input) list.classList.add('hidden');
-    });
-    list.onclick = (e)=>{
-      const el=e.target.closest('.combo-item'); if(!el) return;
-      const v=el.getAttribute('data-v'); if(!v) return;
-      input.value=v; hidden.value=v; list.classList.add('hidden');
-    };
+    const input=g(idBase+'_input'), list=g(idBase+'_list'), hidden=g(idBase);
+    function render(q=''){ const m=items.filter(x=>x.toLowerCase().includes(q.toLowerCase())); list.innerHTML=m.length? m.map(v=>`<div class="combo-item" data-v="${escapeHtml(v)}">${escapeHtml(v)}</div>`).join('') : `<div class="combo-item muted">(aucun résultat)</div>`; }
+    render(); input.oninput=()=>render(input.value); input.onfocus=()=>{list.classList.remove('hidden');render(input.value);};
+    document.addEventListener('click',e=>{ if(!list.contains(e.target)&&e.target!==input) list.classList.add('hidden');});
+    list.onclick=e=>{ const el=e.target.closest('.combo-item'); if(!el) return; const v=el.getAttribute('data-v'); input.value=v; hidden.value=v; list.classList.add('hidden'); };
   }
-
-  function opRefreshFarmCombos(){
-    const farms=loadFarms().map(f=>f.name);
-    // create for add form
-    comboFill('op_ferme', farms);
-    // create for edit modal
-    comboFill('edit_ferme', farms);
-  }
-
+  function opRefreshFarmCombos(){ const farms=loadFarms().map(f=>f.name); comboFill('op_ferme',farms); comboFill('edit_ferme',farms); comboFill('ref_ferme',farms); }
   function renderOps(){
-    const wrap=document.getElementById('operatorsList'); if(!wrap) return;
-    const data=loadOps();
-    if(data.length===0){
-      wrap.innerHTML='<div class="item"><span class="muted">لا يوجد أي مستخدم بعد.</span></div>';
-      return;
-    }
-    wrap.innerHTML=data.map((u,idx)=>`
+    const w=g('operatorsList'); if(!w) return; const d=loadOps();
+    if(d.length===0){ w.innerHTML='<div class="item"><span class="muted">لا يوجد أي مستخدم بعد.</span></div>'; return; }
+    w.innerHTML=d.map((u,i)=>`
       <div class="item">
         <div class="meta">
           <span><b>Utilisateur:</b> ${escapeHtml(u.username)}</span>
@@ -587,77 +524,128 @@
           <span><b>Ferme:</b> ${escapeHtml(u.ferme||'')}</span>
         </div>
         <div class="actions">
-          <button class="btn icon" onclick="opEdit(${idx})">✏️</button>
-          <button class="btn danger icon" onclick="opDelete(${idx})">🗑️</button>
+          <button class="btn icon" onclick="opEdit(${i})">✏️</button>
+          <button class="btn danger icon" onclick="opDelete(${i})">🗑️</button>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
-
-  function opAdd(){
-    const username=document.getElementById('op_username').value.trim();
-    const password=document.getElementById('op_password').value.trim();
-    const profile =document.getElementById('op_profile').value.trim();
-    const ferme   =document.getElementById('op_ferme').value.trim(); // from hidden
-    if(!username || !password || !profile || !ferme){
-      alert('Remplir tous les champs.'); return;
-    }
-    const data=loadOps();
-    if(data.some(x=>x.username.toLowerCase()===username.toLowerCase())){ alert('Cet utilisateur existe déjà.'); return; }
-    data.push({username,password,profile,ferme}); saveOps(data);
-    // clear
-    document.getElementById('op_username').value='';
-    document.getElementById('op_password').value='';
-    document.getElementById('op_ferme_input').value=''; document.getElementById('op_ferme').value='';
-    opToggleForm(false); renderOps();
-  }
-
-  // Edit modal
   let editIndex=null;
-  function opOpenModal(){ document.getElementById('opModal').classList.add('show'); }
-  function opCloseModal(){ document.getElementById('opModal').classList.remove('show'); editIndex=null; }
-
-  function opEdit(idx){
-    const data=loadOps(); const u=data[idx]; editIndex=idx;
-    document.getElementById('edit_username').value=u.username;
-    document.getElementById('edit_password').value=u.password;
-    opRefreshProfileSelects(); document.getElementById('edit_profile').value=u.profile||'';
-    opRefreshFarmCombos();
-    document.getElementById('edit_ferme_input').value=u.ferme||''; document.getElementById('edit_ferme').value=u.ferme||'';
-    opOpenModal();
-  }
+  function opOpenModal(){ g('opModal').classList.add('show'); }
+  function opCloseModal(){ g('opModal').classList.remove('show'); editIndex=null; }
+  function opEdit(i){ const d=loadOps(), u=d[i]; editIndex=i; s('edit_username',u.username); s('edit_password',u.password); opRefreshProfileSelects(); g('edit_profile').value=u.profile||''; opRefreshFarmCombos(); s('edit_ferme_input',u.ferme||''); s('edit_ferme',u.ferme||''); opOpenModal(); }
   function opSaveEdit(){
     if(editIndex===null) return;
-    const data=loadOps();
-    const u=data[editIndex];
-    const newUser=document.getElementById('edit_username').value.trim();
-    const newPwd =document.getElementById('edit_password').value.trim();
-    const newProf=document.getElementById('edit_profile').value.trim();
-    const newFer =document.getElementById('edit_ferme').value.trim();
-    if(!newUser || !newPwd || !newProf || !newFer){ alert('Remplir tous les champs.'); return; }
-    if(newUser.toLowerCase()!==u.username.toLowerCase() && data.some(x=>x.username.toLowerCase()===newUser.toLowerCase())){
-      alert('Nom d’utilisateur déjà utilisé.'); return;
-    }
-    data[editIndex]={username:newUser, password:newPwd, profile:newProf, ferme:newFer};
-    saveOps(data); opCloseModal(); renderOps();
+    const d=loadOps(), u=d[editIndex];
+    const nu=v('edit_username'), np=v('edit_password'), npr=g('edit_profile').value.trim(), nfe=v('edit_ferme');
+    if(!nu||!np||!npr||!nfe){ alert('Remplir tous les champs.'); return; }
+    if(nu.toLowerCase()!==u.username.toLowerCase() && d.some(x=>x.username.toLowerCase()===nu.toLowerCase())){ alert('Nom d’utilisateur déjà utilisé.'); return; }
+    d[editIndex]={username:nu, password:np, profile:npr, ferme:nfe}; saveOps(d); opCloseModal(); renderOps();
   }
-  function opDelete(idx){
-    const data=loadOps(); if(!confirm('Supprimer l’utilisateur: '+data[idx].username+' ?')) return;
-    data.splice(idx,1); saveOps(data); renderOps();
+  function opAdd(){
+    const username=v('op_username'), password=v('op_password'), profile=g('op_profile').value.trim(), ferme=v('op_ferme');
+    if(!username||!password||!profile||!ferme){ alert('Remplir tous les champs.'); return; }
+    const d=loadOps(); if(d.some(x=>x.username.toLowerCase()===username.toLowerCase())){ alert('Cet utilisateur existe déjà.'); return; }
+    d.push({username,password,profile,ferme}); saveOps(d); s('op_username',''); s('op_password',''); s('op_ferme_input',''); s('op_ferme',''); opToggleForm(false); renderOps();
+  }
+  function opDelete(i){ const d=loadOps(); if(!confirm('Supprimer l’utilisateur: '+d[i].username+' ?')) return; d.splice(i,1); saveOps(d); renderOps(); }
+
+  // Companies (Sociétés)
+  function loadCompanies(){ try{return JSON.parse(localStorage.getItem(LS_COMPANIES))||[];}catch{return [];} }
+  function saveCompanies(a){ localStorage.setItem(LS_COMPANIES, JSON.stringify(a)); }
+  function companyAdd(){
+    const name=v('company_name'); if(!name){alert('Nom de la société requis.'); return;}
+    const d=loadCompanies(); if(d.some(x=>x.toLowerCase()===name.toLowerCase())){ alert('Société déjà existante.'); return; }
+    d.push(name); saveCompanies(d); s('company_name',''); renderCompanies();
+  }
+  function renderCompanies(){
+    const w=g('companiesList'); if(!w) return; const d=loadCompanies();
+    if(d.length===0){ w.innerHTML='<div class="item"><span class="muted">لا توجد شركات بعد.</span></div>'; return; }
+    w.innerHTML=d.map((n,i)=>`
+      <div class="item">
+        <div class="meta"><span><b>Société:</b> ${escapeHtml(n)}</span></div>
+        <div class="actions"><button class="btn danger icon" onclick="companyDel(${i})">🗑️</button></div>
+      </div>`).join('');
+  }
+  function companyDel(i){ const d=loadCompanies(); if(!confirm('Supprimer la société: '+d[i]+' ?')) return; d.splice(i,1); saveCompanies(d); renderCompanies(); }
+
+  // Responsables
+  function loadResponsables(){ try{return JSON.parse(localStorage.getItem(LS_RESP))||[];}catch{return [];} }
+  function saveResponsables(a){ localStorage.setItem(LS_RESP, JSON.stringify(a)); }
+  function respAdd(){
+    const name=v('resp_name'), phone=v('resp_phone');
+    if(!name){ alert('Nom du responsable requis.'); return; }
+    const d=loadResponsables(); if(d.some(x=>x.name.toLowerCase()===name.toLowerCase())){ alert('Responsable déjà existant.'); return; }
+    d.push({name,phone}); saveResponsables(d); s('resp_name',''); s('resp_phone',''); renderResponsables();
+  }
+  function renderResponsables(){
+    const w=g('responsablesList'); if(!w) return; const d=loadResponsables();
+    if(d.length===0){ w.innerHTML='<div class="item"><span class="muted">لا يوجد مسؤولو ضيعات بعد.</span></div>'; return; }
+    w.innerHTML=d.map((r,i)=>`
+      <div class="item">
+        <div class="meta"><span><b>Responsable:</b> ${escapeHtml(r.name)}</span><span><b>Tél:</b> ${escapeHtml(r.phone||'')}</span></div>
+        <div class="actions"><button class="btn danger icon" onclick="respDel(${i})">🗑️</button></div>
+      </div>`).join('');
+  }
+  function respDel(i){ const d=loadResponsables(); if(!confirm('Supprimer: '+d[i].name+' ?')) return; d.splice(i,1); saveResponsables(d); renderResponsables(); }
+
+  /* ---------- Référentiels: Explorateur Ferme dropdowns ---------- */
+  function refsBuildChoices(){
+    const farms=loadFarms();
+    // unique sets
+    const names=[...new Set(farms.map(f=>f.name).filter(Boolean))];
+    const places=[...new Set(farms.map(f=>f.location).filter(Boolean))];
+    const managers=[...new Set(farms.map(f=>f.manager).filter(Boolean))];
+
+    fillSelect('ref_nomferme', names, 'Nom de ferme');
+    fillSelect('ref_emplacement', places, 'Emplacement');
+    fillSelect('ref_responsable', managers, 'Responsable');
+
+    // searchable farm combobox
+    opRefreshFarmCombos(); // also builds ref_ferme combo
+  }
+  function fillSelect(id, arr, placeholder){
+    const sel=g(id);
+    sel.innerHTML = arr.length ? arr.map(v=>`<option>${escapeHtml(v)}</option>`).join('') : `<option>(aucune donnée)</option>`;
+    sel.title = placeholder;
   }
 
-  /* ---------- Helpers ---------- */
-  function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  // When farm selected in refs combobox, preselect matching values
+  document.addEventListener('click', e=>{
+    // capture selections from refs farm combobox list
+    if(e.target.closest('#ref_ferme_list .combo-item')){
+      const name=v('ref_ferme');
+      const f=loadFarms().find(x=>x.name===name);
+      if(f){
+        // set selects to this farm's values (if present in options)
+        selectIfFound('ref_nomferme', f.name);
+        selectIfFound('ref_emplacement', f.location);
+        selectIfFound('ref_responsable', f.manager);
+      }
+    }
+  });
+  function selectIfFound(selectId, value){
+    const sel=g(selectId); if(!sel||!value) return;
+    const opts=[...sel.options].map(o=>o.text);
+    const idx=opts.findIndex(t=>t===value);
+    if(idx>=0) sel.selectedIndex=idx;
+  }
+
+  /* ---------- Utilities ---------- */
+  function g(id){ return document.getElementById(id); }
+  function v(id){ return g(id).value.trim(); }
+  function s(id,val){ g(id).value=val; }
 
   /* ---------- INIT ---------- */
   (function init(){
-    // ensure default profiles on first run
     if(!localStorage.getItem(LS_PROFILES)) saveProfiles(DEFAULT_PROFILES.slice());
     renderProfiles();
     renderFarms();
+    renderCompanies();
+    renderResponsables();
     opRefreshProfileSelects();
     opRefreshFarmCombos();
     renderOps();
+    refsBuildChoices();
   })();
 </script>
 
