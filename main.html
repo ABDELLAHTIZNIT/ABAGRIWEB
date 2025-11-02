@@ -35,7 +35,6 @@
     box-shadow:4px 0 20px rgba(0,0,0,.4); z-index:15;
   }
   .sidebar.active{ left:0; }
-
   .side-header{
     position:absolute; top:0; left:0; right:0; height:56px;
     display:flex; align-items:center; gap:10px; padding:0 14px;
@@ -71,7 +70,7 @@
   }
   .muted{opacity:.8}
 
-  /* Paramètres – vertical tiles */
+  /* Paramètres – tiles */
   .stack{ display:grid; gap:12px; }
   .tile{
     display:flex; align-items:center; gap:12px;
@@ -85,6 +84,20 @@
   }
   .tile h4{ margin:0; font-size:16px; }
   .tile p{ margin:2px 0 0; font-size:12px; color:#94a3b8; }
+
+  /* Profiles page */
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .input{ width:100%; max-width:300px; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
+  .btn{ padding:12px 14px; border-radius:10px; border:1px solid #22c55e; color:#22c55e; background:transparent; cursor:pointer }
+  .btn:hover{ background:#22c55e; color:#0b1220 }
+  .list{ display:grid; gap:10px; margin-top:14px; }
+  .item{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:#0c1526; border:1px solid #243046; border-radius:10px; padding:12px 14px;
+  }
+  .item strong{ letter-spacing:.3px }
+  .danger{ border-color:#3b1f1f; color:#fca5a5; }
+  .danger:hover{ background:#ef4444; color:#0b1220; border-color:#ef4444; }
 </style>
 </head>
 <body>
@@ -116,15 +129,28 @@
       <p class="muted">هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
     </section>
 
-    <!-- PAGE: Paramètres -->
+    <!-- PAGE: Paramètres (menu de tuiles) -->
     <section id="page-settings" class="card hidden">
       <h2>Paramètres</h2>
       <p class="muted">اختر أحد الإعدادات التالية:</p>
       <div class="stack">
-        <!-- OPÉRATEUR -->
-        <div class="tile" onclick="alert('OPÉRATEUR (placeholder)')">
+        <div class="tile" onclick="showPage('profiles'); setActiveTile('profiles')">
           <div class="icon">
-            <!-- user icon -->
+            <!-- id-badge -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="5" width="16" height="14" rx="2" stroke="#22c55e" stroke-width="2"/>
+              <circle cx="12" cy="11" r="2.5" stroke="#22c55e" stroke-width="2"/>
+              <path d="M8 17c1.2-1.5 3-2.3 4-2.3s2.8.8 4 2.3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4>PROFILE</h4>
+            <p>Gestion des profils (rôles)</p>
+          </div>
+        </div>
+
+        <div class="tile" onclick="alert('OPÉRATEUR (à compléter)')">
+          <div class="icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="8" r="4" stroke="#22c55e" stroke-width="2"/>
               <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
@@ -136,26 +162,8 @@
           </div>
         </div>
 
-        <!-- PROFILE -->
-        <div class="tile" onclick="alert('PROFILE (placeholder)')">
+        <div class="tile" onclick="alert('DROITS ACCÈS (à compléter)')">
           <div class="icon">
-            <!-- id-badge icon -->
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <rect x="4" y="5" width="16" height="14" rx="2" stroke="#22c55e" stroke-width="2"/>
-              <circle cx="12" cy="11" r="2.5" stroke="#22c55e" stroke-width="2"/>
-              <path d="M8 17c1.2-1.5 3-2.3 4-2.3s2.8.8 4 2.3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div>
-            <h4>PROFILE</h4>
-            <p>Informations du profil</p>
-          </div>
-        </div>
-
-        <!-- DROITS ACCÈS -->
-        <div class="tile" onclick="alert('DROITS ACCÈS (placeholder)')">
-          <div class="icon">
-            <!-- shield icon -->
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M12 3l7 3v6c0 5-3.5 7.8-7 9-3.5-1.2-7-4-7-9V6l7-3z" stroke="#22c55e" stroke-width="2"/>
               <path d="M9 12l2 2 4-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -167,10 +175,8 @@
           </div>
         </div>
 
-        <!-- MOT DE PASSE -->
-        <div class="tile" onclick="alert('MOT DE PASSE (placeholder)')">
+        <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')">
           <div class="icon">
-            <!-- key icon -->
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <circle cx="8" cy="12" r="3" stroke="#22c55e" stroke-width="2"/>
               <path d="M11 12h9M17 12v3M20 12v3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
@@ -183,61 +189,139 @@
         </div>
       </div>
     </section>
+
+    <!-- PAGE: Profiles (CRUD simple) -->
+    <section id="page-profiles" class="card hidden">
+      <h2>Profiles</h2>
+      <p class="muted">أضف/احذف أدوار (Profils) وسيتم حفظها محليًا في المتصفح.</p>
+
+      <div class="row" style="margin-top:12px">
+        <input id="profileName" class="input" placeholder="Ex: Admin, Magasinier, Pointeur, Directeur">
+        <button class="btn" onclick="addProfile()">Ajouter le profil</button>
+      </div>
+
+      <div id="profilesList" class="list"></div>
+
+      <p class="muted" style="margin-top:10px">Tip: سيتم حفظ القائمة في <code>localStorage</code> تحت المفتاح <b>ab_profiles</b>.</p>
+      <div class="row" style="margin-top:6px">
+        <button class="btn danger" onclick="resetDefaults()">Réinitialiser aux rôles par défaut</button>
+      </div>
+    </section>
   </main>
 
 <script>
+  // Sidebar + overlay
   const sidebar  = document.getElementById('sidebar');
   const overlay  = document.getElementById('overlay');
-  const navHome  = document.getElementById('nav-home');
-  const navIrrig = document.getElementById('nav-irrig');
-  const navTrait = document.getElementById('nav-trait');
-  const navSet   = document.getElementById('nav-settings');
-
-  const pageHome = document.getElementById('page-home');
-  const pageSet  = document.getElementById('page-settings');
 
   function openMenu(){ sidebar.classList.add('active'); overlay.classList.add('active'); }
   function closeMenu(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); }
   function toggleMenu(){ sidebar.classList.contains('active') ? closeMenu() : openMenu(); }
-
-  // close on ESC & overlay
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
   overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('.sidebar a').forEach(a => a.addEventListener('click', closeMenu));
 
-  // swipe close (mobile)
-  let startX = null;
-  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
-  document.addEventListener('touchmove', e => {
-    if(startX === null) return;
-    const dx = e.touches[0].clientX - startX;
-    if(dx < -60 && sidebar.classList.contains('active')) { closeMenu(); startX = null; }
-  }, {passive:true});
+  // Simple pages router
+  const navHome  = document.getElementById('nav-home');
+  const navSet   = document.getElementById('nav-settings');
+  const pageHome = document.getElementById('page-home');
+  const pageSet  = document.getElementById('page-settings');
+  const pageProf = document.getElementById('page-profiles');
 
-  // simple router: show/hide pages
-  function setActive(link){
+  function setActiveLink(link){
     document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
     link.classList.add('active');
   }
+
   function showPage(name){
-    pageHome.classList.add('hidden');
-    pageSet.classList.add('hidden');
-    if(name === 'home') pageHome.classList.remove('hidden');
-    if(name === 'settings') pageSet.classList.remove('hidden');
+    // hide all
+    [pageHome, pageSet, pageProf].forEach(el=>el.classList.add('hidden'));
+    if(name==='home') pageHome.classList.remove('hidden');
+    if(name==='settings') pageSet.classList.remove('hidden');
+    if(name==='profiles') pageProf.classList.remove('hidden');
     closeMenu();
   }
 
-  navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navHome); showPage('home'); });
-  navSet .addEventListener('click', (e)=>{ e.preventDefault(); setActive(navSet ); showPage('settings'); });
+  // From sidebar
+  navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActiveLink(navHome); showPage('home'); });
+  navSet .addEventListener('click', (e)=>{ e.preventDefault(); setActiveLink(navSet ); showPage('settings'); });
 
-  // placeholders for others
-  navIrrig.addEventListener('click', e=>{ e.preventDefault(); alert('Irrigation (à compléter)'); closeMenu(); });
-  navTrait.addEventListener('click', e=>{ e.preventDefault(); alert('Traitement (à compléter)'); closeMenu(); });
+  // From settings tile
+  function setActiveTile(which){
+    // when coming from tiles, keep Settings as active link
+    setActiveLink(navSet);
+  }
 
-  // logout → back to login
+  // Logout → back to login
   document.getElementById('logout').addEventListener('click', e=>{
-    e.preventDefault();
-    window.location = 'index.html';
+    e.preventDefault(); window.location = 'index.html';
   });
+
+  /* ---------------- Profiles (localStorage) ---------------- */
+  const LS_KEY = 'ab_profiles';
+  const DEFAULTS = ["Admin","Magasinier","Pointeur","Directeur"];
+
+  function loadProfiles(){
+    const raw = localStorage.getItem(LS_KEY);
+    let items = [];
+    try{ items = raw ? JSON.parse(raw) : []; }catch{ items = []; }
+    if(!Array.isArray(items)) items = [];
+    return items;
+  }
+  function saveProfiles(arr){
+    localStorage.setItem(LS_KEY, JSON.stringify(arr));
+  }
+  function renderProfiles(){
+    const list = document.getElementById('profilesList');
+    const data = loadProfiles();
+    if(data.length===0){
+      list.innerHTML = `<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>`;
+      return;
+    }
+    list.innerHTML = data.map((name,idx)=>`
+      <div class="item">
+        <strong>${escapeHtml(name)}</strong>
+        <button class="btn danger" onclick="removeProfile(${idx})">Supprimer</button>
+      </div>
+    `).join('');
+  }
+  function addProfile(){
+    const inp = document.getElementById('profileName');
+    const name = inp.value.trim();
+    if(!name){ alert("Entrer un nom de profil."); return; }
+    const data = loadProfiles();
+    if(data.some(x=>x.toLowerCase()===name.toLowerCase())){
+      alert("Ce profil existe déjà."); return;
+    }
+    data.push(name);
+    saveProfiles(data);
+    inp.value='';
+    renderProfiles();
+    alert("Profil ajouté ✅");
+  }
+  function removeProfile(idx){
+    const data = loadProfiles();
+    const name = data[idx];
+    if(!confirm(`Supprimer le profil: ${name} ?`)) return;
+    data.splice(idx,1);
+    saveProfiles(data);
+    renderProfiles();
+  }
+  function resetDefaults(){
+    if(!confirm("Réinitialiser aux rôles par défaut ?")) return;
+    saveProfiles(DEFAULTS.slice());
+    renderProfiles();
+  }
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+  }
+
+  // init: ensure defaults on first run
+  (function init(){
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw){ saveProfiles(DEFAULTS.slice()); }
+    renderProfiles();
+  })();
 </script>
 
 </body>
