@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,6 +7,7 @@
 <style>
   :root{
     --bg:#0f172a; --panel:#0b1220; --text:#e2e8f0; --accent:#22c55e; --border:#243046;
+    --tile:#0c1526; --tileIcon:#0f1a2e;
   }
   *{box-sizing:border-box}
   body{
@@ -14,6 +15,7 @@
     background:linear-gradient(180deg,var(--bg),#1e293b); color:var(--text);
     height:100vh; overflow-x:hidden;
   }
+  .hidden{display:none}
 
   /* Header */
   header{
@@ -22,9 +24,7 @@
     background:var(--panel); padding:12px 18px; border-bottom:1px solid var(--border);
     box-shadow:0 2px 12px rgba(0,0,0,.25);
   }
-  .menu-btn{
-    background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;
-  }
+  .menu-btn{ background:none; border:none; color:var(--text); font-size:24px; cursor:pointer; }
   .title{ font-weight:800; color:var(--accent); letter-spacing:.5px }
 
   /* Sidebar */
@@ -36,7 +36,6 @@
   }
   .sidebar.active{ left:0; }
 
-  /* top strip inside sidebar */
   .side-header{
     position:absolute; top:0; left:0; right:0; height:56px;
     display:flex; align-items:center; gap:10px; padding:0 14px;
@@ -49,7 +48,6 @@
   .close-btn:hover{ background:#0f172a; }
   .side-header span{ font-weight:700; color:#cbd5e1 }
 
-  /* Sidebar links */
   .sidebar a{
     display:flex; align-items:center; gap:10px; padding:14px 24px;
     color:var(--text) !important; text-decoration:none; border-bottom:1px solid #1e293b;
@@ -58,23 +56,35 @@
   .sidebar a:hover{ background:var(--accent); color:#0b1220 !important; font-weight:600; }
   .sidebar a.active{ background:var(--accent); color:#0b1220 !important; font-weight:700; }
 
-  /* Overlay behind sidebar */
+  /* Overlay */
   .overlay{
     position:fixed; inset:0; background:rgba(0,0,0,.4);
     opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:10;
   }
   .overlay.active{ opacity:1; pointer-events:all; }
 
-  /* Main content */
+  /* Main content + cards */
   .content{ padding:24px; }
   .card{
     max-width:960px; margin:16px auto; background:#0b1220; border:1px solid var(--border);
     border-radius:16px; padding:20px; box-shadow:0 10px 24px rgba(0,0,0,.25);
   }
+  .muted{opacity:.8}
 
-  @media (min-width:980px){
-    .content{ padding:32px 40px; }
+  /* Paramètres – vertical tiles */
+  .stack{ display:grid; gap:12px; }
+  .tile{
+    display:flex; align-items:center; gap:12px;
+    background:var(--tile); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; cursor:pointer;
   }
+  .tile:hover{ border-color:var(--accent); box-shadow:0 0 0 2px rgba(34,197,94,.25) inset; }
+  .tile .icon{
+    width:36px; height:36px; display:grid; place-items:center;
+    background:var(--tileIcon); border:1px solid #1f2a44; border-radius:10px;
+  }
+  .tile h4{ margin:0; font-size:16px; }
+  .tile p{ margin:2px 0 0; font-size:12px; color:#94a3b8; }
 </style>
 </head>
 <body>
@@ -90,40 +100,111 @@
       <span>Menu</span>
     </div>
 
-    <a href="#" class="active">🌿 Irrigation</a>
-    <a href="#">💧 Traitement</a>
-    <a href="#">⚙️ Paramètres</a>
+    <a href="#" id="nav-home" class="active">🏠 Accueil</a>
+    <a href="#" id="nav-irrig">🌿 Irrigation</a>
+    <a href="#" id="nav-trait">💧 Traitement</a>
+    <a href="#" id="nav-settings">⚙️ Paramètres</a>
     <a href="#" id="logout">🚪 Logout</a>
   </aside>
 
-  <!-- dark overlay -->
   <div class="overlay" id="overlay"></div>
 
   <main class="content">
-    <section class="card">
+    <!-- PAGE: Accueil -->
+    <section id="page-home" class="card">
       <h2>Bienvenue 👋</h2>
-      <p>هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
+      <p class="muted">هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
+    </section>
+
+    <!-- PAGE: Paramètres -->
+    <section id="page-settings" class="card hidden">
+      <h2>Paramètres</h2>
+      <p class="muted">اختر أحد الإعدادات التالية:</p>
+      <div class="stack">
+        <!-- OPÉRATEUR -->
+        <div class="tile" onclick="alert('OPÉRATEUR (placeholder)')">
+          <div class="icon">
+            <!-- user icon -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="4" stroke="#22c55e" stroke-width="2"/>
+              <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4>OPÉRATEUR</h4>
+            <p>Gestion des opérateurs</p>
+          </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="tile" onclick="alert('PROFILE (placeholder)')">
+          <div class="icon">
+            <!-- id-badge icon -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="5" width="16" height="14" rx="2" stroke="#22c55e" stroke-width="2"/>
+              <circle cx="12" cy="11" r="2.5" stroke="#22c55e" stroke-width="2"/>
+              <path d="M8 17c1.2-1.5 3-2.3 4-2.3s2.8.8 4 2.3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4>PROFILE</h4>
+            <p>Informations du profil</p>
+          </div>
+        </div>
+
+        <!-- DROITS ACCÈS -->
+        <div class="tile" onclick="alert('DROITS ACCÈS (placeholder)')">
+          <div class="icon">
+            <!-- shield icon -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3l7 3v6c0 5-3.5 7.8-7 9-3.5-1.2-7-4-7-9V6l7-3z" stroke="#22c55e" stroke-width="2"/>
+              <path d="M9 12l2 2 4-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4>DROITS ACCÈS</h4>
+            <p>Permissions & rôles</p>
+          </div>
+        </div>
+
+        <!-- MOT DE PASSE -->
+        <div class="tile" onclick="alert('MOT DE PASSE (placeholder)')">
+          <div class="icon">
+            <!-- key icon -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="8" cy="12" r="3" stroke="#22c55e" stroke-width="2"/>
+              <path d="M11 12h9M17 12v3M20 12v3" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4>MOT DE PASSE</h4>
+            <p>Changer le mot de passe</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
 <script>
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+  const navHome  = document.getElementById('nav-home');
+  const navIrrig = document.getElementById('nav-irrig');
+  const navTrait = document.getElementById('nav-trait');
+  const navSet   = document.getElementById('nav-settings');
+
+  const pageHome = document.getElementById('page-home');
+  const pageSet  = document.getElementById('page-settings');
 
   function openMenu(){ sidebar.classList.add('active'); overlay.classList.add('active'); }
   function closeMenu(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); }
   function toggleMenu(){ sidebar.classList.contains('active') ? closeMenu() : openMenu(); }
 
-  // close on ESC
+  // close on ESC & overlay
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
-
-  // close on overlay click
   overlay.addEventListener('click', closeMenu);
 
-  // close when clicking a sidebar link
-  document.querySelectorAll('.sidebar a').forEach(a => a.addEventListener('click', closeMenu));
-
-  // close with swipe left (mobile)
+  // swipe close (mobile)
   let startX = null;
   document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
   document.addEventListener('touchmove', e => {
@@ -132,8 +213,28 @@
     if(dx < -60 && sidebar.classList.contains('active')) { closeMenu(); startX = null; }
   }, {passive:true});
 
-  // (optional) logout goes back to login page
-  document.getElementById('logout').addEventListener('click', e => {
+  // simple router: show/hide pages
+  function setActive(link){
+    document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+    link.classList.add('active');
+  }
+  function showPage(name){
+    pageHome.classList.add('hidden');
+    pageSet.classList.add('hidden');
+    if(name === 'home') pageHome.classList.remove('hidden');
+    if(name === 'settings') pageSet.classList.remove('hidden');
+    closeMenu();
+  }
+
+  navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActive(navHome); showPage('home'); });
+  navSet .addEventListener('click', (e)=>{ e.preventDefault(); setActive(navSet ); showPage('settings'); });
+
+  // placeholders for others
+  navIrrig.addEventListener('click', e=>{ e.preventDefault(); alert('Irrigation (à compléter)'); closeMenu(); });
+  navTrait.addEventListener('click', e=>{ e.preventDefault(); alert('Traitement (à compléter)'); closeMenu(); });
+
+  // logout → back to login
+  document.getElementById('logout').addEventListener('click', e=>{
     e.preventDefault();
     window.location = 'index.html';
   });
