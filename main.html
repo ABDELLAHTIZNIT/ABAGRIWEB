@@ -51,7 +51,6 @@
     display:flex; align-items:center; gap:10px; padding:14px 24px;
     color:var(--text) !important; text-decoration:none; border-bottom:1px solid #1e293b;
   }
-  .sidebar a:visited{ color:var(--text) !important; }
   .sidebar a:hover{ background:var(--accent); color:#0b1220 !important; font-weight:600; }
   .sidebar a.active{ background:var(--accent); color:#0b1220 !important; font-weight:700; }
 
@@ -62,15 +61,15 @@
   }
   .overlay.active{ opacity:1; pointer-events:all; }
 
-  /* Main content + cards */
+  /* Main + cards */
   .content{ padding:24px; }
   .card{
-    max-width:960px; margin:16px auto; background:#0b1220; border:1px solid var(--border);
+    max-width:1000px; margin:16px auto; background:#0b1220; border:1px solid var(--border);
     border-radius:16px; padding:20px; box-shadow:0 10px 24px rgba(0,0,0,.25);
   }
   .muted{opacity:.8}
 
-  /* Paramètres – tiles */
+  /* Tiles (Paramètres) */
   .stack{ display:grid; gap:12px; }
   .tile{
     display:flex; align-items:center; gap:12px;
@@ -107,10 +106,20 @@
   .modal-wrap{ position:fixed; inset:0; display:none; place-items:center; z-index:30; }
   .modal-wrap.show{ display:grid; }
   .modal-bg{ position:absolute; inset:0; background:rgba(0,0,0,.55); }
-  .modal{ position:relative; width:min(92%,560px); background:#0b1220; border:1px solid var(--border); border-radius:14px; padding:16px 16px 18px; box-shadow:0 20px 40px rgba(0,0,0,.45); }
+  .modal{ position:relative; width:min(92%,640px); background:#0b1220; border:1px solid var(--border); border-radius:14px; padding:16px 16px 18px; box-shadow:0 20px 40px rgba(0,0,0,.45); }
   .modal h3{ margin:0 0 10px }
   .modal .row{ margin:10px 0 }
   .right{ display:flex; justify-content:flex-end; gap:10px }
+
+  /* Searchable Combo (Ferme) */
+  .combo{ position:relative; width:100%; max-width:300px; }
+  .combo-input{ width:100%; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
+  .combo-list{
+    position:absolute; left:0; right:0; top:100%; background:#0b1220; border:1px solid #243046;
+    border-radius:10px; margin-top:6px; max-height:220px; overflow:auto; z-index:40; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  .combo-item{ padding:10px 12px; cursor:pointer; }
+  .combo-item:hover{ background:#152238; }
 </style>
 </head>
 <body>
@@ -191,6 +200,20 @@
           </div>
         </div>
 
+        <div class="tile" onclick="showPage('farms'); setActiveTile()">
+          <div class="icon">
+            <!-- farm/field -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M3 20h18M3 14l6-4 6 4 6-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 20v-6m12 6v-6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4>FERME</h4>
+            <p>Gestion des fermes</p>
+          </div>
+        </div>
+
         <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')">
           <div class="icon">
             <!-- key -->
@@ -237,14 +260,42 @@
 
       <div id="opAddForm" class="row hidden" style="margin-top:12px">
         <input id="op_username" class="input" placeholder="Nom d’utilisateur">
-        <input id="op_password" class="input" placeholder="Mot de passe">
+        <input id="op_password" type="password" class="input" placeholder="Mot de passe">
         <select id="op_profile" class="input"></select>
-        <input id="op_ferme" class="input" placeholder="Ferme (ex: Karam 16)">
+
+        <!-- Ferme combobox (searchable) -->
+        <div class="combo" id="combo-op-ferme">
+          <input id="op_ferme_input" class="combo-input" placeholder="Chercher/choisir une ferme...">
+          <div id="op_ferme_list" class="combo-list hidden"></div>
+          <input type="hidden" id="op_ferme" />
+        </div>
+
         <button class="btn" onclick="opAdd()">Confirmer</button>
         <button class="btn danger" onclick="opToggleForm(false)">Annuler</button>
       </div>
 
       <div id="operatorsList" class="list" style="margin-top:14px"></div>
+    </section>
+
+    <!-- PAGE: Fermes -->
+    <section id="page-farms" class="card hidden">
+      <h2>Fermes</h2>
+      <p class="muted">أضف ونسّق الضيعات. سيتم استعمال هذه اللائحة في اختيار الضيعة داخل صفحة Opérateurs.</p>
+
+      <button id="farmShowAddBtn" class="btn" style="margin-top:12px" onclick="farmToggleForm(true)">➕ Ajouter une ferme</button>
+
+      <div id="farmAddForm" class="row hidden" style="margin-top:12px">
+        <input id="farm_name" class="input" placeholder="Nom de la ferme (ex: Karam 16)">
+        <input id="farm_area" class="input" placeholder="Surface (ex: 12 ha)">
+        <input id="farm_company" class="input" placeholder="Société">
+        <input id="farm_location" class="input" placeholder="Emplacement">
+        <input id="farm_manager" class="input" placeholder="Responsable">
+        <input id="farm_phone" class="input" placeholder="Téléphone du responsable">
+        <button class="btn" onclick="farmAdd()">Confirmer</button>
+        <button class="btn danger" onclick="farmToggleForm(false)">Annuler</button>
+      </div>
+
+      <div id="farmsList" class="list" style="margin-top:14px"></div>
     </section>
   </main>
 
@@ -255,15 +306,45 @@
       <h3>Modifier l’opérateur</h3>
       <div class="row">
         <input id="edit_username" class="input" placeholder="Nom d’utilisateur">
-        <input id="edit_password" class="input" placeholder="Mot de passe">
+        <input id="edit_password" type="password" class="input" placeholder="Mot de passe">
       </div>
       <div class="row">
         <select id="edit_profile" class="input"></select>
-        <input id="edit_ferme" class="input" placeholder="Ferme">
+
+        <!-- Ferme combobox in modal -->
+        <div class="combo" id="combo-edit-ferme">
+          <input id="edit_ferme_input" class="combo-input" placeholder="Chercher/choisir une ferme...">
+          <div id="edit_ferme_list" class="combo-list hidden"></div>
+          <input type="hidden" id="edit_ferme" />
+        </div>
       </div>
       <div class="right" style="margin-top:8px">
         <button class="btn danger" onclick="opCloseModal()">Annuler</button>
         <button class="btn" onclick="opSaveEdit()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: edit farm -->
+  <div id="farmModal" class="modal-wrap">
+    <div class="modal-bg" onclick="farmCloseModal()"></div>
+    <div class="modal">
+      <h3>Modifier la ferme</h3>
+      <div class="row">
+        <input id="edit_farm_name" class="input" placeholder="Nom de la ferme">
+        <input id="edit_farm_area" class="input" placeholder="Surface">
+      </div>
+      <div class="row">
+        <input id="edit_farm_company" class="input" placeholder="Société">
+        <input id="edit_farm_location" class="input" placeholder="Emplacement">
+      </div>
+      <div class="row">
+        <input id="edit_farm_manager" class="input" placeholder="Responsable">
+        <input id="edit_farm_phone" class="input" placeholder="Téléphone">
+      </div>
+      <div class="right" style="margin-top:8px">
+        <button class="btn danger" onclick="farmCloseModal()">Annuler</button>
+        <button class="btn" onclick="farmSaveEdit()">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -287,20 +368,21 @@
   const pageSet=document.getElementById('page-settings');
   const pageProf=document.getElementById('page-profiles');
   const pageOps=document.getElementById('page-operators');
+  const pageFarms=document.getElementById('page-farms');
 
   function setActiveLink(link){
     document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
     link.classList.add('active');
   }
   function showPage(name){
-    [pageHome,pageSet,pageProf,pageOps].forEach(p=>p.classList.add('hidden'));
+    [pageHome,pageSet,pageProf,pageOps,pageFarms].forEach(p=>p.classList.add('hidden'));
     if(name==='home') pageHome.classList.remove('hidden');
     if(name==='settings') pageSet.classList.remove('hidden');
     if(name==='profiles') pageProf.classList.remove('hidden');
     if(name==='operators') pageOps.classList.remove('hidden');
+    if(name==='farms') pageFarms.classList.remove('hidden');
     closeMenu();
   }
-
   navHome.addEventListener('click',e=>{e.preventDefault();setActiveLink(navHome);showPage('home');});
   navSet.addEventListener('click',e=>{e.preventDefault();setActiveLink(navSet);showPage('settings');});
   function setActiveTile(){setActiveLink(navSet);} // نبقى داخل Paramètres
@@ -313,13 +395,10 @@
   const LS_PROFILES='ab_profiles';
   const DEFAULT_PROFILES=["Admin","Magasinier","Pointeur","Directeur"];
 
-  function loadProfiles(){
-    try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[];}catch{return [];}
-  }
-  function saveProfiles(arr){localStorage.setItem(LS_PROFILES,JSON.stringify(arr));}
+  function loadProfiles(){ try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[];}catch{return [];} }
+  function saveProfiles(arr){ localStorage.setItem(LS_PROFILES, JSON.stringify(arr)); }
   function renderProfiles(){
-    const list=document.getElementById('profilesList');
-    if(!list) return; // في صفحات أخرى
+    const list=document.getElementById('profilesList'); if(!list) return;
     const data=loadProfiles();
     if(data.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return;}
     list.innerHTML=data.map((n,i)=>`
@@ -331,33 +410,111 @@
       </div>`).join('');
   }
   function addProfile(){
-    const inp=document.getElementById('profileName');
-    const name=inp.value.trim();
+    const inp=document.getElementById('profileName'); const name=inp.value.trim();
     if(!name){alert('Entrer un nom de profil.');return;}
     const data=loadProfiles();
     if(data.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Ce profil existe déjà.');return;}
     data.push(name); saveProfiles(data);
-    inp.value='';
-    toggleAddForm(false);
-    renderProfiles(); opRefreshProfileSelects(); // تحديث لوائح البروفايلات فالـopérateurs
+    inp.value=''; toggleAddForm(false); renderProfiles(); opRefreshProfileSelects();
   }
   function removeProfile(i){
-    const data=loadProfiles();
-    if(!confirm('Supprimer le profil : '+data[i]+' ?'))return;
-    data.splice(i,1); saveProfiles(data);
-    renderProfiles(); opRefreshProfileSelects();
+    const data=loadProfiles(); if(!confirm('Supprimer le profil : '+data[i]+' ?'))return;
+    data.splice(i,1); saveProfiles(data); renderProfiles(); opRefreshProfileSelects();
   }
   function resetDefaults(){
     if(!confirm('Réinitialiser aux rôles par défaut ?'))return;
-    saveProfiles(DEFAULT_PROFILES.slice());
-    renderProfiles(); opRefreshProfileSelects();
+    saveProfiles(DEFAULT_PROFILES.slice()); renderProfiles(); opRefreshProfileSelects();
   }
   function toggleAddForm(show){
-    const form=document.getElementById('addForm');
-    const btn=document.getElementById('showAddFormBtn');
-    if(!form || !btn) return;
+    const form=document.getElementById('addForm'); const btn=document.getElementById('showAddFormBtn');
+    if(!form||!btn)return;
     if(show){form.classList.remove('hidden');btn.classList.add('hidden');document.getElementById('profileName').focus();}
     else{form.classList.add('hidden');btn.classList.remove('hidden');}
+  }
+
+  /* ---------- Farms CRUD (localStorage) ---------- */
+  const LS_FARMS='ab_farms';
+  function loadFarms(){ try{return JSON.parse(localStorage.getItem(LS_FARMS))||[];}catch{return [];} }
+  function saveFarms(arr){ localStorage.setItem(LS_FARMS, JSON.stringify(arr)); }
+
+  function farmToggleForm(show){
+    const f=document.getElementById('farmAddForm'); const b=document.getElementById('farmShowAddBtn');
+    if(show){f.classList.remove('hidden'); b.classList.add('hidden'); document.getElementById('farm_name').focus();}
+    else{f.classList.add('hidden'); b.classList.remove('hidden');}
+  }
+  function farmAdd(){
+    const name=document.getElementById('farm_name').value.trim();
+    const area=document.getElementById('farm_area').value.trim();
+    const company=document.getElementById('farm_company').value.trim();
+    const location=document.getElementById('farm_location').value.trim();
+    const manager=document.getElementById('farm_manager').value.trim();
+    const phone=document.getElementById('farm_phone').value.trim();
+    if(!name){ alert('Nom de la ferme requis.'); return; }
+    const data=loadFarms();
+    if(data.some(x=>x.name.toLowerCase()===name.toLowerCase())){ alert('Cette ferme existe déjà.'); return; }
+    data.push({name,area,company,location,manager,phone}); saveFarms(data);
+    farmToggleForm(false); renderFarms(); opRefreshFarmCombos();
+  }
+  function renderFarms(){
+    const wrap=document.getElementById('farmsList'); if(!wrap) return;
+    const data=loadFarms();
+    if(data.length===0){ wrap.innerHTML='<div class="item"><span class="muted">لا توجد ضيعات بعد.</span></div>'; return; }
+    wrap.innerHTML = data.map((f,i)=>`
+      <div class="item">
+        <div class="meta">
+          <span><b>Ferme:</b> ${escapeHtml(f.name)}</span>
+          <span><b>Surface:</b> ${escapeHtml(f.area||'')}</span>
+          <span><b>Société:</b> ${escapeHtml(f.company||'')}</span>
+          <span><b>Lieu:</b> ${escapeHtml(f.location||'')}</span>
+          <span><b>Resp.:</b> ${escapeHtml(f.manager||'')}</span>
+          <span><b>Tél:</b> ${escapeHtml(f.phone||'')}</span>
+        </div>
+        <div class="actions">
+          <button class="btn icon" onclick="farmEdit(${i})">✏️</button>
+          <button class="btn danger icon" onclick="farmDelete(${i})">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  // edit farm (modal)
+  let farmEditIndex=null;
+  function farmEdit(i){
+    const f=loadFarms()[i]; farmEditIndex=i;
+    document.getElementById('edit_farm_name').value=f.name||'';
+    document.getElementById('edit_farm_area').value=f.area||'';
+    document.getElementById('edit_farm_company').value=f.company||'';
+    document.getElementById('edit_farm_location').value=f.location||'';
+    document.getElementById('edit_farm_manager').value=f.manager||'';
+    document.getElementById('edit_farm_phone').value=f.phone||'';
+    farmOpenModal();
+  }
+  function farmOpenModal(){ document.getElementById('farmModal').classList.add('show'); }
+  function farmCloseModal(){ document.getElementById('farmModal').classList.remove('show'); farmEditIndex=null; }
+  function farmSaveEdit(){
+    if(farmEditIndex===null) return;
+    const data=loadFarms();
+    const v={
+      name:document.getElementById('edit_farm_name').value.trim(),
+      area:document.getElementById('edit_farm_area').value.trim(),
+      company:document.getElementById('edit_farm_company').value.trim(),
+      location:document.getElementById('edit_farm_location').value.trim(),
+      manager:document.getElementById('edit_farm_manager').value.trim(),
+      phone:document.getElementById('edit_farm_phone').value.trim(),
+    };
+    if(!v.name){ alert('Nom de la ferme requis.'); return; }
+    // check duplicate name (excluding current)
+    if(v.name.toLowerCase()!==data[farmEditIndex].name.toLowerCase() &&
+       data.some(x=>x.name.toLowerCase()===v.name.toLowerCase())){
+      alert('Nom de ferme déjà utilisé.'); return;
+    }
+    data[farmEditIndex]=v; saveFarms(data); farmCloseModal(); renderFarms(); opRefreshFarmCombos();
+  }
+  function farmDelete(i){
+    const data=loadFarms(); if(!confirm('Supprimer la ferme: '+data[i].name+' ?')) return;
+    const removedName=data[i].name;
+    data.splice(i,1); saveFarms(data); renderFarms(); opRefreshFarmCombos();
+    // If operators were using this farm, keep their value as text (no hard unlink here)
+    // You can later add validation to prevent orphaned farm refs.
   }
 
   /* ---------- Operators CRUD (localStorage) ---------- */
@@ -368,26 +525,55 @@
   function opToggleForm(show){
     const form=document.getElementById('opAddForm');
     const btn=document.getElementById('opShowAddBtn');
-    if(show){ form.classList.remove('hidden'); btn.classList.add('hidden'); opBuildProfileOptions('op_profile'); document.getElementById('op_username').focus(); }
-    else{ form.classList.add('hidden'); btn.classList.remove('hidden'); }
+    if(show){
+      form.classList.remove('hidden'); btn.classList.add('hidden');
+      opRefreshProfileSelects(); opRefreshFarmCombos();
+      document.getElementById('op_username').focus();
+    } else {
+      form.classList.add('hidden'); btn.classList.remove('hidden');
+    }
   }
 
   function opBuildProfileOptions(selectId){
-    const sel=document.getElementById(selectId);
-    if(!sel) return;
-    const profiles=loadProfiles();
-    sel.innerHTML = profiles.length
-      ? profiles.map(p=>`<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('')
-      : `<option value="">(Aucun profil)</option>`;
+    const sel=document.getElementById(selectId); if(!sel) return;
+    const prof=loadProfiles();
+    sel.innerHTML = prof.length ? prof.map(p=>`<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('') : `<option value="">(Aucun profil)</option>`;
   }
-  function opRefreshProfileSelects(){
-    opBuildProfileOptions('op_profile');
-    opBuildProfileOptions('edit_profile');
+  function opRefreshProfileSelects(){ opBuildProfileOptions('op_profile'); opBuildProfileOptions('edit_profile'); }
+
+  // ----- Searchable combo helpers -----
+  function comboFill(idBase, items){
+    const input=document.getElementById(idBase+'_input');
+    const list=document.getElementById(idBase+'_list');
+    const hidden=document.getElementById(idBase);
+    function render(filter=''){
+      const q=filter.toLowerCase();
+      const matched=items.filter(x=>x.toLowerCase().includes(q));
+      list.innerHTML = matched.map(v=>`<div class="combo-item" data-v="${escapeHtml(v)}">${escapeHtml(v)}</div>`).join('') || `<div class="combo-item muted">(aucun résultat)</div>`;
+    }
+    render('');
+    input.oninput = ()=> render(input.value);
+    input.onfocus = ()=> { list.classList.remove('hidden'); render(input.value); };
+    document.addEventListener('click', (e)=>{
+      if(!list.contains(e.target) && e.target!==input) list.classList.add('hidden');
+    });
+    list.onclick = (e)=>{
+      const el=e.target.closest('.combo-item'); if(!el) return;
+      const v=el.getAttribute('data-v'); if(!v) return;
+      input.value=v; hidden.value=v; list.classList.add('hidden');
+    };
+  }
+
+  function opRefreshFarmCombos(){
+    const farms=loadFarms().map(f=>f.name);
+    // create for add form
+    comboFill('op_ferme', farms);
+    // create for edit modal
+    comboFill('edit_ferme', farms);
   }
 
   function renderOps(){
-    const wrap=document.getElementById('operatorsList');
-    if(!wrap) return;
+    const wrap=document.getElementById('operatorsList'); if(!wrap) return;
     const data=loadOps();
     if(data.length===0){
       wrap.innerHTML='<div class="item"><span class="muted">لا يوجد أي مستخدم بعد.</span></div>';
@@ -412,22 +598,18 @@
     const username=document.getElementById('op_username').value.trim();
     const password=document.getElementById('op_password').value.trim();
     const profile =document.getElementById('op_profile').value.trim();
-    const ferme   =document.getElementById('op_ferme').value.trim();
+    const ferme   =document.getElementById('op_ferme').value.trim(); // from hidden
     if(!username || !password || !profile || !ferme){
       alert('Remplir tous les champs.'); return;
     }
     const data=loadOps();
-    if(data.some(x=>x.username.toLowerCase()===username.toLowerCase())){
-      alert('Cet utilisateur existe déjà.'); return;
-    }
-    data.push({username,password,profile,ferme});
-    saveOps(data);
+    if(data.some(x=>x.username.toLowerCase()===username.toLowerCase())){ alert('Cet utilisateur existe déjà.'); return; }
+    data.push({username,password,profile,ferme}); saveOps(data);
     // clear
     document.getElementById('op_username').value='';
     document.getElementById('op_password').value='';
-    document.getElementById('op_ferme').value='';
-    opToggleForm(false);
-    renderOps();
+    document.getElementById('op_ferme_input').value=''; document.getElementById('op_ferme').value='';
+    opToggleForm(false); renderOps();
   }
 
   // Edit modal
@@ -436,14 +618,12 @@
   function opCloseModal(){ document.getElementById('opModal').classList.remove('show'); editIndex=null; }
 
   function opEdit(idx){
-    const data=loadOps();
-    const u=data[idx];
-    editIndex=idx;
+    const data=loadOps(); const u=data[idx]; editIndex=idx;
     document.getElementById('edit_username').value=u.username;
     document.getElementById('edit_password').value=u.password;
-    opBuildProfileOptions('edit_profile');
-    document.getElementById('edit_profile').value=u.profile||'';
-    document.getElementById('edit_ferme').value=u.ferme||'';
+    opRefreshProfileSelects(); document.getElementById('edit_profile').value=u.profile||'';
+    opRefreshFarmCombos();
+    document.getElementById('edit_ferme_input').value=u.ferme||''; document.getElementById('edit_ferme').value=u.ferme||'';
     opOpenModal();
   }
   function opSaveEdit(){
@@ -455,17 +635,14 @@
     const newProf=document.getElementById('edit_profile').value.trim();
     const newFer =document.getElementById('edit_ferme').value.trim();
     if(!newUser || !newPwd || !newProf || !newFer){ alert('Remplir tous les champs.'); return; }
-    // check unique username unless same index
     if(newUser.toLowerCase()!==u.username.toLowerCase() && data.some(x=>x.username.toLowerCase()===newUser.toLowerCase())){
       alert('Nom d’utilisateur déjà utilisé.'); return;
     }
     data[editIndex]={username:newUser, password:newPwd, profile:newProf, ferme:newFer};
-    saveOps(data);
-    opCloseModal(); renderOps();
+    saveOps(data); opCloseModal(); renderOps();
   }
   function opDelete(idx){
-    const data=loadOps();
-    if(!confirm('Supprimer l’utilisateur: '+data[idx].username+' ?')) return;
+    const data=loadOps(); if(!confirm('Supprimer l’utilisateur: '+data[idx].username+' ?')) return;
     data.splice(idx,1); saveOps(data); renderOps();
   }
 
@@ -476,10 +653,10 @@
   (function init(){
     // ensure default profiles on first run
     if(!localStorage.getItem(LS_PROFILES)) saveProfiles(DEFAULT_PROFILES.slice());
-    // build selects for operators
-    opRefreshProfileSelects();
-    // initial renders
     renderProfiles();
+    renderFarms();
+    opRefreshProfileSelects();
+    opRefreshFarmCombos();
     renderOps();
   })();
 </script>
