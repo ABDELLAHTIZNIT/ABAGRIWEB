@@ -1,109 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AB AGRIWEB - Dashboard</title>
 <style>
   :root{
-    --bg:#0f172a; --panel:#0b1220; --text:#e2e8f0; --accent:#22c55e;
+    --bg:#0f172a; --panel:#0b1220; --text:#e2e8f0; --accent:#22c55e; --border:#243046;
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box}
   body{
-    margin:0;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    background:linear-gradient(180deg,var(--bg),#1e293b);
-    color:var(--text);
-    height:100vh;
-    overflow-x:hidden;
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,var(--bg),#1e293b); color:var(--text);
+    height:100vh; overflow-x:hidden;
   }
 
   /* Header */
   header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    background:var(--panel);
-    padding:12px 18px;
-    border-bottom:1px solid #243046;
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--panel); padding:12px 18px; border-bottom:1px solid var(--border);
+    box-shadow:0 2px 12px rgba(0,0,0,.25);
   }
   .menu-btn{
-    background:none;
-    border:none;
-    color:var(--text);
-    font-size:24px;
-    cursor:pointer;
+    background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;
   }
-  .title{
-    font-weight:700;
-    color:var(--accent);
-    letter-spacing:.5px;
-  }
+  .title{ font-weight:800; color:var(--accent); letter-spacing:.5px }
 
   /* Sidebar */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 100%;
-  background: #0b1220;
-  border-right: 1px solid #243046;
-  transition: left 0.35s ease;
-  display: flex;
-  flex-direction: column;
-  padding-top: 60px;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.4);
-  z-index: 10;
-}
-.sidebar.active {
-  left: 0;
-}
+  .sidebar{
+    position:fixed; top:0; left:-260px; width:260px; height:100%;
+    background:#0b1220; border-right:1px solid var(--border);
+    transition:left .35s ease; display:flex; flex-direction:column; padding-top:56px;
+    box-shadow:4px 0 20px rgba(0,0,0,.4); z-index:15;
+  }
+  .sidebar.active{ left:0; }
 
-/* overlay (dark transparent layer when menu open) */
-.overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 5;
-}
-.overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
+  /* top strip inside sidebar */
+  .side-header{
+    position:absolute; top:0; left:0; right:0; height:56px;
+    display:flex; align-items:center; gap:10px; padding:0 14px;
+    border-bottom:1px solid #1e293b; background:#0b1220;
+  }
+  .close-btn{
+    width:36px; height:36px; border:none; border-radius:8px; cursor:pointer;
+    background:#111827; color:#e2e8f0; font-size:22px; line-height:1;
+  }
+  .close-btn:hover{ background:#0f172a; }
+  .side-header span{ font-weight:700; color:#cbd5e1 }
 
+  /* Sidebar links */
+  .sidebar a{
+    display:flex; align-items:center; gap:10px; padding:14px 24px;
+    color:var(--text) !important; text-decoration:none; border-bottom:1px solid #1e293b;
+  }
+  .sidebar a:visited{ color:var(--text) !important; }
+  .sidebar a:hover{ background:var(--accent); color:#0b1220 !important; font-weight:600; }
+  .sidebar a.active{ background:var(--accent); color:#0b1220 !important; font-weight:700; }
+
+  /* Overlay behind sidebar */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.4);
+    opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:10;
+  }
+  .overlay.active{ opacity:1; pointer-events:all; }
 
   /* Main content */
-  .content{
-    padding:24px;
+  .content{ padding:24px; }
+  .card{
+    max-width:960px; margin:16px auto; background:#0b1220; border:1px solid var(--border);
+    border-radius:16px; padding:20px; box-shadow:0 10px 24px rgba(0,0,0,.25);
   }
-  /* Sidebar links style */
-.sidebar a{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:14px 24px;
-  color: var(--text) !important;      /* نفس اللون للروابط visited أيضا */
-  text-decoration: none;
-  border-bottom: 1px solid #1e293b;
-}
-.sidebar a:visited{ color: var(--text) !important; }
-.sidebar a:hover{
-  background: var(--accent);
-  color: #0b1220 !important;
-  font-weight: 600;
-}
 
-/* active item (الواجهة الحالية) */
-.sidebar a.active{
-  background: var(--accent);
-  color:#0b1220 !important;
-  font-weight:700;
-}
+  @media (min-width:980px){
+    .content{ padding:32px 40px; }
+  }
 </style>
 </head>
 <body>
@@ -114,21 +85,58 @@
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <a href="#">🌿 Irrigation</a>
+    <div class="side-header">
+      <button class="close-btn" onclick="closeMenu()">×</button>
+      <span>Menu</span>
+    </div>
+
+    <a href="#" class="active">🌿 Irrigation</a>
     <a href="#">💧 Traitement</a>
     <a href="#">⚙️ Paramètres</a>
-    <a href="#">🚪 Logout</a>
+    <a href="#" id="logout">🚪 Logout</a>
   </aside>
 
+  <!-- dark overlay -->
+  <div class="overlay" id="overlay"></div>
+
   <main class="content">
-    <h2>Bienvenue 👋</h2>
-    <p>Cette interface sera développée plus tard (menu, données, etc.).</p>
+    <section class="card">
+      <h2>Bienvenue 👋</h2>
+      <p>هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
+    </section>
   </main>
 
 <script>
-  function toggleMenu(){
-    document.getElementById('sidebar').classList.toggle('active');
-  }
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  function openMenu(){ sidebar.classList.add('active'); overlay.classList.add('active'); }
+  function closeMenu(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); }
+  function toggleMenu(){ sidebar.classList.contains('active') ? closeMenu() : openMenu(); }
+
+  // close on ESC
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
+
+  // close on overlay click
+  overlay.addEventListener('click', closeMenu);
+
+  // close when clicking a sidebar link
+  document.querySelectorAll('.sidebar a').forEach(a => a.addEventListener('click', closeMenu));
+
+  // close with swipe left (mobile)
+  let startX = null;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if(startX === null) return;
+    const dx = e.touches[0].clientX - startX;
+    if(dx < -60 && sidebar.classList.contains('active')) { closeMenu(); startX = null; }
+  }, {passive:true});
+
+  // (optional) logout goes back to login page
+  document.getElementById('logout').addEventListener('click', e => {
+    e.preventDefault();
+    window.location = 'index.html';
+  });
 </script>
 
 </body>
