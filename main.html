@@ -81,6 +81,29 @@
   .content{
     padding:24px;
   }
+  /* Sidebar links style */
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 24px;
+  color: var(--text) !important;      /* نفس اللون للروابط visited أيضا */
+  text-decoration: none;
+  border-bottom: 1px solid #1e293b;
+}
+.sidebar a:visited{ color: var(--text) !important; }
+.sidebar a:hover{
+  background: var(--accent);
+  color: #0b1220 !important;
+  font-weight: 600;
+}
+
+/* active item (الواجهة الحالية) */
+.sidebar a.active{
+  background: var(--accent);
+  color:#0b1220 !important;
+  font-weight:700;
+}
 </style>
 </head>
 <body>
