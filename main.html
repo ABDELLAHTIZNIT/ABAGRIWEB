@@ -193,16 +193,21 @@
     <!-- PAGE: Profiles (CRUD simple) -->
     <section id="page-profiles" class="card hidden">
       <h2>Profiles</h2>
-      <p class="muted">أضف/احذف أدوار (Profils) وسيتم حفظها محليًا في المتصفح.</p>
+      <p class="muted">أضف/احذف أدوار (Profils). يتم حفظها محليًا في المتصفح.</p>
 
-      <div class="row" style="margin-top:12px">
+      <!-- زر يُظهر الفورم -->
+      <button id="showAddFormBtn" class="btn" style="margin-top:12px" onclick="toggleAddForm(true)">➕ Ajouter un profil</button>
+
+      <!-- الفورم الذي يظهر/يختفي -->
+      <div id="addForm" class="row hidden" style="margin-top:12px">
         <input id="profileName" class="input" placeholder="Ex: Admin, Magasinier, Pointeur, Directeur">
-        <button class="btn" onclick="addProfile()">Ajouter le profil</button>
+        <button class="btn" onclick="addProfile()">Confirmer</button>
+        <button class="btn danger" onclick="toggleAddForm(false)">Annuler</button>
       </div>
 
-      <div id="profilesList" class="list"></div>
+      <div id="profilesList" class="list" style="margin-top:14px"></div>
 
-      <p class="muted" style="margin-top:10px">Tip: سيتم حفظ القائمة في <code>localStorage</code> تحت المفتاح <b>ab_profiles</b>.</p>
+      <p class="muted" style="margin-top:10px">Sauvegarde locale: <code>localStorage</code> (clé: <b>ab_profiles</b>).</p>
       <div class="row" style="margin-top:6px">
         <button class="btn danger" onclick="resetDefaults()">Réinitialiser aux rôles par défaut</button>
       </div>
@@ -210,18 +215,28 @@
   </main>
 
 <script>
-  // Sidebar + overlay
+  /* ---------- Sidebar + overlay ---------- */
   const sidebar  = document.getElementById('sidebar');
   const overlay  = document.getElementById('overlay');
 
   function openMenu(){ sidebar.classList.add('active'); overlay.classList.add('active'); }
   function closeMenu(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); }
   function toggleMenu(){ sidebar.classList.contains('active') ? closeMenu() : openMenu(); }
+
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
   overlay.addEventListener('click', closeMenu);
   document.querySelectorAll('.sidebar a').forEach(a => a.addEventListener('click', closeMenu));
 
-  // Simple pages router
+  // swipe close (mobile)
+  let startX = null;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if(startX === null) return;
+    const dx = e.touches[0].clientX - startX;
+    if(dx < -60 && sidebar.classList.contains('active')) { closeMenu(); startX = null; }
+  }, {passive:true});
+
+  /* ---------- Simple pages router ---------- */
   const navHome  = document.getElementById('nav-home');
   const navSet   = document.getElementById('nav-settings');
   const pageHome = document.getElementById('page-home');
@@ -232,9 +247,7 @@
     document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
     link.classList.add('active');
   }
-
   function showPage(name){
-    // hide all
     [pageHome, pageSet, pageProf].forEach(el=>el.classList.add('hidden'));
     if(name==='home') pageHome.classList.remove('hidden');
     if(name==='settings') pageSet.classList.remove('hidden');
@@ -242,22 +255,18 @@
     closeMenu();
   }
 
-  // From sidebar
   navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActiveLink(navHome); showPage('home'); });
   navSet .addEventListener('click', (e)=>{ e.preventDefault(); setActiveLink(navSet ); showPage('settings'); });
 
-  // From settings tile
-  function setActiveTile(which){
-    // when coming from tiles, keep Settings as active link
-    setActiveLink(navSet);
-  }
+  // من بلاطات Paramètres
+  function setActiveTile(){ setActiveLink(navSet); } // نبقى داخل Paramètres
 
   // Logout → back to login
   document.getElementById('logout').addEventListener('click', e=>{
     e.preventDefault(); window.location = 'index.html';
   });
 
-  /* ---------------- Profiles (localStorage) ---------------- */
+  /* ---------- Profiles (localStorage) ---------- */
   const LS_KEY = 'ab_profiles';
   const DEFAULTS = ["Admin","Magasinier","Pointeur","Directeur"];
 
@@ -296,8 +305,8 @@
     data.push(name);
     saveProfiles(data);
     inp.value='';
+    toggleAddForm(false);
     renderProfiles();
-    alert("Profil ajouté ✅");
   }
   function removeProfile(idx){
     const data = loadProfiles();
@@ -316,10 +325,25 @@
     return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
   }
 
-  // init: ensure defaults on first run
+  // إظهار/إخفاء فورم الإضافة
+  function toggleAddForm(show){
+    const form = document.getElementById('addForm');
+    const btn  = document.getElementById('showAddFormBtn');
+    if(show){
+      form.classList.remove('hidden');
+      btn.classList.add('hidden');
+      document.getElementById('profileName').focus();
+    }else{
+      form.classList.add('hidden');
+      btn.classList.remove('hidden');
+    }
+  }
+
+  // init: defaults first run
   (function init(){
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw){ saveProfiles(DEFAULTS.slice()); }
+    if(!localStorage.getItem(LS_KEY)){
+      saveProfiles(DEFAULTS.slice());
+    }
     renderProfiles();
   })();
 </script>
