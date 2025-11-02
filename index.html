@@ -121,7 +121,8 @@ button.login:hover{ filter:brightness(.95); }
       const pass = document.getElementById("password").value.trim();
 
       if(user === FIXED_USERNAME && pass === FIXED_PASSWORD){
-        alert("✅ Login successful!");
+       window.location = "main.html";
+
         // هنا لاحقاً نزيدو توجيه للصفحة التالية
       } else {
         alert("❌ Wrong username or password!");
