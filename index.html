@@ -35,16 +35,19 @@ a{display:block;text-align:center;margin-top:10px;color:#c7e2ff;text-decoration:
 .btn.inline{width:auto;display:inline-block}
 .tabbar{display:flex;gap:8px;margin:8px 0 12px}
 .tabbar .btn{width:auto;padding:8px 10px}
+.hint{font-size:13px;opacity:.9;background:#0b1220cc;border:1px dashed #7dd3fc;color:#93c5fd;padding:8px;border-radius:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
   <div class="card">
-    <!-- شعار التطبيق من الإعدادات -->
+    <!-- شعار التطبيق -->
     <div id="loginLogoWrap" class="banner hidden"><img id="loginLogoImg" alt=""></div>
     <!-- بانر اختياري فوق الحقول -->
     <div class="banner hidden" id="loginBanner"><img id="loginBannerImg" alt=""></div>
-    <!-- اسم احتياطي إن لم يوجد شعار -->
+    <!-- اسم احتياطي -->
     <h1 id="appTitle" class="hidden">AB AGRIWEB</h1>
+
+    <div id="noOpsHint" class="hint hidden">لا يمكن الدخول: ماكاين حتى مستخدم مُسجّل. استعمل <b>Forgot password</b> وأدخل <b>Recovery code</b> باش تفعل وضع الإعداد الأولي وتضيف أول مستخدم.</div>
 
     <label>Username</label>
     <input id="u" class="input" placeholder="Enter your username"/>
@@ -55,7 +58,7 @@ a{display:block;text-align:center;margin-top:10px;color:#c7e2ff;text-decoration:
       <span class="eye" onclick="togglePass()">👁️</span>
     </div>
 
-    <a href="main.html" class="btn" id="loginBtn">Login</a>
+    <button class="btn" id="loginBtn">Login</button>
     <a href="#" id="forgotLink">Forgot password?</a>
   </div>
 
@@ -82,7 +85,7 @@ a{display:block;text-align:center;margin-top:10px;color:#c7e2ff;text-decoration:
         <input id="qa_answer" class="input" placeholder="Votre réponse">
         <button class="btn" onclick="tryQA()">Vérifier &amp; ouvrir</button>
       </div>
-      <div id="qa_empty" class="small hidden">Question secrète غير مفعّلة في الإعدادات.</div>
+      <div id="qa_empty" class="small hidden">Question secrète غير مفعّلة.</div>
     </div>
 
     <div class="small" style="margin-top:10px" id="recoveryContact"></div>
@@ -94,10 +97,11 @@ a{display:block;text-align:center;margin-top:10px;color:#c7e2ff;text-decoration:
 </div>
 
 <script>
-const LS_APP='ab_appcfg', LS_IMG='ab_appimg', LS_SEC='ab_security';
+const LS_APP='ab_appcfg', LS_IMG='ab_appimg', LS_SEC='ab_security', LS_OPERATORS='ab_operators';
 function loadCfg(){try{return JSON.parse(localStorage.getItem(LS_APP)||'{}')}catch{return{}}}
 function loadImgs(){try{return JSON.parse(localStorage.getItem(LS_IMG)||'{}')}catch{return{}}}
 function loadSec(){try{return JSON.parse(localStorage.getItem(LS_SEC)||'{}')}catch{return{}}}
+function loadOps(){try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[]}catch{return []}}
 
 (function init(){
   const cfg=loadCfg();
@@ -105,7 +109,7 @@ function loadSec(){try{return JSON.parse(localStorage.getItem(LS_SEC)||'{}')}cat
 
   const imgs=loadImgs();
 
-  // شعار التطبيق (PNG/GIF) أو fallback للاسم
+  // شعار التطبيق أو fallback
   if( (imgs.logo && /^data:image\/(png|gif);/i.test(imgs.logo)) ||
       (typeof imgs.logo==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.logo)) ){
     const wrap=document.getElementById('loginLogoWrap');
@@ -133,28 +137,45 @@ function loadSec(){try{return JSON.parse(localStorage.getItem(LS_SEC)||'{}')}cat
   } else {
     document.body.style.background='linear-gradient(180deg,#0f172a,#1e293b)';
   }
+
+  // إظهار تنبيه إذا ماكاينش حتى opérateur
+  if(loadOps().length===0){ document.getElementById('noOpsHint').classList.remove('hidden'); }
 })();
 
 function togglePass(){ const i=document.getElementById('p'); i.type=i.type==='password'?'text':'password'; }
-function login(){ const url=new URL('main.html',window.location.href).toString(); window.location.href=url; }
+
+function loginFlow(){
+  const ops=loadOps();
+  const u=(document.getElementById('u').value||'').trim();
+  const p=(document.getElementById('p').value||'').trim();
+
+  if(ops.length===0){
+    alert('لا يمكن الدخول: لا يوجد أي مستخدم. استعمل Forgot password للدخول إلى وضع الإعداد الأولي.');
+    openRecovery();
+    return;
+  }
+  if(!u || !p){ alert('أدخل اسم المستخدم وكلمة المرور.'); return; }
+
+  const ok = ops.find(x => (x.username||'').toLowerCase()===u.toLowerCase() && (x.password||'')===p);
+  if(!ok){ alert('اسم المستخدم أو كلمة المرور غير صحيحة.'); return; }
+
+  window.location.href = new URL('main.html', window.location.href).toString();
+}
 
 document.addEventListener('DOMContentLoaded',()=>{
-  const btn=document.getElementById('loginBtn');
-  if(btn) btn.addEventListener('click',(e)=>{ if(!btn.getAttribute('href')){ e.preventDefault(); login(); } });
+  document.getElementById('loginBtn').addEventListener('click',(e)=>{e.preventDefault(); loginFlow();});
   document.getElementById('forgotLink').addEventListener('click', (e)=>{e.preventDefault(); openRecovery();});
 });
 
 /* ==== Recovery flow (local) ==== */
 function openRecovery(){
   const sec=loadSec();
-  // hints (email/phone آخر أرقام)
   const email=sec.email||'', phone=sec.phone||'';
   const emailHint=email?`Email: ${email.replace(/(.{2}).+(@.+)/,'$1***$2')}`:'Email non configuré';
   const phoneHint=phone?`Téléphone: ****${phone.slice(-4)}`:'Téléphone non configuré';
   document.getElementById('recoveryHints').textContent='Conseil: استعمل الرمز أو أجب على السؤال السري.';
   document.getElementById('recoveryContact').textContent=`${emailHint} | ${phoneHint}`;
 
-  // question secrète
   const hasQ=!!sec.question;
   document.getElementById('qa_wrap').classList.toggle('hidden', !hasQ);
   document.getElementById('qa_empty').classList.toggle('hidden', hasQ);
@@ -172,7 +193,7 @@ function tryCode(){
   const code=(document.getElementById('rec_code').value||'').trim();
   const sec=loadSec();
   if(code && sec.recoveryCode && code===String(sec.recoveryCode)){
-    login();
+    window.location.href = new URL('main.html', window.location.href).toString(); // وضع الإعداد الأولي
   }else{
     alert('Code invalide ou non configuré.');
   }
@@ -181,9 +202,10 @@ function tryQA(){
   const ans=(document.getElementById('qa_answer').value||'').trim().toLowerCase();
   const sec=loadSec();
   if(!sec.answerHash){ alert('Question secrète غير مفعلة.'); return; }
-  if(hashLite(ans)===sec.answerHash){ login(); } else { alert('Réponse incorrecte.'); }
+  if(hashLite(ans)===sec.answerHash){
+    window.location.href = new URL('main.html', window.location.href).toString(); // وضع الإعداد الأولي
+  } else { alert('Réponse incorrecte.'); }
 }
-// hash بسيط غير آمن (للتجربة فقط)
 function hashLite(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return String(h)}
 </script>
 </body>
