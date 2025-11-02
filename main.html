@@ -12,7 +12,7 @@
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:12px 18px;border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.25)}
 .menu-btn{background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
 .brand{display:flex;align-items:center;gap:10px}
-.title{font-weight:800;color:var(--accent);letter-spacing:.5px}
+.title{font-weight:800;color:var(--accent);letter-spacing:.5px;display:flex;align-items:center;gap:10px}
 .badge-img{height:22px;border-radius:6px;border:1px solid #1f2937}
 /* Sidebar */
 .sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#0b1220;border-right:1px solid var(--border);transition:left .35s ease;display:flex;flex-direction:column;padding-top:56px;box-shadow:4px 0 20px rgba(0,0,0,.4);z-index:15}
@@ -189,11 +189,15 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <!-- Réglages app -->
   <section id="page-appcfg" class="card hidden">
     <h2>Réglages de l’application</h2>
-    <p class="muted">بدّل اسم التطبيق، تسميات القوائم، وصور القوالب لواجهة الدخول.</p>
+    <p class="muted">بدّل الشعار (PNG/GIF)، تسميات القوائم، وصور القوالب لواجهة الدخول.</p>
 
     <div class="sectionTitle">Général</div>
     <div class="grid">
-      <div><label class="label">Nom de l’application</label><input id="cfg-appTitle" class="input" placeholder="AB AGRIWEB"></div>
+      <div>
+        <label class="label">Logo de l’application (PNG/GIF)</label>
+        <input id="cfg-logo-url" class="input" placeholder="URL (png/gif)">
+        <input id="cfg-logo-file" type="file" accept="image/png,image/gif" class="input">
+      </div>
     </div>
 
     <div class="sectionTitle">Sidebar (labels)</div>
@@ -245,7 +249,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   </section>
 </main>
 
-<!-- Modals (نفسها كما قبل) -->
+<!-- Modals -->
 <div id="opModal" class="modal-wrap"><div class="modal-bg" onclick="opCloseModal()"></div>
   <div class="modal"><h3>Modifier l’opérateur</h3>
     <div class="row"><input id="edit_username" class="input" placeholder="Nom d’utilisateur"><input id="edit_password" type="password" class="input" placeholder="Mot de passe"></div>
@@ -299,7 +303,7 @@ const DEFAULT_PROFILES=["Admin","Magasinier","Pointeur","Directeur"];
 function g(id){return document.getElementById(id)}function v(id){return g(id).value.trim()}function s(id,val){g(id).value=val}
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-/* App labels + images */
+/* App defaults (اسم يبقى احتياطي فقط) */
 const APP_DEFAULT={appTitle:"AB AGRIWEB",
   nav:{home:"Accueil",irrig:"Irrigation",trait:"Traitement",settings:"Paramètres",logout:"Logout"},
   tiles:{operators:"OPÉRATEUR",profiles:"PROFILE",refs:"RÉFÉRENTIELS",rights:"DROITS ACCÈS",pass:"MOT DE PASSE",appcfg:"RÉGLAGES APP"},
@@ -310,11 +314,11 @@ function appcfgSaveToLS(o){localStorage.setItem(LS_APP,JSON.stringify(o))}
 function appcfgReset(){appcfgSaveToLS(APP_DEFAULT);localStorage.removeItem(LS_IMG);appcfgApply();appcfgFillForm();alert('رجعنا للإعدادات الافتراضية')}
 
 /* images in LS */
-function loadImgs(){try{return Object.assign({},{badge:null,sidebar:null,login:null,loginBg:null},JSON.parse(localStorage.getItem(LS_IMG)||'{}'))}catch{return {badge:null,sidebar:null,login:null,loginBg:null}}}
+function loadImgs(){try{return Object.assign({},{badge:null,sidebar:null,login:null,loginBg:null,logo:null},JSON.parse(localStorage.getItem(LS_IMG)||'{}'))}catch{return {badge:null,sidebar:null,login:null,loginBg:null,logo:null}}}
 function saveImgs(obj){localStorage.setItem(LS_IMG,JSON.stringify(obj))}
 function fileToDataURL(file,cb){const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
 function acceptPngGif(file){return file && (file.type==='image/png' || file.type==='image/gif')}
-['cfg-badge-file','cfg-side-file','cfg-login-file','cfg-loginbg-file'].forEach(id=>{
+['cfg-badge-file','cfg-side-file','cfg-login-file','cfg-loginbg-file','cfg-logo-file'].forEach(id=>{
   const el=g(id); if(!el) return;
   el.addEventListener('change',e=>{
     const f=e.target.files&&e.target.files[0]; if(!f) return;
@@ -324,25 +328,39 @@ function acceptPngGif(file){return file && (file.type==='image/png' || file.type
       if(id==='cfg-side-file') imgs.sidebar=data;
       if(id==='cfg-login-file') imgs.login=data;
       if(id==='cfg-loginbg-file') imgs.loginBg=data;
+      if(id==='cfg-logo-file') imgs.logo=data;
       saveImgs(imgs); appcfgApply();
     });
   });
 });
 
 function appcfgApply(){
-  const c=appcfgLoad();const imgs=loadImgs();
-  document.title=c.appTitle+' - Dashboard';g('appTitleTop').textContent=c.appTitle;
+  const c=appcfgLoad(); const imgs=loadImgs();
+  document.title=c.appTitle+' - Dashboard';
+
+  // شعار أعلى الواجهة (إن وجد صورة، نستعملها؛ وإلا نعرض اسم افتراضي)
+  const titleTop=g('appTitleTop');
+  if(imgs.logo){
+    titleTop.innerHTML = `<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`;
+  }else{
+    titleTop.textContent = c.appTitle;
+  }
+
+  // تسميات
   g('lbl-nav-home').textContent='🏠 '+c.nav.home;g('lbl-nav-irrig').textContent='🌿 '+c.nav.irrig;g('lbl-nav-trait').textContent='💧 '+c.nav.trait;g('lbl-nav-settings').textContent='⚙️ '+c.nav.settings;g('lbl-nav-logout').textContent='🚪 '+c.nav.logout;
   g('lbl-tile-operators').textContent=c.tiles.operators;g('lbl-tile-profiles').textContent=c.tiles.profiles;g('lbl-tile-refs').textContent=c.tiles.refs;g('lbl-tile-rights').textContent=c.tiles.rights;g('lbl-tile-pass').textContent=c.tiles.pass;g('lbl-tile-appcfg').textContent=c.tiles.appcfg;
+
+  // labels référentiel
   g('lbl-ref-ferme').textContent=c.refLabels.ferme;g('lbl-ref-companies').textContent=c.refLabels.companies;g('lbl-ref-responsables').textContent=c.refLabels.responsables;g('lbl-ref-stations').textContent=c.refLabels.stations;g('lbl-ref-secteurs').textContent=c.refLabels.secteurs;g('lbl-ref-parcelles').textContent=c.refLabels.parcelles;g('lbl-ref-transports').textContent=c.refLabels.transports;g('lbl-ref-varietes').textContent=c.refLabels.varietes;g('lbl-ref-varietes_champ').textContent=c.refLabels.varietes_champ;g('lbl-ref-gestions').textContent=c.refLabels.gestions;g('lbl-ref-achats').textContent=c.refLabels.achats;
   Object.assign(REF_LABELS,c.refLabels);
+
+  // صور إضافية
   const badge=g('appBadgeImg'); if(imgs.badge){badge.src=imgs.badge;badge.classList.remove('hidden')} else badge.classList.add('hidden');
   const sbWrap=g('sidebarBrand'), sbImg=g('sidebarBrandImg'); if(imgs.sidebar){sbImg.src=imgs.sidebar;sbWrap.classList.remove('hidden')} else sbWrap.classList.add('hidden');
 }
 
 function appcfgFillForm(){
   const c=appcfgLoad();
-  s('cfg-appTitle',c.appTitle);
   s('cfg-nav-home',c.nav.home);s('cfg-nav-irrig',c.nav.irrig);s('cfg-nav-trait',c.nav.trait);s('cfg-nav-settings',c.nav.settings);s('cfg-nav-logout',c.nav.logout);
   s('cfg-tile-operators',c.tiles.operators);s('cfg-tile-profiles',c.tiles.profiles);s('cfg-tile-refs',c.tiles.refs);s('cfg-tile-rights',c.tiles.rights);s('cfg-tile-pass',c.tiles.pass);
 }
@@ -350,38 +368,35 @@ function appcfgFillForm(){
 function appcfgSave(){
   const o=appcfgLoad();
   // labels
-  o.appTitle=v('cfg-appTitle')||APP_DEFAULT.appTitle;
-  o.nav.home=v('cfg-nav-home')||APP_DEFAULT.nav.home;o.nav.irrig=v('cfg-nav-irrig')||APP_DEFAULT.nav.irrig;o.nav.trait=v('cfg-nav-trait')||APP_DEFAULT.nav.trait;o.nav.settings=v('cfg-nav-settings')||APP_DEFAULT.nav.settings;o.nav.logout=v('cfg-nav-logout')||APP_DEFAULT.nav.logout;
-  o.tiles.operators=v('cfg-tile-operators')||APP_DEFAULT.tiles.operators;o.tiles.profiles=v('cfg-tile-profiles')||APP_DEFAULT.tiles.profiles;o.tiles.refs=v('cfg-tile-refs')||APP_DEFAULT.tiles.refs;o.tiles.rights=v('cfg-tile-rights')||APP_DEFAULT.tiles.rights;o.tiles.pass=v('cfg-tile-pass')||APP_DEFAULT.tiles.pass;
+  o.nav.home=v('cfg-nav-home')||APP_DEFAULT.nav.home;
+  o.nav.irrig=v('cfg-nav-irrig')||APP_DEFAULT.nav.irrig;
+  o.nav.trait=v('cfg-nav-trait')||APP_DEFAULT.nav.trait;
+  o.nav.settings=v('cfg-nav-settings')||APP_DEFAULT.nav.settings;
+  o.nav.logout=v('cfg-nav-logout')||APP_DEFAULT.nav.logout;
 
-  // ref labels
-  o.refLabels=Object.assign({},APP_DEFAULT.refLabels,{
-    ferme:v('cfg-ref-ferme')||APP_DEFAULT.refLabels.ferme,
-    companies:v('cfg-ref-companies')||APP_DEFAULT.refLabels.companies,
-    responsables:v('cfg-ref-responsables')||APP_DEFAULT.refLabels.responsables,
-    stations:v('cfg-ref-stations')||APP_DEFAULT.refLabels.stations,
-    secteurs:v('cfg-ref-secteurs')||APP_DEFAULT.refLabels.secteurs,
-    parcelles:v('cfg-ref-parcelles')||APP_DEFAULT.refLabels.parcelles,
-    transports:v('cfg-ref-transports')||APP_DEFAULT.refLabels.transports,
-    varietes:v('cfg-ref-varietes')||APP_DEFAULT.refLabels.varietes,
-    varietes_champ:v('cfg-ref-varietes_champ')||APP_DEFAULT.refLabels.varietes_champ,
-    gestions:v('cfg-ref-gestions')||APP_DEFAULT.refLabels.gestions,
-    achats:v('cfg-ref-achats')||APP_DEFAULT.refLabels.achats
-  });
+  o.tiles.operators=v('cfg-tile-operators')||APP_DEFAULT.tiles.operators;
+  o.tiles.profiles=v('cfg-tile-profiles')||APP_DEFAULT.tiles.profiles;
+  o.tiles.refs=v('cfg-tile-refs')||APP_DEFAULT.tiles.refs;
+  o.tiles.rights=v('cfg-tile-rights')||APP_DEFAULT.tiles.rights;
+  o.tiles.pass=v('cfg-tile-pass')||APP_DEFAULT.tiles.pass;
 
-  // URL inputs (PNG/GIF فقط)
+  // ref labels تبقى نفسها
+  o.refLabels = APP_DEFAULT.refLabels;
+
+  // URL الصور (PNG/GIF فقط)
   const imgs=loadImgs();
   const urlOk = u => !u || /\.(png|gif)(\?|#|$)/i.test(u);
 
-  const badgeUrl=v('cfg-badge-url'); if(!urlOk(badgeUrl)){return alert('Badge: URL يجب أن يكون PNG أو GIF')} if(badgeUrl) imgs.badge=badgeUrl;
-  const sideUrl=v('cfg-side-url'); if(!urlOk(sideUrl)){return alert('Sidebar: URL يجب أن يكون PNG أو GIF')} if(sideUrl) imgs.sidebar=sideUrl;
-  const loginUrl=v('cfg-login-url'); if(!urlOk(loginUrl)){return alert('Login banner: URL يجب أن يكون PNG أو GIF')} if(loginUrl) imgs.login=loginUrl;
-  const loginBgUrl=v('cfg-loginbg-url'); if(!urlOk(loginBgUrl)){return alert('Login background: URL يجب أن يكون PNG أو GIF')} if(loginBgUrl) imgs.loginBg=loginBgUrl;
+  const badgeUrl=v('cfg-badge-url'); if(!urlOk(badgeUrl)) return alert('Badge: URL يجب أن يكون PNG أو GIF'); if(badgeUrl) imgs.badge=badgeUrl;
+  const sideUrl=v('cfg-side-url'); if(!urlOk(sideUrl)) return alert('Sidebar: URL يجب أن يكون PNG أو GIF'); if(sideUrl) imgs.sidebar=sideUrl;
+  const loginUrl=v('cfg-login-url'); if(!urlOk(loginUrl)) return alert('Login banner: URL يجب أن يكون PNG أو GIF'); if(loginUrl) imgs.login=loginUrl;
+  const loginBgUrl=v('cfg-loginbg-url'); if(!urlOk(loginBgUrl)) return alert('Login background: URL يجب أن يكون PNG أو GIF'); if(loginBgUrl) imgs.loginBg=loginBgUrl;
+  const logoUrl=v('cfg-logo-url'); if(!urlOk(logoUrl)) return alert('Logo: URL يجب أن يكون PNG أو GIF'); if(logoUrl) imgs.logo=logoUrl;
 
   saveImgs(imgs); appcfgSaveToLS(o); appcfgApply(); alert('تم الحفظ ✅')
 }
 
-/* === باقي (Profiles / Farms / Operators / Référentiels) كما هو === */
+/* === Profiles / Farms / Operators / Référentiels (كما في الإصدارات السابقة) === */
 function loadProfiles(){try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[]}catch{return []}}
 function saveProfiles(a){localStorage.setItem(LS_PROFILES,JSON.stringify(a))}
 function renderProfiles(){const list=g('profilesList'),d=loadProfiles();if(d.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return}
