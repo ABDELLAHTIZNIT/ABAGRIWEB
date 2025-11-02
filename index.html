@@ -1,61 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AB AGRIWEB - Login</title>
 <style>
-  :root {
-    --bg: #0f172a;
-    --panel: #0b1220;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --accent: #22c55e;
-    --border: #243046;
-  }
-  * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     background: linear-gradient(180deg, #0f172a, #1e293b);
-    color: var(--text);
+    color: #e2e8f0;
     min-height: 100vh;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .box {
-    width: min(92%, 360px);
-    background: var(--panel);
-    border: 1px solid var(--border);
+    width: 320px;
+    background: #0b1220;
+    border: 1px solid #243046;
     border-radius: 16px;
     padding: 32px 28px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 25px rgba(0,0,0,.4);
   }
   h2 {
     text-align: center;
-    margin: 0 0 24px;
-    color: var(--accent);
-    letter-spacing: 0.3px;
+    margin-bottom: 24px;
+    color: #22c55e;
   }
-  .field {
-    display: grid;
-    gap: 6px;
-    margin-bottom: 16px;
-  }
-  label {
-    font-size: 14px;
-    color: #cbd5e1;
-  }
-  .input-wrapper {
-    position: relative;
-  }
+  .field { display: grid; gap: 6px; margin-bottom: 16px; }
+  label { font-size: 14px; color: #cbd5e1; }
+  .input-wrapper { position: relative; }
   input {
     width: 100%;
-    padding: 12px 42px 12px 12px;
+    padding: 12px 40px 12px 12px;
     border-radius: 10px;
     border: 1px solid #334155;
     background: #091227;
-    color: var(--text);
+    color: #e2e8f0;
     font-size: 15px;
     outline: none;
   }
@@ -66,68 +48,77 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--muted);
+    color: #94a3b8;
     cursor: pointer;
     font-size: 17px;
-    padding: 4px;
   }
-  .eye:hover {
-    color: var(--accent);
-  }
-  button.login {
+  .eye:hover { color: #22c55e; }
+  .btn {
     width: 100%;
     padding: 12px;
     border: none;
     border-radius: 10px;
-    background: var(--accent);
+    background: #22c55e;
     color: #0b1220;
     font-weight: 700;
-    font-size: 16px;
     cursor: pointer;
   }
-  button.login:hover {
-    filter: brightness(0.95);
-  }
+  .btn:hover { background: #16a34a; }
   .link {
     display: block;
     text-align: center;
-    margin-top: 14px;
     color: #93c5fd;
-    text-decoration: none;
     font-size: 14px;
+    margin-top: 14px;
+    text-decoration: none;
   }
-  .link:hover {
-    text-decoration: underline;
-  }
+  .link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
+
   <main class="box">
     <h2>AB AGRIWEB</h2>
 
     <div class="field">
       <label>Username</label>
-      <input type="text" placeholder="Enter your username">
+      <input id="username" type="text" placeholder="Enter your username">
     </div>
 
     <div class="field">
       <label>Password</label>
       <div class="input-wrapper">
-        <input type="password" id="password" placeholder="Enter your password">
+        <input id="password" type="password" placeholder="Enter your password">
         <button class="eye" type="button" onclick="togglePwd()">👁️</button>
       </div>
     </div>
 
-    <button class="login" type="button">Login</button>
-
+    <button class="btn" type="button" onclick="checkLogin()">Login</button>
     <a href="#" class="link">Forgot password?</a>
   </main>
 
   <script>
+    // 👇 هنا تحدد الكلمة السرّية
+    const FIXED_USERNAME = "admin";
+    const FIXED_PASSWORD = "1234";  // <-- بدّلها لأي كلمة مرور بغيتي
+
     function togglePwd(){
-      const p = document.getElementById('password');
-      p.type = p.type === 'password' ? 'text' : 'password';
+      const p = document.getElementById("password");
+      p.type = p.type === "password" ? "text" : "password";
+    }
+
+    function checkLogin(){
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if(user === FIXED_USERNAME && pass === FIXED_PASSWORD){
+        alert("✅ Login successful!");
+        // هنا لاحقاً نزيدو توجيه للصفحة التالية
+      } else {
+        alert("❌ Wrong username or password!");
+      }
     }
   </script>
+
 </body>
 </html>
