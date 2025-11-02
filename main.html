@@ -7,7 +7,7 @@
 <style>
   :root{
     --bg:#0f172a; --panel:#0b1220; --text:#e2e8f0; --accent:#22c55e; --border:#243046;
-    --tile:#0c1526; --tileIcon:#0f1a2e;
+    --tile:#0c1526; --tileIcon:#0f1a2e; --warn:#fde68a1a;
   }
   *{box-sizing:border-box}
   body{
@@ -66,8 +66,10 @@
   .card{
     max-width:1000px; margin:16px auto; background:#0b1220; border:1px solid var(--border);
     border-radius:16px; padding:20px; box-shadow:0 10px 24px rgba(0,0,0,.25);
+    position:relative;
   }
   .muted{opacity:.8}
+  .hint{background:var(--warn); border:1px dashed #fbbf24; color:#fcd34d; padding:8px 10px; border-radius:8px; font-size:13px;}
 
   /* Tiles */
   .stack{ display:grid; gap:12px; } /* عمود واحد */
@@ -84,14 +86,19 @@
   .tile h4{ margin:0; font-size:16px; }
   .tile p{ margin:2px 0 0; font-size:12px; color:#94a3b8; }
 
+  /* Top-right actions (Add + Edit) */
+  .actions-top{
+    position:absolute; top:16px; right:16px; display:flex; gap:8px;
+  }
+  .btn{ padding:10px 12px; border-radius:10px; border:1px solid #22c55e; color:#22c55e; background:transparent; cursor:pointer }
+  .btn:hover{ background:#22c55e; color:#0b1220 }
+  .btn.icon{ width:40px; height:40px; display:grid; place-items:center; padding:0; }
+  .btn.danger{ border-color:#3b1f1f; color:#fca5a5; }
+  .btn.danger:hover{ background:#ef4444; color:#0b1220; border-color:#ef4444; }
+
   /* Forms & lists */
   .row{ display:flex; gap:10px; flex-wrap:wrap; }
   .input, select{ width:100%; max-width:320px; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
-  .btn{ padding:12px 14px; border-radius:10px; border:1px solid #22c55e; color:#22c55e; background:transparent; cursor:pointer }
-  .btn:hover{ background:#22c55e; color:#0b1220 }
-  .btn.icon{ padding:8px 10px; border-radius:8px; }
-  .btn.danger{ border-color:#3b1f1f; color:#fca5a5; }
-  .btn.danger:hover{ background:#ef4444; color:#0b1220; border-color:#ef4444; }
   .list{ display:grid; gap:10px; margin-top:14px; }
   .item{
     display:grid; grid-template-columns: 1fr auto; align-items:center; gap:10px;
@@ -110,16 +117,6 @@
   .modal h3{ margin:0 0 10px }
   .modal .row{ margin:10px 0 }
   .right{ display:flex; justify-content:flex-end; gap:10px }
-
-  /* Searchable Combo (Ferme) */
-  .combo{ position:relative; width:100%; max-width:320px; }
-  .combo-input{ width:100%; padding:12px; border-radius:10px; border:1px solid #334155; background:#091227; color:#e2e8f0; }
-  .combo-list{
-    position:absolute; left:0; right:0; top:100%; background:#0b1220; border:1px solid #243046;
-    border-radius:10px; margin-top:6px; max-height:220px; overflow:auto; z-index:40; box-shadow:0 10px 24px rgba(0,0,0,.35);
-  }
-  .combo-item{ padding:10px 12px; cursor:pointer; }
-  .combo-item:hover{ background:#152238; }
 </style>
 </head>
 <body>
@@ -151,7 +148,7 @@
       <p class="muted">هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
     </section>
 
-    <!-- PAGE: Paramètres (عمود واحد – بدون Ferme) -->
+    <!-- PAGE: Paramètres -->
     <section id="page-settings" class="card hidden">
       <h2>Paramètres</h2>
       <p class="muted">اختر أحد الإعدادات التالية:</p>
@@ -212,10 +209,13 @@
 
     <!-- PAGE: Profiles -->
     <section id="page-profiles" class="card hidden">
+      <div class="actions-top">
+        <button class="btn icon" title="Ajouter" onclick="toggleAddForm(true)">➕</button>
+        <button class="btn icon" title="Modifier (utiliser ✏️ بجانب العناصر)" onclick="showProfilesHint()">✏️</button>
+      </div>
       <h2>Profiles</h2>
-      <p class="muted">أضف/احذف أدوار. يتم حفظها محليًا.</p>
-
-      <button id="showAddFormBtn" class="btn" style="margin-top:12px" onclick="toggleAddForm(true)">➕ Ajouter un profil</button>
+      <p class="muted">أضف/احذف/عدّل أدوار. يتم حفظها محليًا.</p>
+      <div id="profilesHint" class="hint hidden">استعمل زر ✏️ بجانب كل عنصر لتعديل الاسم.</div>
 
       <div id="addForm" class="row hidden" style="margin-top:12px">
         <input id="profileName" class="input" placeholder="Ex: Admin, Magasinier, Pointeur, Directeur">
@@ -228,19 +228,21 @@
 
     <!-- PAGE: Opérateurs -->
     <section id="page-operators" class="card hidden">
+      <div class="actions-top">
+        <button class="btn icon" title="Ajouter" onclick="opToggleForm(true)">➕</button>
+        <button class="btn icon" title="Modifier (استعمل ✏️ بجانب كل مستخدم)" onclick="showOpsHint()">✏️</button>
+      </div>
       <h2>Opérateurs</h2>
+      <div id="opsHint" class="hint hidden">لتعديل مستخدم، استعمل زر ✏️ داخل اللائحة.</div>
       <p class="muted">المستخدمون (الاسم، كلمة المرور، البروفيل، الضيعة). التخزين محليًا.</p>
-
-      <button id="opShowAddBtn" class="btn" style="margin-top:12px" onclick="opToggleForm(true)">➕ Ajouter un opérateur</button>
 
       <div id="opAddForm" class="row hidden" style="margin-top:12px">
         <input id="op_username" class="input" placeholder="Nom d’utilisateur">
         <input id="op_password" type="password" class="input" placeholder="Mot de passe">
         <select id="op_profile" class="input"></select>
 
-        <!-- Ferme combobox (searchable) -->
-        <div class="combo" id="combo-op-ferme">
-          <input id="op_ferme_input" class="combo-input" placeholder="Chercher/choisir une ferme...">
+        <div class="combo" id="combo-op-ferme" style="max-width:320px; width:100%">
+          <input id="op_ferme_input" class="input" placeholder="Chercher/choisir une ferme...">
           <div id="op_ferme_list" class="combo-list hidden"></div>
           <input type="hidden" id="op_ferme" />
         </div>
@@ -252,12 +254,15 @@
       <div id="operatorsList" class="list" style="margin-top:14px"></div>
     </section>
 
-    <!-- PAGE: Fermes (تُفتح الآن من داخل Référentiels) -->
+    <!-- PAGE: Fermes (داخل Référentiels) -->
     <section id="page-farms" class="card hidden">
+      <div class="actions-top">
+        <button class="btn icon" title="Ajouter" onclick="farmToggleForm(true)">➕</button>
+        <button class="btn icon" title="Modifier (استعمل ✏️ بجانب كل ضيعة)" onclick="showFarmsHint()">✏️</button>
+      </div>
       <h2>Fermes</h2>
-      <p class="muted">أضف ونسّق الضيعات. هذه الصفحة جزء من RÉFÉRENTIELS.</p>
-
-      <button id="farmShowAddBtn" class="btn" style="margin-top:12px" onclick="farmToggleForm(true)">➕ Ajouter une ferme</button>
+      <div id="farmsHint" class="hint hidden">لتعديل ضيعة، استعمل زر ✏️ في اللائحة.</div>
+      <p class="muted">أضف ونسّق الضيعات. (Nom, Surface, Société, Emplacement, Responsable, Téléphone)</p>
 
       <div id="farmAddForm" class="row hidden" style="margin-top:12px">
         <input id="farm_name" class="input" placeholder="Nom de la ferme (ex: Karam 16)">
@@ -274,74 +279,42 @@
     </section>
 
     <!-- PAGE: Référentiels -->
-    <section id="page-refs" class="card hidden" style="position:relative">
+    <section id="page-refs" class="card hidden">
       <h2>Référentiels</h2>
       <p class="muted">لوائح مرجعية (تتضمن Ferme الآن).</p>
 
-      <!-- الصفحة الرئيسية للريفيرانس -->
+      <!-- Home of référentiels -->
       <div id="refsHome" class="stack">
-        <!-- Ferme داخل référentiels -->
         <div class="tile" onclick="showPage('farms'); setActiveTile()">
           <div class="icon"><span>🏞️</span></div>
-          <div><h4>Ferme</h4><p>Gestion des fermes (nom, lieu, responsable…)</p></div>
+          <div><h4>Ferme</h4><p>Gestion des fermes</p></div>
         </div>
 
-        <!-- أزواج القوائم المطلوبة -->
-        <div class="tile" onclick="refsOpen('companies')">
-          <div class="icon"><span>🏢</span></div>
-          <div><h4>Société</h4><p>Gestion des sociétés</p></div>
-        </div>
-        <div class="tile" onclick="refsOpen('responsables')">
-          <div class="icon"><span>👤</span></div>
-          <div><h4>Responsable</h4><p>Chefs de ferme</p></div>
-        </div>
+        <div class="tile" onclick="refsOpen('companies')"><div class="icon"><span>🏢</span></div><div><h4>Société</h4><p>Gestion des sociétés</p></div></div>
+        <div class="tile" onclick="refsOpen('responsables')"><div class="icon"><span>👤</span></div><div><h4>Responsable</h4><p>Chefs de ferme</p></div></div>
 
-        <div class="tile" onclick="refsOpen('stations')">
-          <div class="icon"><span>🚏</span></div>
-          <div><h4>Station</h4><p>Stations d’irrigation</p></div>
-        </div>
-        <div class="tile" onclick="refsOpen('secteurs')">
-          <div class="icon"><span>🧭</span></div>
-          <div><h4>Secteur</h4><p>Zones/secteurs</p></div>
-        </div>
+        <div class="tile" onclick="refsOpen('stations')"><div class="icon"><span>🚏</span></div><div><h4>Station</h4><p>Stations d’irrigation</p></div></div>
+        <div class="tile" onclick="refsOpen('secteurs')"><div class="icon"><span>🧭</span></div><div><h4>Secteur</h4><p>Zones/secteurs</p></div></div>
 
-        <div class="tile" onclick="refsOpen('parcelles')">
-          <div class="icon"><span>🧱</span></div>
-          <div><h4>Parcelle</h4><p>Parcelles/champs</p></div>
-        </div>
-        <div class="tile" onclick="refsOpen('transports')">
-          <div class="icon"><span>🚚</span></div>
-          <div><h4>Transport</h4><p>Moyens de transport</p></div>
-        </div>
+        <div class="tile" onclick="refsOpen('parcelles')"><div class="icon"><span>🧱</span></div><div><h4>Parcelle</h4><p>Parcelles/champs</p></div></div>
+        <div class="tile" onclick="refsOpen('transports')"><div class="icon"><span>🚚</span></div><div><h4>Transport</h4><p>Moyens de transport</p></div></div>
 
-        <div class="tile" onclick="refsOpen('varietes')">
-          <div class="icon"><span>🌱</span></div>
-          <div><h4>Variété</h4><p>Variétés générales</p></div>
-        </div>
-        <div class="tile" onclick="refsOpen('varietes_champ')">
-          <div class="icon"><span>🌿</span></div>
-          <div><h4>Variété champ</h4><p>Variétés par champ</p></div>
-        </div>
+        <div class="tile" onclick="refsOpen('varietes')"><div class="icon"><span>🌱</span></div><div><h4>Variété</h4><p>Variétés générales</p></div></div>
+        <div class="tile" onclick="refsOpen('varietes_champ')"><div class="icon"><span>🌿</span></div><div><h4>Variété champ</h4><p>Variétés par champ</p></div></div>
 
-        <div class="tile" onclick="refsOpen('gestions')">
-          <div class="icon"><span>📦</span></div>
-          <div><h4>Gestion stock</h4><p>Références de stock</p></div>
-        </div>
-        <div class="tile" onclick="refsOpen('achats')">
-          <div class="icon"><span>🧾</span></div>
-          <div><h4>Achat</h4><p>Fournisseurs/achats</p></div>
-        </div>
+        <div class="tile" onclick="refsOpen('gestions')"><div class="icon"><span>📦</span></div><div><h4>Gestion stock</h4><p>Références de stock</p></div></div>
+        <div class="tile" onclick="refsOpen('achats')"><div class="icon"><span>🧾</span></div><div><h4>Achat</h4><p>Fournisseurs/achats</p></div></div>
       </div>
 
-      <!-- صفحة الفئة داخل référentiels -->
-      <div id="refsCat" class="hidden" style="position:relative">
-        <!-- زر إضافة (رمز) أعلى اليمين -->
-        <button class="btn icon" id="refsAddBtn" title="Ajouter (référentiel)" style="position:absolute;top:0;right:0" onclick="refsToggleForm(true)">➕</button>
-
-        <div class="row" style="align-items:center; justify-content:space-between; padding-top:4px">
-          <h3 id="refsCatTitle" style="margin:0">Catégorie</h3>
-          <button class="btn icon" onclick="refsBack()">←</button>
+      <!-- Category view in référentiels -->
+      <div id="refsCat" class="hidden">
+        <div class="actions-top">
+          <button class="btn icon" id="refsAddBtn" title="Ajouter" onclick="refsToggleForm(true)">➕</button>
+          <button class="btn icon" id="refsEditBtn" title="Mode édition (استعمل ✏️ بجانب العناصر)" onclick="toggleRefsHint()">✏️</button>
         </div>
+
+        <h3 id="refsCatTitle" style="margin-top:0">Catégorie</h3>
+        <div id="refsHint" class="hint hidden">للتعديل استعمل زر ✏️ على يمين كل عنصر. للحذف استعمل 🗑️.</div>
 
         <div id="refsAddForm" class="row hidden" style="margin-top:12px">
           <input id="refsInput" class="input" placeholder="Nom à ajouter">
@@ -354,7 +327,7 @@
     </section>
   </main>
 
-  <!-- MODALS: edit operator / farm -->
+  <!-- MODALS -->
   <div id="opModal" class="modal-wrap">
     <div class="modal-bg" onclick="opCloseModal()"></div>
     <div class="modal">
@@ -365,8 +338,8 @@
       </div>
       <div class="row">
         <select id="edit_profile" class="input"></select>
-        <div class="combo" id="combo-edit-ferme">
-          <input id="edit_ferme_input" class="combo-input" placeholder="Chercher/choisir une ferme...">
+        <div class="combo" id="combo-edit-ferme" style="max-width:320px; width:100%">
+          <input id="edit_ferme_input" class="input" placeholder="Chercher/choisir une ferme...">
           <div id="edit_ferme_list" class="combo-list hidden"></div>
           <input type="hidden" id="edit_ferme" />
         </div>
@@ -458,8 +431,19 @@
     list.innerHTML=data.map((n,i)=>`
       <div class="item">
         <div class="meta"><b>${escapeHtml(n)}</b></div>
-        <div class="actions"><button class="btn danger icon" onclick="removeProfile(${i})">🗑️</button></div>
+        <div class="actions">
+          <button class="btn icon" onclick="profileEdit(${i})">✏️</button>
+          <button class="btn danger icon" onclick="removeProfile(${i})">🗑️</button>
+        </div>
       </div>`).join('');
+  }
+  function profileEdit(i){
+    const data=loadProfiles(); const old=data[i];
+    const nv=prompt('Modifier le profil:', old);
+    if(nv===null) return;
+    const val=nv.trim(); if(!val){ alert('Nom vide.'); return; }
+    if(val.toLowerCase()!==old.toLowerCase() && data.some(x=>x.toLowerCase()===val.toLowerCase())){ alert('Existe déjà.'); return; }
+    data[i]=val; saveProfiles(data); renderProfiles(); opRefreshProfileSelects();
   }
   function addProfile(){
     const name=v('profileName'); if(!name){alert('Entrer un nom de profil.');return;}
@@ -471,17 +455,17 @@
     const data=loadProfiles(); if(!confirm('Supprimer le profil : '+data[i]+' ?'))return;
     data.splice(i,1); saveProfiles(data); renderProfiles(); opRefreshProfileSelects();
   }
-  function resetDefaults(){ if(!confirm('Réinitialiser aux rôles par défaut ?'))return; saveProfiles(DEFAULT_PROFILES.slice()); renderProfiles(); opRefreshProfileSelects(); }
   function toggleAddForm(show){
-    const form=g('addForm'), btn=g('showAddFormBtn');
-    if(show){form.classList.remove('hidden');btn.classList.add('hidden');g('profileName').focus();}
-    else{form.classList.add('hidden');btn.classList.remove('hidden');}
+    const form=g('addForm');
+    if(show){form.classList.remove('hidden'); g('profileName').focus();}
+    else{form.classList.add('hidden');}
   }
+  function showProfilesHint(){ g('profilesHint').classList.toggle('hidden'); }
 
   /* ---------- Farms (in Référentiels) ---------- */
   function loadFarms(){ try{return JSON.parse(localStorage.getItem(LS_FARMS))||[];}catch{return [];} }
   function saveFarms(a){ localStorage.setItem(LS_FARMS, JSON.stringify(a)); }
-  function farmToggleForm(show){ const f=g('farmAddForm'), b=g('farmShowAddBtn'); if(show){f.classList.remove('hidden');b.classList.add('hidden');g('farm_name').focus();} else {f.classList.add('hidden');b.classList.remove('hidden');} }
+  function farmToggleForm(show){ const f=g('farmAddForm'); if(show){f.classList.remove('hidden');g('farm_name').focus();} else {f.classList.add('hidden');} }
   function farmAdd(){
     const obj={ name:v('farm_name'), area:v('farm_area'), company:v('farm_company'), location:v('farm_location'), manager:v('farm_manager'), phone:v('farm_phone') };
     if(!obj.name){ alert('Nom de la ferme requis.'); return; }
@@ -526,11 +510,12 @@
     d[farmEditIndex]=vobj; saveFarms(d); farmCloseModal(); renderFarms(); opRefreshFarmCombos();
   }
   function farmDelete(i){ const d=loadFarms(); if(!confirm('Supprimer la ferme: '+d[i].name+' ?')) return; d.splice(i,1); saveFarms(d); renderFarms(); opRefreshFarmCombos(); }
+  function showFarmsHint(){ g('farmsHint').classList.toggle('hidden'); }
 
   /* ---------- Operators ---------- */
   function loadOps(){ try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[];}catch{return [];} }
   function saveOps(a){ localStorage.setItem(LS_OPERATORS, JSON.stringify(a)); }
-  function opToggleForm(show){ const f=g('opAddForm'), b=g('opShowAddBtn'); if(show){f.classList.remove('hidden');b.classList.add('hidden'); opRefreshProfileSelects(); opRefreshFarmCombos(); g('op_username').focus();} else {f.classList.add('hidden');b.classList.remove('hidden');} }
+  function opToggleForm(show){ const f=g('opAddForm'); if(show){f.classList.remove('hidden'); g('op_username').focus();} else {f.classList.add('hidden');} }
   function opBuildProfileOptions(id){ const sel=g(id); if(!sel) return; const p=loadProfiles(); sel.innerHTML=p.length?p.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join(''):`<option value="">(Aucun profil)</option>`; }
   function opRefreshProfileSelects(){ opBuildProfileOptions('op_profile'); opBuildProfileOptions('edit_profile'); }
   /* searchable combo for Ferme */
@@ -541,11 +526,13 @@
     document.addEventListener('click',e=>{ if(!list.contains(e.target)&&e.target!==input) list.classList.add('hidden');});
     list.onclick=e=>{ const el=e.target.closest('.combo-item'); if(!el) return; const v=el.getAttribute('data-v'); input.value=v; hidden.value=v; list.classList.add('hidden'); };
   }
-  function opRefreshFarmCombos(){ const farms=loadFarms().map(f=>f.name); comboFill('op_ferme',farms); comboFill('edit_ferme',farms); comboFill('ref_ferme',farms); }
+  function opRefreshFarmCombos(){ const farms=loadFarms().map(f=>f.name); comboFill('op_ferme',farms); comboFill('edit_ferme',farms); }
 
   function renderOps(){
     const w=g('operatorsList'); if(!w) return; const d=loadOps();
-    if(d.length===0){ w.innerHTML='<div class="item"><span class="muted">لا يوجد أي مستخدم بعد.</span></div>'; return; }
+    if(d.length===0){
+      w.innerHTML='<div class="item"><span class="muted">لا يوجد أي مستخدم بعد.</span></div>'; return;
+    }
     w.innerHTML=d.map((u,i)=>`
       <div class="item">
         <div class="meta">
@@ -564,7 +551,7 @@
   let editIndex=null;
   function opOpenModal(){ g('opModal').classList.add('show'); }
   function opCloseModal(){ g('opModal').classList.remove('show'); editIndex=null; }
-  function opEdit(i){ const d=loadOps(), u=d[i]; editIndex=i; s('edit_username',u.username); s('edit_password',u.password); opRefreshProfileSelects(); g('edit_profile').value=u.profile||''; opRefreshFarmCombos(); s('edit_ferme_input',u.ferme||''); s('edit_ferme',u.ferme||''); opOpenModal(); }
+  function opEdit(i){ const d=loadOps(), u=d[i]; editIndex=i; s('edit_username',u.username); s('edit_password',u.password); opRefreshProfileSelects(); g('edit_profile').value=u.profile||''; const farms=loadFarms().map(f=>f.name); comboFill('edit_ferme',farms); s('edit_ferme_input',u.ferme||''); s('edit_ferme',u.ferme||''); opOpenModal(); }
   function opSaveEdit(){
     if(editIndex===null) return;
     const d=loadOps(), u=d[editIndex];
@@ -580,6 +567,7 @@
     d.push({username,password,profile,ferme}); saveOps(d); s('op_username',''); s('op_password',''); s('op_ferme_input',''); s('op_ferme',''); opToggleForm(false); renderOps();
   }
   function opDelete(i){ const d=loadOps(); if(!confirm('Supprimer l’utilisateur: '+d[i].username+' ?')) return; d.splice(i,1); saveOps(d); renderOps(); }
+  function showOpsHint(){ g('opsHint').classList.toggle('hidden'); }
 
   /* ---------- Référentiels (generic engine) ---------- */
   const LS_REFS_KEYS_DEFAULT = {
@@ -587,8 +575,6 @@
     parcelles:[], transports:[], varietes:[], varietes_champ:[],
     gestions:[], achats:[]
   };
-  function loadRefs(){ try{ return Object.assign({}, LS_REFS_KEYS_DEFAULT, JSON.parse(localStorage.getItem(LS_REFS)||'{}')); }catch{ return {...LS_REFS_KEYS_DEFAULT}; } }
-  function saveRefs(obj){ localStorage.setItem(LS_REFS, JSON.stringify(obj)); }
   const REF_LABELS = {
     companies:"Société", responsables:"Responsable", stations:"Station", secteurs:"Secteur",
     parcelles:"Parcelle", transports:"Transport", varietes:"Variété", varietes_champ:"Variété champ",
@@ -596,26 +582,27 @@
   };
   let currentRefKey=null;
 
+  function loadRefs(){ try{ return Object.assign({}, LS_REFS_KEYS_DEFAULT, JSON.parse(localStorage.getItem(LS_REFS)||'{}')); }catch{ return {...LS_REFS_KEYS_DEFAULT}; } }
+  function saveRefs(obj){ localStorage.setItem(LS_REFS, JSON.stringify(obj)); }
+
   function refsOpen(key){
     currentRefKey=key;
     g('refsHome').classList.add('hidden');
     g('refsCat').classList.remove('hidden');
     g('refsCatTitle').textContent = REF_LABELS[key] || 'Catégorie';
+    g('refsHint').classList.add('hidden');
     refsToggleForm(false);
     refsRender();
-  }
-  function refsBack(){
-    currentRefKey=null;
-    g('refsCat').classList.add('hidden');
-    g('refsHome').classList.remove('hidden');
   }
   function refsToggleForm(show){
     const f=g('refsAddForm');
     if(show){ f.classList.remove('hidden'); g('refsInput').focus(); }
     else{ f.classList.add('hidden'); s('refsInput',''); }
   }
+  function toggleRefsHint(){ g('refsHint').classList.toggle('hidden'); }
+
   function refsRender(){
-    const wrap=g('refsList'); const data=loadRefs()[currentRefKey]||[];
+    const wrap=g('refsList'); const data=(loadRefs()[currentRefKey]||[]);
     if(data.length===0){ wrap.innerHTML='<div class="item"><span class="muted">لا توجد عناصر بعد.</span></div>'; return; }
     wrap.innerHTML=data.map((name,idx)=>`
       <div class="item">
