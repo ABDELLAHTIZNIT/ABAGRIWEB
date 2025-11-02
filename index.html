@@ -1,10 +1,180 @@
-<style>
-/* --- Mobile app-like form --- */
-.form {display:grid; gap:14px}
-.field {display:grid; gap:6px}
-.label {font-size:13px; color:#c8d3e8}
-.input {width:100%; padding:14px 14px; border-radius:12px; border:1px solid #263656; background:#091227; color:var(--text)}
-.actions-login {display:grid; gap:12px}
-.btn-wide {width:100%; padding:14px 18px; font-weight:600}
-.helper {display:flex; align-items:center; justify-content:space-between}
-<style/>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AB AGRIWEB</title>
+  <style>
+    :root{--green:#22c55e;--bg:#0f172a;--card:#0b1220;--text:#e2e8f0;--muted:#a3b2cc}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:grid;place-items:center}
+    .wrap{width:min(92%,860px)}
+    .card{background:var(--card);border:1px solid #1f2a44;border-radius:16px;padding:28px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+    h1{margin:0 0 6px;text-align:center;font-size:32px;letter-spacing:.3px}
+    .subtitle{text-align:center;color:var(--muted);margin:0 0 20px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:10px;border:1px solid var(--green);color:var(--green);text-decoration:none;cursor:pointer;background:transparent}
+    .btn:hover{background:var(--green);color:#0b1220}
+    .btn.ghost{border-color:#3b4b6d;color:#c7d2fe}
+    .note{font-size:12px;opacity:.75;text-align:center;margin-top:12px}
+    .header{display:flex;justify-content:center;gap:8px;align-items:center;margin-bottom:12px}
+    .header .logo{width:22px;height:22px;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(34,197,94,.4)}
+    .hidden{display:none}
+    .right{display:flex;justify-content:flex-end}
+
+    /* --- Mobile app-like form --- */
+    .form {display:grid; gap:14px}
+    .field {display:grid; gap:6px}
+    .label {font-size:13px; color:#c8d3e8}
+    .input {width:100%; padding:14px 14px; border-radius:12px; border:1px solid #263656; background:#091227; color:var(--text)}
+    .actions-login {display:grid; gap:12px}
+    .btn-wide {width:100%; padding:14px 18px; font-weight:600}
+    .helper {display:flex; align-items:center; justify-content:space-between}
+
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;padding:16px}
+    .modal{width:min(92%,520px)}
+    .modal-backdrop.show{display:grid}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="logo"></div>
+      <h1>AB AGRIWEB</h1>
+    </div>
+    <p class="subtitle">Plateforme agricole — version Web</p>
+
+    <!-- LOGIN -->
+    <section id="loginCard" class="card">
+      <h3 style="margin:0 0 14px">Connexion</h3>
+      <div class="form">
+        <div class="field">
+          <span class="label">Nom d'utilisateur</span>
+          <input id="username" class="input" placeholder="ex: abdellah" autocomplete="username">
+        </div>
+        <div class="field">
+          <span class="label">Mot de passe</span>
+          <div class="helper" style="gap:10px">
+            <input id="password" class="input" type="password" placeholder="••••••••" autocomplete="current-password" style="flex:1">
+            <button class="btn ghost" id="togglePwd" type="button">Afficher</button>
+          </div>
+        </div>
+
+        <div class="helper">
+          <label class="label" style="display:flex; gap:8px; align-items:center">
+            <input id="remember" type="checkbox"> Se souvenir de moi
+          </label>
+          <a class="btn ghost" href="#" onclick="alert('Placeholder: reset via admin.');return false;">Mot de passe oublié?</a>
+        </div>
+
+        <div class="actions-login">
+          <button class="btn btn-wide" id="loginBtn">Se connecter</button>
+        </div>
+      </div>
+      <div class="note">ديمو محلي بلا سيرفر. سنربطها بالحقيقي لاحقًا.</div>
+    </section>
+
+    <!-- SELECTION after login -->
+    <section id="selectCard" class="card hidden">
+      <h3 style="margin:0 0 10px">Sélection</h3>
+      <div class="form">
+        <div class="field">
+          <span class="label">Ferme</span>
+          <input id="ferme" class="input" placeholder="ex: Karam 16">
+        </div>
+        <div class="field">
+          <span class="label">Serre</span>
+          <input id="serre" class="input" type="number" min="1" placeholder="1">
+        </div>
+        <div class="field">
+          <span class="label">Point</span>
+          <input id="point" class="input" type="number" min="1" placeholder="1">
+        </div>
+      </div>
+
+      <div class="helper" style="margin-top:14px">
+        <button class="btn" id="paramBtn">Paramètres</button>
+        <button class="btn" id="validerBtn">Validé</button>
+      </div>
+      <div class="note" id="helloNote"></div>
+    </section>
+
+    <!-- Placeholder next step -->
+    <section id="nextStep" class="card hidden">
+      <h3 style="margin:0 0 10px">Ajouter l'irrigation</h3>
+      <p class="subtitle" style="margin:0 0 14px">سنكمل هذه الواجهة في الخطوة القادمة.</p>
+      <div class="right">
+        <a class="btn ghost" href="#" onclick="location.reload();return false;">Retour</a>
+      </div>
+    </section>
+
+    <p class="note">v0.2 • © Abdellah</p>
+  </div>
+
+  <!-- PARAMÈTRES Modal -->
+  <div id="paramModal" class="modal-backdrop">
+    <div class="modal card">
+      <h3 style="margin:0 0 10px">Paramètres (Admin)</h3>
+      <p class="subtitle" style="margin:0">Entrer le code d'accès</p>
+      <label class="mt-3">Code</label>
+      <input id="adminCode" class="input" placeholder="********" />
+      <div class="right" style="gap:10px; margin-top:14px">
+        <button class="btn ghost" type="button" onclick="closeModal()">Annuler</button>
+        <button class="btn" type="button" onclick="checkAdmin()">Valider</button>
+      </div>
+      <div class="note">Code par défaut: <b>12345678</b> (للـديمو؛ سنربطه بالإيميل لاحقًا).</div>
+    </div>
+  </div>
+
+  <script>
+    // show/hide password
+    document.getElementById('togglePwd').onclick = function(){
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+      this.textContent = p.type === 'password' ? 'Afficher' : 'Cacher';
+    };
+
+    // Login (demo)
+    document.getElementById('loginBtn').onclick = function(){
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+      if(!u || !p){ alert('أدخل اسم المستخدم وكلمة المرور'); return; }
+      if(document.getElementById('remember').checked){
+        localStorage.setItem('ab_user', u);
+      } else { localStorage.removeItem('ab_user'); }
+      document.getElementById('loginCard').classList.add('hidden');
+      document.getElementById('selectCard').classList.remove('hidden');
+      document.getElementById('helloNote').textContent = `Bienvenue, ${u}! اختر الإعدادات ثم Validé.`;
+    };
+
+    // Paramètres modal
+    const modal = document.getElementById('paramModal');
+    document.getElementById('paramBtn').onclick = () => { modal.classList.add('show'); setTimeout(()=>document.getElementById('adminCode').focus(),50); };
+    function closeModal(){ modal.classList.remove('show'); document.getElementById('adminCode').value=''; }
+    function checkAdmin(){
+      const code = document.getElementById('adminCode').value.trim();
+      if(code === '12345678'){
+        alert('دخول المسؤول ناجح ✅ (سنضيف إدارة المستخدمين لاحقًا)');
+        closeModal();
+      } else {
+        alert('الكود غير صحيح');
+      }
+    }
+    window.closeModal = closeModal; window.checkAdmin = checkAdmin;
+
+    // Validé
+    document.getElementById('validerBtn').onclick = function(){
+      const ferme = document.getElementById('ferme').value.trim();
+      const serre = document.getElementById('serre').value.trim();
+      const point = document.getElementById('point').value.trim();
+      if(!ferme || !serre || !point){ alert('كمّل الحقول: Ferme / Serre / Point'); return; }
+      document.getElementById('selectCard').classList.add('hidden');
+      document.getElementById('nextStep').classList.remove('hidden');
+    };
+
+    // load remembered user
+    const saved = localStorage.getItem('ab_user');
+    if(saved){ document.getElementById('username').value = saved; document.getElementById('remember').checked = true; }
+  </script>
+</body>
+</html>
