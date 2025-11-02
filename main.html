@@ -15,7 +15,8 @@
     background:linear-gradient(180deg,var(--bg),#1e293b); color:var(--text);
     height:100vh; overflow-x:hidden;
   }
-  .hidden{display:none}
+
+  .hidden{display:none !important;}
 
   /* Header */
   header{
@@ -129,14 +130,13 @@
       <p class="muted">هذه الصفحة مبدئية. من هنا سنضيف أقسام Irrigation / Traitement / Paramètres لاحقًا.</p>
     </section>
 
-    <!-- PAGE: Paramètres (menu de tuiles) -->
+    <!-- PAGE: Paramètres -->
     <section id="page-settings" class="card hidden">
       <h2>Paramètres</h2>
       <p class="muted">اختر أحد الإعدادات التالية:</p>
       <div class="stack">
         <div class="tile" onclick="showPage('profiles'); setActiveTile('profiles')">
           <div class="icon">
-            <!-- id-badge -->
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <rect x="4" y="5" width="16" height="14" rx="2" stroke="#22c55e" stroke-width="2"/>
               <circle cx="12" cy="11" r="2.5" stroke="#22c55e" stroke-width="2"/>
@@ -190,15 +190,13 @@
       </div>
     </section>
 
-    <!-- PAGE: Profiles (CRUD simple) -->
+    <!-- PAGE: Profiles -->
     <section id="page-profiles" class="card hidden">
       <h2>Profiles</h2>
       <p class="muted">أضف/احذف أدوار (Profils). يتم حفظها محليًا في المتصفح.</p>
 
-      <!-- زر يُظهر الفورم -->
       <button id="showAddFormBtn" class="btn" style="margin-top:12px" onclick="toggleAddForm(true)">➕ Ajouter un profil</button>
 
-      <!-- الفورم الذي يظهر/يختفي -->
       <div id="addForm" class="row hidden" style="margin-top:12px">
         <input id="profileName" class="input" placeholder="Ex: Admin, Magasinier, Pointeur, Directeur">
         <button class="btn" onclick="addProfile()">Confirmer</button>
@@ -207,7 +205,7 @@
 
       <div id="profilesList" class="list" style="margin-top:14px"></div>
 
-      <p class="muted" style="margin-top:10px">Sauvegarde locale: <code>localStorage</code> (clé: <b>ab_profiles</b>).</p>
+      <p class="muted" style="margin-top:10px">Sauvegarde locale : <code>localStorage</code> (clé : <b>ab_profiles</b>).</p>
       <div class="row" style="margin-top:6px">
         <button class="btn danger" onclick="resetDefaults()">Réinitialiser aux rôles par défaut</button>
       </div>
@@ -216,134 +214,96 @@
 
 <script>
   /* ---------- Sidebar + overlay ---------- */
-  const sidebar  = document.getElementById('sidebar');
-  const overlay  = document.getElementById('overlay');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
 
   function openMenu(){ sidebar.classList.add('active'); overlay.classList.add('active'); }
   function closeMenu(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); }
   function toggleMenu(){ sidebar.classList.contains('active') ? closeMenu() : openMenu(); }
 
-  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMenu(); });
   overlay.addEventListener('click', closeMenu);
-  document.querySelectorAll('.sidebar a').forEach(a => a.addEventListener('click', closeMenu));
 
-  // swipe close (mobile)
-  let startX = null;
-  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
-  document.addEventListener('touchmove', e => {
-    if(startX === null) return;
-    const dx = e.touches[0].clientX - startX;
-    if(dx < -60 && sidebar.classList.contains('active')) { closeMenu(); startX = null; }
-  }, {passive:true});
-
-  /* ---------- Simple pages router ---------- */
-  const navHome  = document.getElementById('nav-home');
-  const navSet   = document.getElementById('nav-settings');
-  const pageHome = document.getElementById('page-home');
-  const pageSet  = document.getElementById('page-settings');
-  const pageProf = document.getElementById('page-profiles');
+  /* ---------- Routing ---------- */
+  const navHome=document.getElementById('nav-home');
+  const navSet=document.getElementById('nav-settings');
+  const pageHome=document.getElementById('page-home');
+  const pageSet=document.getElementById('page-settings');
+  const pageProf=document.getElementById('page-profiles');
 
   function setActiveLink(link){
     document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
     link.classList.add('active');
   }
   function showPage(name){
-    [pageHome, pageSet, pageProf].forEach(el=>el.classList.add('hidden'));
+    [pageHome,pageSet,pageProf].forEach(p=>p.classList.add('hidden'));
     if(name==='home') pageHome.classList.remove('hidden');
     if(name==='settings') pageSet.classList.remove('hidden');
     if(name==='profiles') pageProf.classList.remove('hidden');
     closeMenu();
   }
 
-  navHome.addEventListener('click', (e)=>{ e.preventDefault(); setActiveLink(navHome); showPage('home'); });
-  navSet .addEventListener('click', (e)=>{ e.preventDefault(); setActiveLink(navSet ); showPage('settings'); });
+  navHome.addEventListener('click',e=>{e.preventDefault();setActiveLink(navHome);showPage('home');});
+  navSet.addEventListener('click',e=>{e.preventDefault();setActiveLink(navSet);showPage('settings');});
+  function setActiveTile(){setActiveLink(navSet);}
 
-  // من بلاطات Paramètres
-  function setActiveTile(){ setActiveLink(navSet); } // نبقى داخل Paramètres
-
-  // Logout → back to login
-  document.getElementById('logout').addEventListener('click', e=>{
-    e.preventDefault(); window.location = 'index.html';
+  document.getElementById('logout').addEventListener('click',e=>{
+    e.preventDefault();window.location='index.html';
   });
 
-  /* ---------- Profiles (localStorage) ---------- */
-  const LS_KEY = 'ab_profiles';
-  const DEFAULTS = ["Admin","Magasinier","Pointeur","Directeur"];
+  /* ---------- Profiles CRUD ---------- */
+  const LS_KEY='ab_profiles';
+  const DEFAULTS=["Admin","Magasinier","Pointeur","Directeur"];
 
   function loadProfiles(){
-    const raw = localStorage.getItem(LS_KEY);
-    let items = [];
-    try{ items = raw ? JSON.parse(raw) : []; }catch{ items = []; }
-    if(!Array.isArray(items)) items = [];
-    return items;
+    try{return JSON.parse(localStorage.getItem(LS_KEY))||[];}catch{return [];}
   }
-  function saveProfiles(arr){
-    localStorage.setItem(LS_KEY, JSON.stringify(arr));
-  }
+  function saveProfiles(arr){localStorage.setItem(LS_KEY,JSON.stringify(arr));}
   function renderProfiles(){
-    const list = document.getElementById('profilesList');
-    const data = loadProfiles();
-    if(data.length===0){
-      list.innerHTML = `<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>`;
-      return;
-    }
-    list.innerHTML = data.map((name,idx)=>`
+    const list=document.getElementById('profilesList');
+    const data=loadProfiles();
+    if(data.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return;}
+    list.innerHTML=data.map((n,i)=>`
       <div class="item">
-        <strong>${escapeHtml(name)}</strong>
-        <button class="btn danger" onclick="removeProfile(${idx})">Supprimer</button>
-      </div>
-    `).join('');
+        <strong>${escapeHtml(n)}</strong>
+        <button class="btn danger" onclick="removeProfile(${i})">Supprimer</button>
+      </div>`).join('');
   }
   function addProfile(){
-    const inp = document.getElementById('profileName');
-    const name = inp.value.trim();
-    if(!name){ alert("Entrer un nom de profil."); return; }
-    const data = loadProfiles();
-    if(data.some(x=>x.toLowerCase()===name.toLowerCase())){
-      alert("Ce profil existe déjà."); return;
-    }
+    const inp=document.getElementById('profileName');
+    const name=inp.value.trim();
+    if(!name){alert('Entrer un nom de profil.');return;}
+    const data=loadProfiles();
+    if(data.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Ce profil existe déjà.');return;}
     data.push(name);
     saveProfiles(data);
     inp.value='';
     toggleAddForm(false);
     renderProfiles();
   }
-  function removeProfile(idx){
-    const data = loadProfiles();
-    const name = data[idx];
-    if(!confirm(`Supprimer le profil: ${name} ?`)) return;
-    data.splice(idx,1);
+  function removeProfile(i){
+    const data=loadProfiles();
+    if(!confirm('Supprimer le profil : '+data[i]+' ?'))return;
+    data.splice(i,1);
     saveProfiles(data);
     renderProfiles();
   }
   function resetDefaults(){
-    if(!confirm("Réinitialiser aux rôles par défaut ?")) return;
+    if(!confirm('Réinitialiser aux rôles par défaut ?'))return;
     saveProfiles(DEFAULTS.slice());
     renderProfiles();
   }
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
-  }
+  function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 
-  // إظهار/إخفاء فورم الإضافة
   function toggleAddForm(show){
-    const form = document.getElementById('addForm');
-    const btn  = document.getElementById('showAddFormBtn');
-    if(show){
-      form.classList.remove('hidden');
-      btn.classList.add('hidden');
-      document.getElementById('profileName').focus();
-    }else{
-      form.classList.add('hidden');
-      btn.classList.remove('hidden');
-    }
+    const form=document.getElementById('addForm');
+    const btn=document.getElementById('showAddFormBtn');
+    if(show){form.classList.remove('hidden');btn.classList.add('hidden');document.getElementById('profileName').focus();}
+    else{form.classList.add('hidden');btn.classList.remove('hidden');}
   }
 
-  // init: defaults first run
   (function init(){
-    if(!localStorage.getItem(LS_KEY)){
-      saveProfiles(DEFAULTS.slice());
-    }
+    if(!localStorage.getItem(LS_KEY)) saveProfiles(DEFAULTS.slice());
     renderProfiles();
   })();
 </script>
