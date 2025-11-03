@@ -13,12 +13,7 @@
   body{margin:0; background:var(--bg); color:var(--text); font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; overflow-x:hidden}
 
   /* Top bar */
-  .topbar{
-    height:56px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 12px 0 10px; border-bottom:1px solid var(--border);
-    background:linear-gradient(180deg,#0e1b2c,#0c1726);
-    position:sticky; top:0; z-index:60;
-  }
+  .topbar{height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 10px; border-bottom:1px solid var(--border); background:linear-gradient(180deg,#0e1b2c,#0c1726); position:sticky; top:0; z-index:60}
   .hamb{font-size:22px; cursor:pointer; width:36px; height:36px; display:grid; place-items:center; border-radius:999px}
   .hamb:hover{background:rgba(255,255,255,.06)}
   .title{font-weight:800; letter-spacing:.6px}
@@ -27,49 +22,37 @@
 
   .wrap{padding:14px}
   .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:14px}
-
-  /* Accordion */
-  .acc{border-radius:16px; overflow:hidden; border:1px solid var(--border)}
-  .acc-sec + .acc-sec{border-top:1px solid var(--border)}
-  .acc-hd{padding:14px; background:#0f1b2d; cursor:pointer; display:flex; align-items:center; justify-content:space-between}
-  .acc-bd{display:none; padding:14px; background:#0e1a2a}
-  .acc-sec.open .acc-bd{display:block}
-
+  .hr{height:1px;background:var(--border); margin:10px 0}
+  .muted{color:var(--muted); font-size:12px}
+  .btn{background:var(--accent); color:#07150e; font-weight:700; border:0; padding:10px 12px; border-radius:12px; cursor:pointer}
+  .btn.secondary{background:#233349; color:#dbe9ff}
   .row{display:grid; grid-template-columns:1fr; gap:10px}
   label{font-size:13px; color:var(--muted)}
   .inp{display:flex; gap:8px; align-items:center; background:#0e1a2a; border:1px solid var(--border); padding:10px 12px; border-radius:12px}
-  .inp input[type="text"]{flex:1; background:transparent; border:0; outline:0; color:var(--text)}
-  .btn{background:var(--accent); color:#07150e; font-weight:700; border:0; padding:10px 12px; border-radius:12px; cursor:pointer}
+  .inp input,.inp select{flex:1; background:transparent; border:0; outline:0; color:var(--text)}
+  .table{width:100%; border-collapse:collapse; font-size:14px}
+  .table th,.table td{border-bottom:1px solid var(--border); padding:10px}
+  .actions{display:flex; gap:8px}
+  .iconbtn{background:#1a2a42; border:1px solid var(--border); color:#e6f6e6; border-radius:10px; padding:6px 10px; cursor:pointer}
+  .iconbtn.delete{background:#3a1e24; border-color:#5d2a32}
 
-  .muted{color:var(--muted); font-size:12px}
-  .note{font-size:12px; color:#cde7ff}
-  .hr{height:1px;background:var(--border); margin:10px 0}
+  /* Tabs inside Paramètres */
+  .tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
+  .tab{padding:8px 12px; border:1px solid var(--border); border-radius:12px; background:#0f1b2d; cursor:pointer; color:#cfe6ff}
+  .tab.active{background:#1b2a41; color:#e6f6e6}
+  .tabpan{display:none}
+  .tabpan.show{display:block}
 
-  /* === Sidebar (drawer) === */
-  .overlay{
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    opacity:0; visibility:hidden; transition:.2s ease; z-index:55;
-  }
+  /* Sidebar / overlay */
+  .overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); opacity:0; visibility:hidden; transition:.2s; z-index:55}
   .overlay.show{opacity:1; visibility:visible}
-  .sidebar{
-    position:fixed; inset:0 auto 0 0; width:268px; max-width:86vw;
-    background:linear-gradient(180deg,#0b1524,#0a1220);
-    border-right:1px solid var(--border);
-    transform:translateX(-100%); transition:transform .25s ease; z-index:60;
-    display:flex; flex-direction:column;
-  }
+  .sidebar{position:fixed; inset:0 auto 0 0; width:268px; max-width:86vw; background:linear-gradient(180deg,#0b1524,#0a1220); border-right:1px solid var(--border); transform:translateX(-100%); transition:transform .25s; z-index:60; display:flex; flex-direction:column}
   .sidebar.open{transform:translateX(0)}
-  .sb-top{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px; border-bottom:1px solid var(--border);
-  }
+  .sb-top{display:flex; align-items:center; justify-content:space-between; padding:12px; border-bottom:1px solid var(--border)}
   .sb-close{font-size:20px; width:34px; height:34px; display:grid; place-items:center; border-radius:10px; cursor:pointer}
   .sb-close:hover{background:rgba(255,255,255,.06)}
   .sb-nav{padding:8px}
-  .sb-item{
-    display:flex; align-items:center; gap:10px; padding:12px 10px; border-radius:12px;
-    color:var(--text); text-decoration:none; border:1px solid transparent;
-  }
+  .sb-item{display:flex; align-items:center; gap:10px; padding:12px 10px; border-radius:12px; color:var(--text); text-decoration:none; border:1px solid transparent}
   .sb-item:hover{background:var(--panel2); border-color:var(--border)}
   .sb-item.active{background:#1b2a41; border-color:var(--border)}
   .sb-foot{margin-top:auto; padding:8px}
@@ -80,144 +63,392 @@
 
   <!-- Topbar -->
   <div class="topbar">
-    <div class="left">
-      <span class="hamb" id="openMenu" aria-label="Open menu">☰</span>
-    </div>
+    <div class="left"><span class="hamb" id="openMenu">☰</span></div>
     <div class="title">AB AGRIWEB</div>
-    <div class="rightslot">
-      <img id="topbarLogo" alt="">
-    </div>
+    <div class="rightslot"><img id="topbarLogo" alt=""></div>
   </div>
 
   <!-- Overlay + Sidebar -->
   <div id="overlay" class="overlay" tabindex="-1"></div>
-
   <nav id="sidebar" class="sidebar" aria-hidden="true">
     <div class="sb-top">
       <strong>Menu</strong>
-      <span id="closeMenu" class="sb-close" aria-label="Close menu">✕</span>
+      <span id="closeMenu" class="sb-close">✕</span>
     </div>
     <div class="sb-nav">
-      <a class="sb-item" href="#" onclick="alert('Irrigation (قريباً)')">🌿 Irrigation</a>
-      <a class="sb-item" href="#" onclick="alert('Traitement (قريباً)')">💧 Traitement</a>
-      <a class="sb-item active" href="#branding">⚙️ Paramètres</a>
+      <a class="sb-item" href="#" onclick="alert('Irrigation: قريبًا')">🌿 Irrigation</a>
+      <a class="sb-item" href="#" onclick="alert('Traitement: قريبًا')">💧 Traitement</a>
+      <a class="sb-item active" href="#params" onclick="scrollToParams()">⚙️ Paramètres</a>
     </div>
-    <div class="sb-foot">
-      <div class="logout" onclick="doLogout()">Logout</div>
-    </div>
+    <div class="sb-foot"><div class="logout" onclick="doLogout()">Logout</div></div>
   </nav>
 
-  <div class="wrap">
-    <!-- Branding فقط كما طلبت -->
-    <div class="acc" id="branding">
-      <div class="acc-sec open" id="accBrand">
-        <div class="acc-hd" onclick="toggleAcc(this)">Branding (صور الواجهة)</div>
-        <div class="acc-bd">
-          <div class="row">
-            <!-- خلفية شاشة تسجيل الدخول -->
-            <div class="card">
-              <h3>Login Background</h3>
-              <div class="inp">
-                <input id="brand_login_bg_url" type="text" placeholder="assets/image/login-bg.jpg (أو الصق رابط صورة)">
-                <button class="btn" type="button" onclick="saveBrandUrl('brand.loginBg','brand_login_bg_url')">Save URL</button>
-              </div>
-              <div class="hr"></div>
-              <label class="muted">أو حمّل صورة (png/jpg/gif)</label>
-              <input id="brand_login_bg_file" type="file" accept=".png,.jpg,.jpeg,.gif" onchange="saveBrandFile('brand.loginBg', this)">
-              <div class="muted">الحقول وزر الدخول سيظهرون فوق هذه الصورة مباشرة.</div>
-            </div>
+  <div class="wrap" id="params">
+    <div class="card">
+      <h2 style="margin:0 0 10px">Paramètres</h2>
 
-            <!-- قالب صغير شفاف فوق الحقول -->
-            <div class="card">
-              <h3>Login Badge (قالب صغير شفاف)</h3>
-              <div class="inp">
-                <input id="brand_login_badge_url" type="text" placeholder="assets/image/login-badge.png">
-                <button class="btn" type="button" onclick="saveBrandUrl('brand.loginBadge','brand_login_badge_url')">Save URL</button>
-              </div>
-              <div class="hr"></div>
-              <label class="muted">أو حمّل صورة (png/gif بخلفية شفافة)</label>
-              <input id="brand_login_badge_file" type="file" accept=".png,.gif" onchange="saveBrandFile('brand.loginBadge', this)">
-              <div class="muted">تظهر أعلى الحقول في صفحة تسجيل الدخول.</div>
-            </div>
+      <!-- Tabs -->
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-target="tab-ops">Opérateur</button>
+        <button class="tab" data-target="tab-prof">Profil</button>
+        <button class="tab" data-target="tab-ref">Référentiel</button>
+        <button class="tab" data-target="tab-acl">Droits d’accès</button>
+        <button class="tab" data-target="tab-pass">Mot de passe</button>
+        <button class="tab" data-target="tab-brand">Branding</button>
+      </div>
 
-            <!-- شعار الشريط العلوي يمين الهامبرغر -->
-            <div class="card">
-              <h3>Topbar Logo (يمين ☰)</h3>
+      <!-- Opérateur -->
+      <div class="tabpan show" id="tab-ops">
+        <div class="row">
+          <div class="card">
+            <h3>Liste des opérateurs</h3>
+            <table class="table" id="opsTable">
+              <thead><tr><th>Nom d’utilisateur</th><th>Profil</th><th>Ferme</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Ajouter un opérateur</h3>
+            <div class="row">
+              <div class="inp"><label>Username&nbsp;</label><input id="op_username" placeholder="ex: abdellah"></div>
+              <div class="inp"><label>Password&nbsp;</label><input id="op_password" placeholder="ex: 20202020"></div>
               <div class="inp">
-                <input id="brand_topbar_logo_url" type="text" placeholder="assets/image/topbar-logo.png">
-                <button class="btn" type="button" onclick="saveBrandUrl('brand.topbarLogo','brand_topbar_logo_url')">Save URL</button>
+                <label>Profil&nbsp;</label>
+                <select id="op_profile"></select>
               </div>
-              <div class="hr"></div>
-              <label class="muted">أو حمّل صورة (png/jpg/gif)</label>
-              <input id="brand_topbar_logo_file" type="file" accept=".png,.jpg,.jpeg,.gif" onchange="saveBrandFile('brand.topbarLogo', this)">
+              <div class="inp">
+                <label>Ferme&nbsp;</label>
+                <select id="op_ferme"></select>
+              </div>
+              <div class="actions">
+                <button class="btn" onclick="addOperator()">Enregistrer</button>
+                <button class="iconbtn" onclick="seedDemo()">Seed demo</button>
+              </div>
+              <div class="muted">يتم الحفظ محليًا في المتصفح أثناء التطوير.</div>
             </div>
-
-            <div class="note">ملاحظة: يمكنك أيضاً رفع الصور داخل <code>assets/image/</code> واستعمال المسار النسبي مباشرة.</div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card"><div class="muted">إعدادات إضافية ستضاف لاحقاً…</div></div>
+      <!-- Profil -->
+      <div class="tabpan" id="tab-prof">
+        <div class="row">
+          <div class="card">
+            <h3>Profils</h3>
+            <table class="table" id="profTable">
+              <thead><tr><th>Nom du profil</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Ajouter un profil</h3>
+            <div class="row">
+              <div class="inp"><label>Nom&nbsp;</label><input id="prof_name" placeholder="ex: Admin, Magasinier..."></div>
+              <div><button class="btn" onclick="addProfile()">Ajouter</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Référentiel -->
+      <div class="tabpan" id="tab-ref">
+        <div class="row">
+          <div class="card">
+            <h3>Référentiel — Ferme</h3>
+            <table class="table" id="fermeTable">
+              <thead><tr><th>Nom</th><th>Emplacement</th><th>Société</th><th>Responsable</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Ajouter une ferme</h3>
+            <div class="row">
+              <div class="inp"><label>Nom&nbsp;</label><input id="f_nom" placeholder="ex: Karam 16"></div>
+              <div class="inp"><label>Emplacement&nbsp;</label><input id="f_lieu" placeholder="ex: Tiznit"></div>
+              <div class="inp"><label>Société&nbsp;</label><input id="f_soc" placeholder="ex: Karam Green"></div>
+              <div class="inp"><label>Responsable&nbsp;</label><input id="f_resp" placeholder="ex: M. Said"></div>
+              <div class="actions">
+                <button class="btn" onclick="addFerme()">Enregistrer</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Autres référentiels (rapides)</h3>
+            <div class="row">
+              <div class="inp"><label>Société&nbsp;</label><input id="ref_soc" placeholder="Ajouter société..."><button class="iconbtn" onclick="addRef('societes','ref_soc')">+</button></div>
+              <div class="inp"><label>Responsable&nbsp;</label><input id="ref_resp" placeholder="Ajouter responsable..."><button class="iconbtn" onclick="addRef('responsables','ref_resp')">+</button></div>
+              <div class="inp"><label>Station&nbsp;</label><input id="ref_stat" placeholder="Ajouter station..."><button class="iconbtn" onclick="addRef('stations','ref_stat')">+</button></div>
+              <div class="inp"><label>Secteur&nbsp;</label><input id="ref_sect" placeholder="Ajouter secteur..."><button class="iconbtn" onclick="addRef('secteurs','ref_sect')">+</button></div>
+              <div class="inp"><label>Parcelle&nbsp;</label><input id="ref_parc" placeholder="Ajouter parcelle..."><button class="iconbtn" onclick="addRef('parcelles','ref_parc')">+</button></div>
+              <div class="inp"><label>Transport&nbsp;</label><input id="ref_trans" placeholder="Ajouter transport..."><button class="iconbtn" onclick="addRef('transports','ref_trans')">+</button></div>
+              <div class="inp"><label>Variété&nbsp;</label><input id="ref_var" placeholder="Ajouter variété..."><button class="iconbtn" onclick="addRef('varietes','ref_var')">+</button></div>
+              <div class="inp"><label>Variété champ&nbsp;</label><input id="ref_varc" placeholder="Ajouter variété champ..."><button class="iconbtn" onclick="addRef('varietes_champ','ref_varc')">+</button></div>
+            </div>
+            <div class="muted">هذه القوائم تُخزن محليًا أثناء التطوير ويمكن استعمالها لاحقًا في النماذج.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Droits d’accès -->
+      <div class="tabpan" id="tab-acl">
+        <div class="card">
+          <h3>Règles d’accès (بسيطة للتجربة)</h3>
+          <div class="row">
+            <div class="inp"><label>Autoriser création d’opérateurs</label><input type="checkbox" id="acl_create_ops"></div>
+            <div class="inp"><label>Autoriser modification référentiel</label><input type="checkbox" id="acl_edit_ref"></div>
+            <button class="btn" onclick="saveACL()">Enregistrer</button>
+          </div>
+          <div class="muted">مبدئيًا نخزن الأذونات في localStorage فقط.</div>
+        </div>
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="tabpan" id="tab-pass">
+        <div class="card">
+          <h3>Changer mot de passe (local)</h3>
+          <div class="row">
+            <div class="inp"><label>Username</label><input id="pw_user" placeholder="username"></div>
+            <div class="inp"><label>Nouveau mot de passe</label><input id="pw_new" placeholder="nouveau mot de passe"></div>
+            <button class="btn" onclick="changePassword()">Enregistrer</button>
+          </div>
+          <div class="muted">هذا التغيير يؤثر فقط على قائمة opérateurs المخزنة محليًا الآن.</div>
+        </div>
+      </div>
+
+      <!-- Branding -->
+      <div class="tabpan" id="tab-brand">
+        <div class="row">
+          <div class="card">
+            <h3>Login Background</h3>
+            <div class="inp">
+              <input id="brand_login_bg_url" type="text" placeholder="assets/image/login-bg.jpg">
+              <button class="btn" type="button" onclick="saveBrandUrl('brand.loginBg','brand_login_bg_url')">Save URL</button>
+            </div>
+            <div class="hr"></div>
+            <label class="muted">أو حمّل صورة (png/jpg/gif)</label>
+            <input id="brand_login_bg_file" type="file" accept=".png,.jpg,.jpeg,.gif" onchange="saveBrandFile('brand.loginBg', this)">
+          </div>
+
+          <div class="card">
+            <h3>Login Badge (شفاف)</h3>
+            <div class="inp">
+              <input id="brand_login_badge_url" type="text" placeholder="assets/image/login-badge.png">
+              <button class="btn" type="button" onclick="saveBrandUrl('brand.loginBadge','brand_login_badge_url')">Save URL</button>
+            </div>
+            <div class="hr"></div>
+            <label class="muted">png/gif فقط</label>
+            <input id="brand_login_badge_file" type="file" accept=".png,.gif" onchange="saveBrandFile('brand.loginBadge', this)">
+          </div>
+
+          <div class="card">
+            <h3>Topbar Logo (يمين ☰)</h3>
+            <div class="inp">
+              <input id="brand_topbar_logo_url" type="text" placeholder="assets/image/topbar-logo.png">
+              <button class="btn" type="button" onclick="saveBrandUrl('brand.topbarLogo','brand_topbar_logo_url')">Save URL</button>
+            </div>
+            <div class="hr"></div>
+            <input id="brand_topbar_logo_file" type="file" accept=".png,.jpg,.jpeg,.gif" onchange="saveBrandFile('brand.topbarLogo', this)">
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
 <script>
-  /* ===== Accordion ===== */
-  function toggleAcc(hd){ hd.parentElement.classList.toggle('open'); }
+/* ===== Sidebar ===== */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const openBtn  = document.getElementById('openMenu');
+const closeBtn = document.getElementById('closeMenu');
+function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); sidebar.setAttribute('aria-hidden','false'); }
+function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); sidebar.setAttribute('aria-hidden','true'); }
+openBtn.addEventListener('click', openSidebar);
+closeBtn.addEventListener('click', closeSidebar);
+overlay.addEventListener('click', closeSidebar);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeSidebar(); });
+function scrollToParams(){ document.getElementById('params').scrollIntoView({behavior:'smooth'}); }
 
-  /* ===== Sidebar open/close ===== */
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const openBtn  = document.getElementById('openMenu');
-  const closeBtn = document.getElementById('closeMenu');
+/* ===== Tabs ===== */
+const tabButtons = document.querySelectorAll('.tab');
+const tabPans    = document.querySelectorAll('.tabpan');
+tabButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabButtons.forEach(b=>b.classList.remove('active'));
+    tabPans.forEach(p=>p.classList.remove('show'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('show');
+  });
+});
 
-  function openSidebar(){
-    sidebar.classList.add('open');
-    overlay.classList.add('show');
-    sidebar.setAttribute('aria-hidden','false');
-  }
-  function closeSidebar(){
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
-    sidebar.setAttribute('aria-hidden','true');
-  }
-  openBtn.addEventListener('click', openSidebar);
-  closeBtn.addEventListener('click', closeSidebar);
-  overlay.addEventListener('click', closeSidebar);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeSidebar(); });
+/* ===== Branding helpers ===== */
+function saveBrandUrl(key, inputId){
+  const val = document.getElementById(inputId).value.trim();
+  if(!val){ alert('ضع مسار الصورة أو رابطها'); return; }
+  localStorage.setItem(key, val);
+  applyTopbarLogo();
+  alert('Saved ✔');
+}
+function saveBrandFile(key, input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { localStorage.setItem(key, reader.result); applyTopbarLogo(); alert('Saved ✔'); };
+  reader.readAsDataURL(file);
+}
+function applyTopbarLogo(){
+  const src = localStorage.getItem('brand.topbarLogo') || 'assets/image/topbar-logo.png';
+  document.getElementById('topbarLogo').src = src;
+}
+function hydrateBrandInputs(){
+  [['brand.loginBg','brand_login_bg_url'],
+   ['brand.loginBadge','brand_login_badge_url'],
+   ['brand.topbarLogo','brand_topbar_logo_url']].forEach(([k,id])=>{
+      const v = localStorage.getItem(k); if(v) document.getElementById(id).value = v;
+   });
+}
 
-  /* ===== Branding save/apply ===== */
-  function saveBrandUrl(key, inputId){
-    const val = document.getElementById(inputId).value.trim();
-    if(!val){ alert('ضع مسار الصورة أو رابطها'); return; }
-    localStorage.setItem(key, val);
-    applyTopbarLogo();
-    alert('Saved ✔');
-  }
-  function saveBrandFile(key, input){
-    const file = input.files && input.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = () => { localStorage.setItem(key, reader.result); applyTopbarLogo(); alert('Saved ✔'); };
-    reader.readAsDataURL(file);
-  }
-  function applyTopbarLogo(){
-    const src = localStorage.getItem('brand.topbarLogo') || 'assets/image/topbar-logo.png';
-    document.getElementById('topbarLogo').src = src;
-  }
-  function hydrateBrandInputs(){
-    [['brand.loginBg','brand_login_bg_url'],
-     ['brand.loginBadge','brand_login_badge_url'],
-     ['brand.topbarLogo','brand_topbar_logo_url']].forEach(([k,id])=>{
-        const v = localStorage.getItem(k); if(v) document.getElementById(id).value = v;
-     });
-  }
-  function doLogout(){ location.href='index.html'; }
+/* ===== Data storage ===== */
+function getArr(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
+function setArr(key,arr){ localStorage.setItem(key, JSON.stringify(arr)); }
 
+/* === Profiles === */
+function renderProfiles(){
+  const t = document.querySelector('#profTable tbody'); t.innerHTML='';
+  getArr('data.profiles').forEach((p,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p}</td>
+      <td class="actions">
+        <button class="iconbtn" onclick="editProfile(${i})">✏️</button>
+        <button class="iconbtn delete" onclick="delProfile(${i})">🗑️</button>
+      </td>`;
+    t.appendChild(tr);
+  });
+  // fill profile select
+  const sel = document.getElementById('op_profile');
+  sel.innerHTML=''; getArr('data.profiles').forEach(p=>{
+    const o=document.createElement('option'); o.textContent=p; o.value=p; sel.appendChild(o);
+  });
+}
+function addProfile(){
+  const name = document.getElementById('prof_name').value.trim();
+  if(!name) return alert('Nom requis');
+  const arr = getArr('data.profiles'); if(arr.includes(name)) return alert('Existe déjà');
+  arr.push(name); setArr('data.profiles',arr); document.getElementById('prof_name').value='';
+  renderProfiles();
+}
+function editProfile(i){
+  const arr=getArr('data.profiles'); const nv=prompt('Nouveau nom', arr[i]); if(!nv) return;
+  arr[i]=nv.trim(); setArr('data.profiles',arr); renderProfiles();
+}
+function delProfile(i){
+  const arr=getArr('data.profiles'); arr.splice(i,1); setArr('data.profiles',arr); renderProfiles();
+}
+
+/* === Fermes === */
+function renderFermes(){
+  const t=document.querySelector('#fermeTable tbody'); t.innerHTML='';
+  getArr('data.fermes').forEach((f,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${f.nom}</td><td>${f.lieu||''}</td><td>${f.soc||''}</td><td>${f.resp||''}</td>
+      <td class="actions">
+        <button class="iconbtn" onclick="editFerme(${i})">✏️</button>
+        <button class="iconbtn delete" onclick="delFerme(${i})">🗑️</button>
+      </td>`;
+    t.appendChild(tr);
+  });
+  // fill ferme select
+  const sel = document.getElementById('op_ferme');
+  sel.innerHTML=''; getArr('data.fermes').forEach(f=>{
+    const o=document.createElement('option'); o.textContent=f.nom; o.value=f.nom; sel.appendChild(o);
+  });
+}
+function addFerme(){
+  const nom=f('f_nom'), lieu=f('f_lieu'), soc=f('f_soc'), resp=f('f_resp');
+  if(!nom) return alert('Nom requis');
+  const arr=getArr('data.fermes'); arr.push({nom,lieu,soc,resp}); setArr('data.fermes',arr);
+  ['f_nom','f_lieu','f_soc','f_resp'].forEach(id=>document.getElementById(id).value='');
+  renderFermes();
+}
+function editFerme(i){
+  const arr=getArr('data.fermes'); const item=arr[i];
+  const nv=prompt('Nom', item.nom)||item.nom;
+  arr[i]={...item, nom:nv}; setArr('data.fermes',arr); renderFermes();
+}
+function delFerme(i){ const arr=getArr('data.fermes'); arr.splice(i,1); setArr('data.fermes',arr); renderFermes(); }
+
+/* === Opérateurs === */
+function renderOperators(){
+  const t=document.querySelector('#opsTable tbody'); t.innerHTML='';
+  getArr('data.operators').forEach((o,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${o.username}</td><td>${o.profile||''}</td><td>${o.ferme||''}</td>
+      <td class="actions">
+        <button class="iconbtn" onclick="editOperator(${i})">✏️</button>
+        <button class="iconbtn delete" onclick="delOperator(${i})">🗑️</button>
+      </td>`;
+    t.appendChild(tr);
+  });
+}
+function addOperator(){
+  const username=f('op_username'), password=f('op_password'), profile=gsel('op_profile'), ferme=gsel('op_ferme');
+  if(!username||!password) return alert('username + password');
+  const arr=getArr('data.operators'); if(arr.some(o=>o.username===username)) return alert('Existe déjà');
+  arr.push({username,password,profile,ferme}); setArr('data.operators',arr);
+  ['op_username','op_password'].forEach(id=>document.getElementById(id).value='');
+  renderOperators();
+}
+function editOperator(i){
+  const arr=getArr('data.operators'); const item=arr[i];
+  const nv=prompt('Nouveau mot de passe pour '+item.username, item.password); if(!nv) return;
+  item.password=nv; setArr('data.operators',arr); renderOperators();
+}
+function delOperator(i){ const arr=getArr('data.operators'); arr.splice(i,1); setArr('data.operators',arr); renderOperators(); }
+
+/* === Autres référentiels simples === */
+function addRef(key, inputId){
+  const v=document.getElementById(inputId).value.trim(); if(!v) return;
+  const arr=getArr('ref.'+key); arr.push(v); setArr('ref.'+key,arr); document.getElementById(inputId).value='';
+}
+
+/* === ACL / Password === */
+function saveACL(){
+  const data={create_ops:ge('acl_create_ops').checked, edit_ref:ge('acl_edit_ref').checked};
+  localStorage.setItem('data.acl', JSON.stringify(data));
+  alert('Saved ✔');
+}
+function changePassword(){
+  const u=f('pw_user'), np=f('pw_new'); if(!u||!np) return alert('compléter');
+  const arr=getArr('data.operators'); const i=arr.findIndex(o=>o.username===u); if(i<0) return alert('user introuvable');
+  arr[i].password=np; setArr('data.operators',arr); alert('Modifié ✔');
+}
+
+/* === Helpers === */
+function ge(id){return document.getElementById(id)}
+function f(id){return ge(id).value.trim()}
+function gsel(id){const e=ge(id); return e.options[e.selectedIndex]?.value||''}
+
+/* === Demo seed (اختياري) === */
+function seedDemo(){
+  if(!getArr('data.profiles').length) setArr('data.profiles', ['Admin','Magasinier','Pointeur','Directeur']);
+  if(!getArr('data.fermes').length)   setArr('data.fermes', [{nom:'Karam 16',lieu:'Tiznit',soc:'Karam Green',resp:'M. Said'}]);
+  if(!getArr('data.operators').length) setArr('data.operators', [{username:'ABDELLAH',password:'20202020',profile:'Admin',ferme:'Karam 16'}]);
+  renderProfiles(); renderFermes(); renderOperators();
+}
+
+/* === Init === */
+function init(){
   applyTopbarLogo();
   hydrateBrandInputs();
-  // سماح تجاوز الدخول مؤقتاً أثناء التطوير
+  renderProfiles(); renderFermes(); renderOperators();
+  // أثناء التطوير اسمح بالدخول بدون تحقق
   if(!localStorage.getItem('security.bypass')) localStorage.setItem('security.bypass','1');
+}
+init();
+
+/* === Navigation === */
+function doLogout(){ location.href='index.html'; }
 </script>
 </body>
 </html>
