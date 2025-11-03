@@ -6,13 +6,18 @@
 <title>AB AGRIWEB - Dashboard</title>
 <style>
 :root{--bg:#0f172a;--panel:#0b1220;--text:#e2e8f0;--accent:#22c55e;--border:#243046;--tile:#0c1526;--tileIcon:#0f1a2e;--warn:#fde68a1a}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden}
 .hidden{display:none!important}
+
+/* Topbar */
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:12px 18px;border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.25)}
 .menu-btn{background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
 .brand{display:flex;align-items:center;gap:10px}
 .title{font-weight:800;color:var(--accent);letter-spacing:.5px;display:flex;align-items:center;gap:10px}
 .badge-img{height:22px;border-radius:6px;border:1px solid #1f2937}
+
+/* Sidebar */
 .sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#0b1220;border-right:1px solid var(--border);transition:left .35s ease;display:flex;flex-direction:column;padding-top:56px;box-shadow:4px 0 20px rgba(0,0,0,.4);z-index:15}
 .sidebar.active{left:0}
 .side-header{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #1e293b;background:#0b1220}
@@ -24,6 +29,8 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 .sidebar-brand img{width:100%;border-radius:10px;border:1px solid #1f2937}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10}
 .overlay.active{opacity:1;pointer-events:all}
+
+/* Content + cards */
 .content{padding:24px}
 .card{max-width:1000px;margin:16px auto;background:#0b1220;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 10px 24px rgba(0,0,0,.25);position:relative}
 .muted{opacity:.8}
@@ -32,11 +39,13 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 .tile{display:flex;align-items:center;gap:12px;background:var(--tile);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer}
 .tile:hover{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.25) inset}
 .tile .icon{width:36px;height:36px;display:grid;place-items:center;background:var(--tileIcon);border:1px solid #1f2a44;border-radius:10px}
-.tile h4{margin:0;font-size:16px}.tile p{margin:2px 0 0;font-size:12px;color:#94a3b8}
+.tile h4{margin:0;font-size:16px}
+.tile p{margin:2px 0 0;font-size:12px;color:#94a3b8}
 .actions-top{position:absolute;top:16px;right:16px;display:flex;gap:8px}
 .btn{padding:10px 12px;border-radius:10px;border:1px solid #22c55e;color:#22c55e;background:transparent;cursor:pointer}
 .btn:hover{background:#22c55e;color:#0b1220}.btn.icon{width:40px;height:40px;display:grid;place-items:center;padding:0}
 .btn.danger{border-color:#3b1f1f;color:#fca5a5}.btn.danger:hover{background:#ef4444;color:#0b1220;border-color:#ef4444}
+.btn.link{border-color:#334155;color:#93c5fd}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .input,select,textarea{width:100%;max-width:360px;padding:12px;border-radius:10px;border:1px solid #334155;background:#091227;color:#e2e8f0}
 .list{display:grid;gap:10px;margin-top:14px}
@@ -101,6 +110,18 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
     <h2>Bienvenue 👋</h2>
     <p class="muted">Page d’accueil temporaire.</p>
     <div id="firstRunHint" class="hint hidden" style="margin-top:10px">🔐 لم يتم العثور على أي مستخدم. اذهب إلى <b>Paramètres → Opérateurs</b> وأضف أول مستخدم.</div>
+  </section>
+
+  <!-- Irrigation -->
+  <section id="page-irrig" class="card hidden">
+    <h2>🌿 Irrigation</h2>
+    <p class="muted">واجهة قيد الإنشاء.</p>
+  </section>
+
+  <!-- Traitement -->
+  <section id="page-trait" class="card hidden">
+    <h2>💧 Traitement</h2>
+    <p class="muted">واجهة قيد الإنشاء.</p>
   </section>
 
   <!-- Paramètres (menu tuiles) -->
@@ -212,6 +233,10 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
             <label class="label">Logo de l’application (PNG/GIF)</label>
             <input id="cfg-logo-url" class="input" placeholder="URL (png/gif)">
             <input id="cfg-logo-file" type="file" accept="image/png,image/gif" class="input">
+            <div class="row" style="margin-top:6px">
+              <button class="btn link" onclick="previewUrl('logo')">Prévisualiser URL</button>
+              <button class="btn danger" onclick="clearImg('logo')">Supprimer</button>
+            </div>
           </div>
         </div>
       </div>
@@ -271,10 +296,43 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
       <button class="acc-hd" onclick="toggleAcc('acc-brand')">5) Branding <span>Badge • Sidebar • Login banner • Login background</span></button>
       <div class="acc-bd">
         <div class="grid">
-          <div><label class="label">Badge header</label><input id="cfg-badge-url" class="input" placeholder="URL (png/gif)"><input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input"></div>
-          <div><label class="label">Sidebar banner</label><input id="cfg-side-url" class="input" placeholder="URL (png/gif)"><input id="cfg-side-file" type="file" accept="image/png,image/gif" class="input"></div>
-          <div><label class="label">Login banner</label><input id="cfg-login-url" class="input" placeholder="URL (png/gif)"><input id="cfg-login-file" type="file" accept="image/png,image/gif" class="input"></div>
-          <div><label class="label">Login background</label><input id="cfg-loginbg-url" class="input" placeholder="URL (png/gif)"><input id="cfg-loginbg-file" type="file" accept="image/png,image/gif" class="input"></div>
+          <div>
+            <label class="label">Badge header</label>
+            <input id="cfg-badge-url" class="input" placeholder="URL (png/gif)">
+            <input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input">
+            <div class="row" style="margin-top:6px">
+              <button class="btn link" onclick="previewUrl('badge')">Prévisualiser URL</button>
+              <button class="btn danger" onclick="clearImg('badge')">Supprimer</button>
+            </div>
+          </div>
+          <div>
+            <label class="label">Sidebar banner</label>
+            <input id="cfg-side-url" class="input" placeholder="URL (png/gif)">
+            <input id="cfg-side-file" type="file" accept="image/png,image/gif" class="input">
+            <div class="row" style="margin-top:6px">
+              <button class="btn link" onclick="previewUrl('sidebar')">Prévisualiser URL</button>
+              <button class="btn danger" onclick="clearImg('sidebar')">Supprimer</button>
+            </div>
+          </div>
+          <div>
+            <label class="label">Login banner</label>
+            <input id="cfg-login-url" class="input" placeholder="URL (png/gif)">
+            <input id="cfg-login-file" type="file" accept="image/png,image/gif" class="input">
+            <div class="row" style="margin-top:6px">
+              <button class="btn link" onclick="previewUrl('login')">Prévisualiser URL</button>
+              <button class="btn danger" onclick="clearImg('login')">Supprimer</button>
+            </div>
+          </div>
+          <div>
+            <label class="label">Login background</label>
+            <input id="cfg-loginbg-url" class="input" placeholder="URL (png/gif)">
+            <input id="cfg-loginbg-file" type="file" accept="image/png,image/gif" class="input">
+            <div class="row" style="margin-top:6px">
+              <button class="btn link" onclick="previewUrl('loginBg')">Prévisualiser URL</button>
+              <button class="btn danger" onclick="clearImg('loginBg')">Supprimer</button>
+            </div>
+            <div class="muted" style="margin-top:6px">ملاحظة: حقول تسجيل الدخول تبقى وسط الخلفية تلقائياً.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -308,7 +366,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 </div>
 
 <script>
-/* ===== Guard: allow if operators exist OR setup mode ===== */
+/* ===== Guard ===== */
 const SETUP_ON = localStorage.getItem('ab_setup') === '1';
 (function guard(){
   const LS_OPERATORS='ab_operators';
@@ -328,11 +386,17 @@ function toggleMenu(){sidebar.classList.contains('active')?closeMenu():openMenu(
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});overlay.addEventListener('click',closeMenu);
 
 /* Routing */
-const navHome=g('nav-home'),navSet=g('nav-settings');
-const pageHome=g('page-home'),pageSet=g('page-settings'),pageProf=g('page-profiles'),pageOps=g('page-operators'),pageFarms=g('page-farms'),pageRefs=g('page-refs'),pageAppCfg=g('page-appcfg');
+const navHome=g('nav-home'),navSet=g('nav-settings'),navIrrig=g('nav-irrig'),navTrait=g('nav-trait');
+const pageHome=g('page-home'),pageIrrig=g('page-irrig'),pageTrait=g('page-trait'),
+      pageSet=g('page-settings'),pageProf=g('page-profiles'),pageOps=g('page-operators'),
+      pageFarms=g('page-farms'),pageRefs=g('page-refs'),pageAppCfg=g('page-appcfg');
+
 function setActiveLink(l){document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));l.classList.add('active')}
-function showPage(n){[pageHome,pageSet,pageProf,pageOps,pageFarms,pageRefs,pageAppCfg].forEach(p=>p.classList.add('hidden'));
+function showPage(n){
+  [pageHome,pageIrrig,pageTrait,pageSet,pageProf,pageOps,pageFarms,pageRefs,pageAppCfg].forEach(p=>p.classList.add('hidden'));
   if(n==='home')pageHome.classList.remove('hidden');
+  if(n==='irrig')pageIrrig.classList.remove('hidden');
+  if(n==='trait')pageTrait.classList.remove('hidden');
   if(n==='settings')pageSet.classList.remove('hidden');
   if(n==='profiles')pageProf.classList.remove('hidden');
   if(n==='operators')pageOps.classList.remove('hidden');
@@ -342,6 +406,8 @@ function showPage(n){[pageHome,pageSet,pageProf,pageOps,pageFarms,pageRefs,pageA
   closeMenu();
 }
 navHome.onclick=(e)=>{e.preventDefault();setActiveLink(navHome);showPage('home')}
+navIrrig.onclick=(e)=>{e.preventDefault();setActiveLink(navIrrig);showPage('irrig')}
+navTrait.onclick=(e)=>{e.preventDefault();setActiveLink(navTrait);showPage('trait')}
 navSet.onclick=(e)=>{e.preventDefault();setActiveLink(navSet);showPage('settings')}
 g('logout').onclick=(e)=>{e.preventDefault();location='index.html'}
 function setActiveTile(){setActiveLink(navSet)}
@@ -383,6 +449,26 @@ function acceptPngGif(file){return file && (file.type==='image/png' || file.type
   });
 });
 
+/* NEW: clear / preview helpers */
+function clearImg(which){
+  const imgs=loadImgs();
+  if(!(which in imgs)) return;
+  imgs[which]=null; saveImgs(imgs);
+  // clear URL and file inputs visually
+  const map={logo:['cfg-logo-url','cfg-logo-file'],badge:['cfg-badge-url','cfg-badge-file'],sidebar:['cfg-side-url','cfg-side-file'],login:['cfg-login-url','cfg-login-file'],loginBg:['cfg-loginbg-url','cfg-loginbg-file']};
+  const pair=map[which]||[];
+  if(pair[0]) s(pair[0],'');
+  if(pair[1]){ const f=g(pair[1]); if(f) f.value=''; }
+  appcfgApply();
+  alert('تم حذف الصورة من الإعدادات.');
+}
+function previewUrl(which){
+  const urlId={logo:'cfg-logo-url',badge:'cfg-badge-url',sidebar:'cfg-side-url',login:'cfg-login-url',loginBg:'cfg-loginbg-url'}[which];
+  if(!urlId) return;
+  const u=v(urlId); if(!u){alert('أدخل URL أولاً');return}
+  window.open(u,'_blank');
+}
+
 /* Accordion */
 function toggleAcc(id){ const acc=g(id); acc.classList.toggle('open'); }
 
@@ -395,14 +481,14 @@ function appcfgApply(){
   if(imgs.logo){ titleTop.innerHTML=`<img src="${imgs.logo}" style="height:28px;border-radius:6px;vertical-align:middle">`; }
   else { titleTop.textContent=c.appTitle; }
 
-  // Libellés Navigation
+  // Labels Navigation
   g('lbl-nav-home').textContent='🏠 '+(c.nav.home||APP_DEFAULT.nav.home);
   g('lbl-nav-irrig').textContent='🌿 '+(c.nav.irrig||APP_DEFAULT.nav.irrig);
   g('lbl-nav-trait').textContent='💧 '+(c.nav.trait||APP_DEFAULT.nav.trait);
   g('lbl-nav-settings').textContent='⚙️ '+(c.nav.settings||APP_DEFAULT.nav.settings);
   g('lbl-nav-logout').textContent='🚪 '+(c.nav.logout||APP_DEFAULT.nav.logout);
 
-  // Tuiles Paramètres
+  // Tiles
   g('lbl-tile-operators').textContent=c.tiles.operators||APP_DEFAULT.tiles.operators;
   g('lbl-tile-profiles').textContent=c.tiles.profiles||APP_DEFAULT.tiles.profiles;
   g('lbl-tile-refs').textContent=c.tiles.refs||APP_DEFAULT.tiles.refs;
@@ -410,7 +496,7 @@ function appcfgApply(){
   g('lbl-tile-pass').textContent=c.tiles.pass||APP_DEFAULT.tiles.pass;
   g('lbl-tile-appcfg').textContent=c.tiles.appcfg||APP_DEFAULT.tiles.appcfg;
 
-  // مرجعيات
+  // Référentiels labels
   g('lbl-ref-ferme').textContent=c.refLabels.ferme;
   g('lbl-ref-companies').textContent=c.refLabels.companies;
   g('lbl-ref-responsables').textContent=c.refLabels.responsables;
@@ -423,10 +509,11 @@ function appcfgApply(){
   g('lbl-ref-gestions').textContent=c.refLabels.gestions;
   g('lbl-ref-achats').textContent=c.refLabels.achats;
 
+  // Badge + sidebar images visibility
   const badge=g('appBadgeImg'); if(imgs.badge){badge.src=imgs.badge;badge.classList.remove('hidden')} else badge.classList.add('hidden');
   const sbWrap=g('sidebarBrand'), sbImg=g('sidebarBrandImg'); if(imgs.sidebar){sbImg.src=imgs.sidebar;sbWrap.classList.remove('hidden')} else sbWrap.classList.add('hidden');
 
-  // إشعار الصفحة الرئيسية إذا ماكانش opérateur
+  // First-run hint
   const ops = loadOps(); if(ops.length===0){ g('firstRunHint').classList.remove('hidden'); } else { g('firstRunHint').classList.add('hidden'); }
 }
 
@@ -483,7 +570,7 @@ function appcfgSave(){
   const ans = v('sec-answer'); if(ans) sec.answerHash = hashLite(ans.toLowerCase());
   saveSec(sec);
 
-  // 5) Branding
+  // 5) Branding (URLs)
   const badgeUrl=v('cfg-badge-url'); if(badgeUrl && !urlOk(badgeUrl)) return alert('Badge URL: PNG/GIF'); if(badgeUrl) imgs.badge=badgeUrl;
   const sideUrl=v('cfg-side-url'); if(sideUrl && !urlOk(sideUrl)) return alert('Sidebar URL: PNG/GIF'); if(sideUrl) imgs.sidebar=sideUrl;
   const loginUrl=v('cfg-login-url'); if(loginUrl && !urlOk(loginUrl)) return alert('Login banner URL: PNG/GIF'); if(loginUrl) imgs.login=loginUrl;
@@ -493,7 +580,7 @@ function appcfgSave(){
   alert('تم الحفظ ✅');
 }
 
-/* Data modules */
+/* Data modules (profiles/farms/ops/refs) — بدون تغيير وظيفي */
 function loadProfiles(){try{return JSON.parse(localStorage.getItem(LS_PROFILES))||[]}catch{return []}}
 function saveProfiles(a){localStorage.setItem(LS_PROFILES,JSON.stringify(a))}
 function renderProfiles(){const list=g('profilesList'),d=loadProfiles();if(d.length===0){list.innerHTML='<div class="item"><span class="muted">لا توجد بروفايلات بعد.</span></div>';return}
