@@ -12,6 +12,7 @@ body{
   background:linear-gradient(180deg,#0f172a,#1e293b);
   color:var(--text);min-height:100vh;display:grid;place-items:center;padding:20px;transition:background .2s ease
 }
+/* البطاقة شفافة باش الحقول يبانوا فوق الخلفية مباشرة */
 .card{width:min(420px,92vw);background:transparent;border:none;box-shadow:none;padding:22px}
 h1{margin:0 0 12px;color:var(--accent);text-align:center;text-shadow:0 2px 8px rgba(0,0,0,.6)}
 .banner{margin:-4px -4px 14px -4px}
@@ -41,9 +42,9 @@ a{display:block;text-align:center;margin-top:10px;color:#c7e2ff;text-decoration:
 </head>
 <body>
   <div class="card">
-    <!-- شعار التطبيق -->
+    <!-- Logo اختياري -->
     <div id="loginLogoWrap" class="banner hidden"><img id="loginLogoImg" alt=""></div>
-    <!-- بانر اختياري فوق الحقول -->
+    <!-- بانر فوق الحقول -->
     <div class="banner hidden" id="loginBanner"><img id="loginBannerImg" alt=""></div>
     <!-- اسم احتياطي -->
     <h1 id="appTitle" class="hidden">AB AGRIWEB</h1>
@@ -105,13 +106,14 @@ function loadImgs(){try{return JSON.parse(localStorage.getItem(LS_IMG)||'{}')}ca
 function loadSec(){try{return JSON.parse(localStorage.getItem(LS_SEC)||'{}')}catch{return{}}}
 function loadOps(){try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[]}catch{return []}}
 
+/* init: يطبّق الصور ويخلي الحقول وسط الخلفية */
 (function init(){
   const cfg=loadCfg();
   if(cfg.appTitle){ document.title=cfg.appTitle; }
 
   const imgs=loadImgs();
 
-  // شعار التطبيق أو fallback
+  // Logo
   if( (imgs.logo && /^data:image\/(png|gif);/i.test(imgs.logo)) ||
       (typeof imgs.logo==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.logo)) ){
     const wrap=document.getElementById('loginLogoWrap');
@@ -121,7 +123,7 @@ function loadOps(){try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[]
     document.getElementById('appTitle').classList.remove('hidden');
   }
 
-  // بانر الدخول
+  // Banner au-dessus des champs
   if( (imgs.login && /^data:image\/(png|gif);/i.test(imgs.login)) ||
       (typeof imgs.login==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.login)) ){
     const wrap=document.getElementById('loginBanner');
@@ -129,7 +131,7 @@ function loadOps(){try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[]
     img.src=imgs.login; wrap.classList.remove('hidden');
   }
 
-  // خلفية كاملة
+  // Background plein écran: الحقول كيبقاو وسط الشاشة لأن body = grid + place-items:center
   if( (imgs.loginBg && /^data:image\/(png|gif);/i.test(imgs.loginBg)) ||
       (typeof imgs.loginBg==='string' && /\.(png|gif)(\?|#|$)/i.test(imgs.loginBg)) ){
     document.body.style.backgroundImage=`url('${imgs.loginBg}')`;
@@ -140,7 +142,6 @@ function loadOps(){try{return JSON.parse(localStorage.getItem(LS_OPERATORS))||[]
     document.body.style.background='linear-gradient(180deg,#0f172a,#1e293b)';
   }
 
-  // إظهار تنبيه إذا ماكاينش حتى opérateur
   if(loadOps().length===0){ document.getElementById('noOpsHint').classList.remove('hidden'); }
 })();
 
@@ -150,7 +151,6 @@ function loginFlow(){
   const ops=loadOps();
   const u=(document.getElementById('u').value||'').trim();
   const p=(document.getElementById('p').value||'').trim();
-  // إذا ماكاينش حتى مستخدم و Setup Mode مطفي => منع
   if(ops.length===0 && localStorage.getItem('ab_setup')!=='1'){
     alert('لا يمكن الدخول: لا يوجد أي مستخدم. استعمل Forgot password أو Setup (no login).');
     openRecovery();
@@ -167,15 +167,14 @@ function loginFlow(){
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('loginBtn').addEventListener('click',(e)=>{e.preventDefault(); loginFlow();});
   document.getElementById('forgotLink').addEventListener('click', (e)=>{e.preventDefault(); openRecovery();});
-  // Setup (no login)
   document.getElementById('setupBtn').addEventListener('click',(e)=>{
     e.preventDefault();
-    localStorage.setItem('ab_setup','1');       // فعّل وضع الإعداد
-    window.location.href='main.html';           // دخل مباشرة
+    localStorage.setItem('ab_setup','1');
+    window.location.href='main.html';
   });
 });
 
-/* ==== Recovery flow (local) ==== */
+/* Recovery */
 function openRecovery(){
   const sec=loadSec();
   const email=sec.email||'', phone=sec.phone||'';
@@ -201,7 +200,7 @@ function tryCode(){
   const code=(document.getElementById('rec_code').value||'').trim();
   const sec=loadSec();
   if(code && sec.recoveryCode && code===String(sec.recoveryCode)){
-    window.location.href = new URL('main.html', window.location.href).toString(); // وضع الإعداد الأولي
+    window.location.href = new URL('main.html', window.location.href).toString();
   }else{
     alert('Code invalide ou non configuré.');
   }
@@ -211,7 +210,7 @@ function tryQA(){
   const sec=loadSec();
   if(!sec.answerHash){ alert('Question secrète غير مفعلة.'); return; }
   if(hashLite(ans)===sec.answerHash){
-    window.location.href = new URL('main.html', window.location.href).toString(); // وضع الإعداد الأولي
+    window.location.href = new URL('main.html', window.location.href).toString();
   } else { alert('Réponse incorrecte.'); }
 }
 function hashLite(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return String(h)}
