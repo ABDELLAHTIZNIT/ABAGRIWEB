@@ -5,31 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AB AGRIWEB - Dashboard</title>
 <style>
-:root{
-  --bg:#0f172a;--panel:#0b1220;--text:#e2e8f0;--accent:#22c55e;--border:#243046;
-  --tile:#0c1526;--tileIcon:#0f1a2e;--warn:#fde68a1a;
-  /* قياس الأيقونات في التايلز */
-  --icon-size: 48px;
-  --icon-radius: 14px;
-  --icon-font-mult: .52;
-  /* Accordion compact */
-  --acc-ico-size: 36px;
-  --acc-ico-radius: 10px;
-  --acc-py: 10px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:linear-gradient(180deg,var(--bg),#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden
-}
+:root{--bg:#0f172a;--panel:#0b1220;--text:#e2e8f0;--accent:#22c55e;--border:#243046;--tile:#0c1526;--tileIcon:#0f1a2e;--warn:#fde68a1a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden}
 .hidden{display:none!important}
-/* Header */
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:12px 18px;border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.25)}
 .menu-btn{background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
 .brand{display:flex;align-items:center;gap:10px}
 .title{font-weight:800;color:var(--accent);letter-spacing:.5px;display:flex;align-items:center;gap:10px}
 .badge-img{height:22px;border-radius:6px;border:1px solid #1f2937}
-/* Sidebar */
 .sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#0b1220;border-right:1px solid var(--border);transition:left .35s ease;display:flex;flex-direction:column;padding-top:56px;box-shadow:4px 0 20px rgba(0,0,0,.4);z-index:15}
 .sidebar.active{left:0}
 .side-header{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #1e293b;background:#0b1220}
@@ -39,33 +22,18 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 .sidebar a.active{background:var(--accent);color:#0b1220!important;font-weight:700}
 .sidebar-brand{padding:12px 18px;border-bottom:1px solid #1e293b}
 .sidebar-brand img{width:100%;border-radius:10px;border:1px solid #1f2937}
-/* Overlay */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10}
 .overlay.active{opacity:1;pointer-events:all}
-/* Content */
 .content{padding:24px}
 .card{max-width:1000px;margin:16px auto;background:#0b1220;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 10px 24px rgba(0,0,0,.25);position:relative}
 .muted{opacity:.8}
 .hint{background:var(--warn);border:1px dashed #fbbf24;color:#fcd34d;padding:8px 10px;border-radius:8px;font-size:13px}
-/* Tiles عامة */
 .stack{display:grid;gap:12px}
-.tile{
-  display:flex;align-items:center;gap:14px;background:var(--tile);border:1px solid var(--border);
-  border-radius:14px;padding:14px 16px;cursor:pointer;min-height:72px;
-  transition:transform .12s ease,border-color .12s ease, box-shadow .12s ease;
-}
-.tile:hover{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.22) inset;transform:translateY(-1px)}
-.tile .icon{
-  width:var(--icon-size);height:var(--icon-size);
-  display:grid;place-items:center;
-  background:var(--tileIcon);border:1px solid #1f2a44;border-radius:var(--icon-radius);
-  font-size:calc(var(--icon-size) * var(--icon-font-mult)); line-height:1; text-align:center; padding-top:2px;
-}
-.tile h4{margin:0;font-size:16px}
-.tile p{margin:2px 0 0;font-size:12px;color:#94a3b8}
-.tile .text{display:flex;flex-direction:column;min-width:0}
+.tile{display:flex;align-items:center;gap:12px;background:var(--tile);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer}
+.tile:hover{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.25) inset}
+.tile .icon{width:36px;height:36px;display:grid;place-items:center;background:var(--tileIcon);border:1px solid #1f2a44;border-radius:10px}
+.tile h4{margin:0;font-size:16px}.tile p{margin:2px 0 0;font-size:12px;color:#94a3b8}
 .actions-top{position:absolute;top:16px;right:16px;display:flex;gap:8px}
-/* Buttons + Inputs */
 .btn{padding:10px 12px;border-radius:10px;border:1px solid #22c55e;color:#22c55e;background:transparent;cursor:pointer}
 .btn:hover{background:#22c55e;color:#0b1220}.btn.icon{width:40px;height:40px;display:grid;place-items:center;padding:0}
 .btn.danger{border-color:#3b1f1f;color:#fca5a5}.btn.danger:hover{background:#ef4444;color:#0b1220;border-color:#ef4444}
@@ -78,40 +46,14 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .label{font-size:13px;color:#9fb2cc;margin-bottom:6px;display:block}.sectionTitle{margin:16px 0 8px;font-weight:700;color:#cde4d5}
 
-/* ===== Accordion (modern compact headers) ===== */
-.accordion{
-  border:1px solid var(--border);
-  border-radius:12px;
-  margin:12px 0;
-  background:#0b1220;
-  overflow:hidden;
-}
-.acc{ }
-.acc-hd{
-  width:100%; display:flex; align-items:center; justify-content:space-between;
-  gap:10px; padding:var(--acc-py) 14px;
-  background:#0c1526; border-bottom:1px solid #1e293b;
-  cursor:pointer; font-weight:700;
-}
-.acc-bd{ padding:14px; display:none; }
-.acc.open .acc-bd{ display:block; }
+/* Accordion */
+.accordion{border:1px solid var(--border);border-radius:12px;margin:12px 0;background:#0b1220}
+.acc-hd{width:100%;text-align:left;padding:12px 14px;background:#0c1526;border-bottom:1px solid #1e293b;border-radius:12px 12px 0 0;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.acc-bd{padding:14px;display:none}
+.acc.open .acc-bd{display:block}
+.acc-hd span{opacity:.8}
 
-/* محتوى الهيدر */
-.acc-left{ display:flex; align-items:center; gap:12px; min-width:0; }
-.acc-ico{
-  width:var(--acc-ico-size); height:var(--acc-ico-size);
-  display:grid; place-items:center; background:#0f1a2e; border:1px solid #1f2a44;
-  border-radius:var(--acc-ico-radius); font-size:18px; line-height:1;
-}
-.acc-txt{ display:flex; flex-direction:column; min-width:0; }
-.acc-title{ font-weight:800; color:#e6f3eb; }
-.acc-sub{ font-size:12px; color:#93a3b5; margin-top:2px; }
-
-/* السهم */
-.chev{ font-size:18px; opacity:.85; transition:transform .18s ease; }
-.acc.open .chev{ transform:rotate(90deg); }
-
-/* Combobox */
+/* Combo */
 .combo{position:relative}
 .combo-list{position:absolute;left:0;right:0;top:100%;background:#0b1220;border:1px solid #334155;border-radius:10px;max-height:220px;overflow:auto;z-index:30;margin-top:6px}
 .combo-item{padding:10px 12px;border-bottom:1px solid #1e293b;cursor:pointer}.combo-item:hover{background:#0f172a}
@@ -166,30 +108,12 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
     <h2 id="title-settings">Paramètres</h2>
     <p class="muted">Choisissez un module.</p>
     <div class="stack">
-      <div class="tile" onclick="showPage('operators');setActiveTile()">
-        <div class="icon">👥</div>
-        <div class="text"><h4 id="lbl-tile-operators">OPÉRATEUR</h4><p>Gestion des utilisateurs</p></div>
-      </div>
-      <div class="tile" onclick="showPage('profiles');setActiveTile()">
-        <div class="icon">🧩</div>
-        <div class="text"><h4 id="lbl-tile-profiles">PROFILE</h4><p>Gestion des profils</p></div>
-      </div>
-      <div class="tile" onclick="showPage('refs');setActiveTile()">
-        <div class="icon">🗂️</div>
-        <div class="text"><h4 id="lbl-tile-refs">RÉFÉRENTIELS</h4><p>Listes maîtres</p></div>
-      </div>
-      <div class="tile" onclick="alert('DROITS ACCÈS (à compléter)')">
-        <div class="icon">🛡️</div>
-        <div class="text"><h4 id="lbl-tile-rights">DROITS ACCÈS</h4><p>Permissions</p></div>
-      </div>
-      <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')">
-        <div class="icon">🔑</div>
-        <div class="text"><h4 id="lbl-tile-pass">MOT DE PASSE</h4><p>Changer le mot de passe</p></div>
-      </div>
-      <div class="tile" onclick="showPage('appcfg');setActiveTile()">
-        <div class="icon">⚙️</div>
-        <div class="text"><h4 id="lbl-tile-appcfg">RÉGLAGES APP</h4><p>Logo, labels & sécurité</p></div>
-      </div>
+      <div class="tile" onclick="showPage('operators');setActiveTile()"><div class="icon">👥</div><div><h4 id="lbl-tile-operators">OPÉRATEUR</h4><p>Gestion des utilisateurs</p></div></div>
+      <div class="tile" onclick="showPage('profiles');setActiveTile()"><div class="icon">🧩</div><div><h4 id="lbl-tile-profiles">PROFILE</h4><p>Gestion des profils</p></div></div>
+      <div class="tile" onclick="showPage('refs');setActiveTile()"><div class="icon">🗂️</div><div><h4 id="lbl-tile-refs">RÉFÉRENTIELS</h4><p>Listes maîtres</p></div></div>
+      <div class="tile" onclick="alert('DROITS ACCÈS (à compléter)')"><div class="icon">🛡️</div><div><h4 id="lbl-tile-rights">DROITS ACCÈS</h4><p>Permissions</p></div></div>
+      <div class="tile" onclick="alert('MOT DE PASSE (à compléter)')"><div class="icon">🔑</div><div><h4 id="lbl-tile-pass">MOT DE PASSE</h4><p>Changer le mot de passe</p></div></div>
+      <div class="tile" onclick="showPage('appcfg');setActiveTile()"><div class="icon">⚙️</div><div><h4 id="lbl-tile-appcfg">RÉGLAGES APP</h4><p>Logo, labels & sécurité</p></div></div>
     </div>
   </section>
 
@@ -248,17 +172,17 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
   <section id="page-refs" class="card hidden">
     <h2>Référentiels</h2><p class="muted">لوائح مرجعية.</p>
     <div id="refsHome" class="stack">
-      <div class="tile" onclick="showPage('farms');setActiveTile()"><div class="icon">🏞️</div><div class="text"><h4 id="lbl-ref-ferme">Ferme</h4></div></div>
-      <div class="tile" onclick="refsOpen('companies')"><div class="icon">🏢</div><div class="text"><h4 id="lbl-ref-companies">Société</h4></div></div>
-      <div class="tile" onclick="refsOpen('responsables')"><div class="icon">👤</div><div class="text"><h4 id="lbl-ref-responsables">Responsable</h4></div></div>
-      <div class="tile" onclick="refsOpen('stations')"><div class="icon">🚏</div><div class="text"><h4 id="lbl-ref-stations">Station</h4></div></div>
-      <div class="tile" onclick="refsOpen('secteurs')"><div class="icon">🧭</div><div class="text"><h4 id="lbl-ref-secteurs">Secteur</h4></div></div>
-      <div class="tile" onclick="refsOpen('parcelles')"><div class="icon">🧱</div><div class="text"><h4 id="lbl-ref-parcelles">Parcelle</h4></div></div>
-      <div class="tile" onclick="refsOpen('transports')"><div class="icon">🚚</div><div class="text"><h4 id="lbl-ref-transports">Transport</h4></div></div>
-      <div class="tile" onclick="refsOpen('varietes')"><div class="icon">🌱</div><div class="text"><h4 id="lbl-ref-varietes">Variété</h4></div></div>
-      <div class="tile" onclick="refsOpen('varietes_champ')"><div class="icon">🌿</div><div class="text"><h4 id="lbl-ref-varietes_champ">Variété champ</h4></div></div>
-      <div class="tile" onclick="refsOpen('gestions')"><div class="icon">📦</div><div class="text"><h4 id="lbl-ref-gestions">Gestion stock</h4></div></div>
-      <div class="tile" onclick="refsOpen('achats')"><div class="icon">🧾</div><div class="text"><h4 id="lbl-ref-achats">Achat</h4></div></div>
+      <div class="tile" onclick="showPage('farms');setActiveTile()"><div class="icon">🏞️</div><div><h4 id="lbl-ref-ferme">Ferme</h4></div></div>
+      <div class="tile" onclick="refsOpen('companies')"><div class="icon">🏢</div><div><h4 id="lbl-ref-companies">Société</h4></div></div>
+      <div class="tile" onclick="refsOpen('responsables')"><div class="icon">👤</div><div><h4 id="lbl-ref-responsables">Responsable</h4></div></div>
+      <div class="tile" onclick="refsOpen('stations')"><div class="icon">🚏</div><div><h4 id="lbl-ref-stations">Station</h4></div></div>
+      <div class="tile" onclick="refsOpen('secteurs')"><div class="icon">🧭</div><div><h4 id="lbl-ref-secteurs">Secteur</h4></div></div>
+      <div class="tile" onclick="refsOpen('parcelles')"><div class="icon">🧱</div><div><h4 id="lbl-ref-parcelles">Parcelle</h4></div></div>
+      <div class="tile" onclick="refsOpen('transports')"><div class="icon">🚚</div><div><h4 id="lbl-ref-transports">Transport</h4></div></div>
+      <div class="tile" onclick="refsOpen('varietes')"><div class="icon">🌱</div><div><h4 id="lbl-ref-varietes">Variété</h4></div></div>
+      <div class="tile" onclick="refsOpen('varietes_champ')"><div class="icon">🌿</div><div><h4 id="lbl-ref-varietes_champ">Variété champ</h4></div></div>
+      <div class="tile" onclick="refsOpen('gestions')"><div class="icon">📦</div><div><h4 id="lbl-ref-gestions">Gestion stock</h4></div></div>
+      <div class="tile" onclick="refsOpen('achats')"><div class="icon">🧾</div><div><h4 id="lbl-ref-achats">Achat</h4></div></div>
     </div>
 
     <div id="refsCat" class="hidden">
@@ -281,16 +205,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 
     <!-- 1) Général -->
     <div class="accordion acc open" id="acc-general">
-      <button class="acc-hd" onclick="toggleAcc('acc-general')">
-        <div class="acc-left">
-          <div class="acc-ico">⚙️</div>
-          <div class="acc-txt">
-            <div class="acc-title">Général</div>
-            <div class="acc-sub">Nom / Logo de l’app</div>
-          </div>
-        </div>
-        <div class="chev">▸</div>
-      </button>
+      <button class="acc-hd" onclick="toggleAcc('acc-general')">1) Général <span>Nom/Logo de l’app</span></button>
       <div class="acc-bd">
         <div class="grid">
           <div>
@@ -304,16 +219,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 
     <!-- 2) Libellés Navigation -->
     <div class="accordion acc" id="acc-nav">
-      <button class="acc-hd" onclick="toggleAcc('acc-nav')">
-        <div class="acc-left">
-          <div class="acc-ico">🔤</div>
-          <div class="acc-txt">
-            <div class="acc-title">Libellés Navigation</div>
-            <div class="acc-sub">Accueil • Irrigation • Traitement • Paramètres • Logout</div>
-          </div>
-        </div>
-        <div class="chev">▸</div>
-      </button>
+      <button class="acc-hd" onclick="toggleAcc('acc-nav')">2) Libellés Navigation <span>Accueil • Irrigation • Traitement • Paramètres • Logout</span></button>
       <div class="acc-bd">
         <div class="grid">
           <div><label class="label">Accueil</label><input id="cfg-nav-home" class="input" placeholder="Accueil"></div>
@@ -327,16 +233,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 
     <!-- 3) Tuiles Paramètres -->
     <div class="accordion acc" id="acc-tiles">
-      <button class="acc-hd" onclick="toggleAcc('acc-tiles')">
-        <div class="acc-left">
-          <div class="acc-ico">🧩</div>
-          <div class="acc-txt">
-            <div class="acc-title">Tuiles Paramètres</div>
-            <div class="acc-sub">Opérateur • Profile • Référentiel • Droits • Mot de passe</div>
-          </div>
-        </div>
-        <div class="chev">▸</div>
-      </button>
+      <button class="acc-hd" onclick="toggleAcc('acc-tiles')">3) Tuiles Paramètres <span>Opérateur • Profile • Référentiel • Droits • Mot de passe</span></button>
       <div class="acc-bd">
         <div class="grid">
           <div><label class="label">Opérateur</label><input id="cfg-tile-operators" class="input" placeholder="OPÉRATEUR"></div>
@@ -350,16 +247,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 
     <!-- 4) Sécurité -->
     <div class="accordion acc" id="acc-sec">
-      <button class="acc-hd" onclick="toggleAcc('acc-sec')">
-        <div class="acc-left">
-          <div class="acc-ico">🔒</div>
-          <div class="acc-txt">
-            <div class="acc-title">Sécurité</div>
-            <div class="acc-sub">Email • Téléphone • Question secrète • Code</div>
-          </div>
-        </div>
-        <div class="chev">▸</div>
-      </button>
+      <button class="acc-hd" onclick="toggleAcc('acc-sec')">4) Sécurité <span>Email • Téléphone • Question • Code</span></button>
       <div class="acc-bd">
         <div class="grid">
           <div><label class="label">Email de récupération</label><input id="sec-email" class="input" placeholder="ex: admin@example.com"></div>
@@ -380,16 +268,7 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-
 
     <!-- 5) Branding -->
     <div class="accordion acc" id="acc-brand">
-      <button class="acc-hd" onclick="toggleAcc('acc-brand')">
-        <div class="acc-left">
-          <div class="acc-ico">🎨</div>
-          <div class="acc-txt">
-            <div class="acc-title">Branding</div>
-            <div class="acc-sub">Badge • Sidebar • Login banner • Login background</div>
-          </div>
-        </div>
-        <div class="chev">▸</div>
-      </button>
+      <button class="acc-hd" onclick="toggleAcc('acc-brand')">5) Branding <span>Badge • Sidebar • Login banner • Login background</span></button>
       <div class="acc-bd">
         <div class="grid">
           <div><label class="label">Badge header</label><input id="cfg-badge-url" class="input" placeholder="URL (png/gif)"><input id="cfg-badge-file" type="file" accept="image/png,image/gif" class="input"></div>
@@ -688,7 +567,7 @@ function refsEdit(i){const refs=loadRefs(),arr=refs[currentRefKey]||[],old=arr[i
   if(val.toLowerCase()!==old.toLowerCase()&&arr.some(x=>x.toLowerCase()===val.toLowerCase())){alert('Existe déjà.');return}arr[i]=val;refs[currentRefKey]=arr;saveRefs(refs);refsRender()}
 function refsDelete(i){const refs=loadRefs(),arr=refs[currentRefKey]||[];if(!confirm('Supprimer: '+arr[i]+' ?'))return;arr.splice(i,1);refs[currentRefKey]=arr;saveRefs(refs);refsRender()}
 
-/* Setup banner */
+/* Setup banner helpers */
 function showSetupBanner(){
   const el = document.getElementById('setupBanner');
   if(!el) return;
