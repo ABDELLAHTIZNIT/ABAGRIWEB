@@ -6,17 +6,21 @@
 <title>AB AGRIWEB — Dashboard</title>
 <style>
   :root{
-    --bg:#0f2135; --panel:#0f1b2d; --text:#e6f6e6; --muted:#9fb3c8; --accent:#7CFC00; --border:#243248;
+    --bg:#0f2135; --panel:#0f1b2d; --panel2:#0e1a2a;
+    --text:#e6f6e6; --muted:#9fb3c8; --accent:#7CFC00; --border:#243248;
   }
   *{box-sizing:border-box}
-  body{margin:0; background:var(--bg); color:var(--text); font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  body{margin:0; background:var(--bg); color:var(--text); font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; overflow-x:hidden}
+
+  /* Top bar */
   .topbar{
     height:56px; display:flex; align-items:center; justify-content:space-between;
     padding:0 12px 0 10px; border-bottom:1px solid var(--border);
     background:linear-gradient(180deg,#0e1b2c,#0c1726);
-    position:sticky; top:0; z-index:50;
+    position:sticky; top:0; z-index:60;
   }
-  .hamb{font-size:22px; cursor:pointer}
+  .hamb{font-size:22px; cursor:pointer; width:36px; height:36px; display:grid; place-items:center; border-radius:999px}
+  .hamb:hover{background:rgba(255,255,255,.06)}
   .title{font-weight:800; letter-spacing:.6px}
   .rightslot{display:flex; align-items:center; gap:10px}
   .rightslot img{height:26px; width:auto; object-fit:contain}
@@ -24,7 +28,7 @@
   .wrap{padding:14px}
   .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:14px}
 
-  /* Accordion بسيط */
+  /* Accordion */
   .acc{border-radius:16px; overflow:hidden; border:1px solid var(--border)}
   .acc-sec + .acc-sec{border-top:1px solid var(--border)}
   .acc-hd{padding:14px; background:#0f1b2d; cursor:pointer; display:flex; align-items:center; justify-content:space-between}
@@ -36,10 +40,40 @@
   .inp{display:flex; gap:8px; align-items:center; background:#0e1a2a; border:1px solid var(--border); padding:10px 12px; border-radius:12px}
   .inp input[type="text"]{flex:1; background:transparent; border:0; outline:0; color:var(--text)}
   .btn{background:var(--accent); color:#07150e; font-weight:700; border:0; padding:10px 12px; border-radius:12px; cursor:pointer}
+
   .muted{color:var(--muted); font-size:12px}
-  .hint{font-size:12px; color:var(--muted)}
-  .hr{height:1px;background:var(--border); margin:10px 0}
   .note{font-size:12px; color:#cde7ff}
+  .hr{height:1px;background:var(--border); margin:10px 0}
+
+  /* === Sidebar (drawer) === */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    opacity:0; visibility:hidden; transition:.2s ease; z-index:55;
+  }
+  .overlay.show{opacity:1; visibility:visible}
+  .sidebar{
+    position:fixed; inset:0 auto 0 0; width:268px; max-width:86vw;
+    background:linear-gradient(180deg,#0b1524,#0a1220);
+    border-right:1px solid var(--border);
+    transform:translateX(-100%); transition:transform .25s ease; z-index:60;
+    display:flex; flex-direction:column;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sb-top{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px; border-bottom:1px solid var(--border);
+  }
+  .sb-close{font-size:20px; width:34px; height:34px; display:grid; place-items:center; border-radius:10px; cursor:pointer}
+  .sb-close:hover{background:rgba(255,255,255,.06)}
+  .sb-nav{padding:8px}
+  .sb-item{
+    display:flex; align-items:center; gap:10px; padding:12px 10px; border-radius:12px;
+    color:var(--text); text-decoration:none; border:1px solid transparent;
+  }
+  .sb-item:hover{background:var(--panel2); border-color:var(--border)}
+  .sb-item.active{background:#1b2a41; border-color:var(--border)}
+  .sb-foot{margin-top:auto; padding:8px}
+  .logout{background:var(--accent); color:#08140e; text-align:center; padding:10px; border-radius:12px; cursor:pointer; font-weight:700}
 </style>
 </head>
 <body>
@@ -47,7 +81,7 @@
   <!-- Topbar -->
   <div class="topbar">
     <div class="left">
-      <span class="hamb" id="openMenu">☰</span>
+      <span class="hamb" id="openMenu" aria-label="Open menu">☰</span>
     </div>
     <div class="title">AB AGRIWEB</div>
     <div class="rightslot">
@@ -55,9 +89,27 @@
     </div>
   </div>
 
+  <!-- Overlay + Sidebar -->
+  <div id="overlay" class="overlay" tabindex="-1"></div>
+
+  <nav id="sidebar" class="sidebar" aria-hidden="true">
+    <div class="sb-top">
+      <strong>Menu</strong>
+      <span id="closeMenu" class="sb-close" aria-label="Close menu">✕</span>
+    </div>
+    <div class="sb-nav">
+      <a class="sb-item" href="#" onclick="alert('Irrigation (قريباً)')">🌿 Irrigation</a>
+      <a class="sb-item" href="#" onclick="alert('Traitement (قريباً)')">💧 Traitement</a>
+      <a class="sb-item active" href="#branding">⚙️ Paramètres</a>
+    </div>
+    <div class="sb-foot">
+      <div class="logout" onclick="doLogout()">Logout</div>
+    </div>
+  </nav>
+
   <div class="wrap">
-    <!-- قسم الإعدادات: Branding فقط كما طلبت -->
-    <div class="acc">
+    <!-- Branding فقط كما طلبت -->
+    <div class="acc" id="branding">
       <div class="acc-sec open" id="accBrand">
         <div class="acc-hd" onclick="toggleAcc(this)">Branding (صور الواجهة)</div>
         <div class="acc-bd">
@@ -72,7 +124,7 @@
               <div class="hr"></div>
               <label class="muted">أو حمّل صورة (png/jpg/gif)</label>
               <input id="brand_login_bg_file" type="file" accept=".png,.jpg,.jpeg,.gif" onchange="saveBrandFile('brand.loginBg', this)">
-              <div class="hint">الحقول وزر الدخول سيظهرون فوق هذه الصورة مباشرة.</div>
+              <div class="muted">الحقول وزر الدخول سيظهرون فوق هذه الصورة مباشرة.</div>
             </div>
 
             <!-- قالب صغير شفاف فوق الحقول -->
@@ -83,9 +135,9 @@
                 <button class="btn" type="button" onclick="saveBrandUrl('brand.loginBadge','brand_login_badge_url')">Save URL</button>
               </div>
               <div class="hr"></div>
-              <label class="muted">أو حمّل صورة (فقط png/gif بخلفية شفافة)</label>
+              <label class="muted">أو حمّل صورة (png/gif بخلفية شفافة)</label>
               <input id="brand_login_badge_file" type="file" accept=".png,.gif" onchange="saveBrandFile('brand.loginBadge', this)">
-              <div class="hint">تظهر أعلى الحقول في صفحة تسجيل الدخول.</div>
+              <div class="muted">تظهر أعلى الحقول في صفحة تسجيل الدخول.</div>
             </div>
 
             <!-- شعار الشريط العلوي يمين الهامبرغر -->
@@ -96,30 +148,45 @@
                 <button class="btn" type="button" onclick="saveBrandUrl('brand.topbarLogo','brand_topbar_logo_url')">Save URL</button>
               </div>
               <div class="hr"></div>
-              <label class="muted">أو حمّل صورة (png/gif/jpg)</label>
+              <label class="muted">أو حمّل صورة (png/jpg/gif)</label>
               <input id="brand_topbar_logo_file" type="file" accept=".png,.jpg,.jpeg,.gif" onchange="saveBrandFile('brand.topbarLogo', this)">
-              <div class="hint">يتم عرض الشعار في الشريط العلوي لهذه الصفحة.</div>
             </div>
 
-            <div class="note">ملاحظة: يمكنك أيضاً وضع الملفات داخل <code>assets/image/</code> ثم استعمال المسار النسبي مباشرة.</div>
+            <div class="note">ملاحظة: يمكنك أيضاً رفع الصور داخل <code>assets/image/</code> واستعمال المسار النسبي مباشرة.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="muted">إعدادات إضافية ستضاف لاحقاً…</div>
-    </div>
+    <div class="card"><div class="muted">إعدادات إضافية ستضاف لاحقاً…</div></div>
   </div>
 
 <script>
-  // Toggle accordion
-  function toggleAcc(hd){
-    const sec = hd.parentElement;
-    sec.classList.toggle('open');
-  }
+  /* ===== Accordion ===== */
+  function toggleAcc(hd){ hd.parentElement.classList.toggle('open'); }
 
-  // حفظ URL مباشرة
+  /* ===== Sidebar open/close ===== */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const openBtn  = document.getElementById('openMenu');
+  const closeBtn = document.getElementById('closeMenu');
+
+  function openSidebar(){
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+    sidebar.setAttribute('aria-hidden','false');
+  }
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+    sidebar.setAttribute('aria-hidden','true');
+  }
+  openBtn.addEventListener('click', openSidebar);
+  closeBtn.addEventListener('click', closeSidebar);
+  overlay.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeSidebar(); });
+
+  /* ===== Branding save/apply ===== */
   function saveBrandUrl(key, inputId){
     const val = document.getElementById(inputId).value.trim();
     if(!val){ alert('ضع مسار الصورة أو رابطها'); return; }
@@ -127,45 +194,30 @@
     applyTopbarLogo();
     alert('Saved ✔');
   }
-
-  // حفظ ملف (نحوّل لِـ data URL ونخزّن محلياً)
   function saveBrandFile(key, input){
     const file = input.files && input.files[0];
-    if(!file){return;}
+    if(!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      localStorage.setItem(key, reader.result);
-      applyTopbarLogo();
-      alert('Saved ✔');
-    };
+    reader.onload = () => { localStorage.setItem(key, reader.result); applyTopbarLogo(); alert('Saved ✔'); };
     reader.readAsDataURL(file);
   }
-
-  // طبّق شعار التوب بار
   function applyTopbarLogo(){
     const src = localStorage.getItem('brand.topbarLogo') || 'assets/image/topbar-logo.png';
-    const img = document.getElementById('topbarLogo');
-    img.src = src;
+    document.getElementById('topbarLogo').src = src;
   }
-
-  // للسماح بتجاوز الدخول مؤقتاً إن رغبت (يمكنك تعطيله لاحقاً)
-  if(!localStorage.getItem('security.bypass')) localStorage.setItem('security.bypass','1');
-
-  // تعبئة الحقول بما هو محفوظ
   function hydrateBrandInputs(){
-    const map = [
-      ['brand.loginBg','brand_login_bg_url'],
-      ['brand.loginBadge','brand_login_badge_url'],
-      ['brand.topbarLogo','brand_topbar_logo_url'],
-    ];
-    map.forEach(([k, id])=>{
-      const v = localStorage.getItem(k);
-      if(v) document.getElementById(id).value = v;
-    });
+    [['brand.loginBg','brand_login_bg_url'],
+     ['brand.loginBadge','brand_login_badge_url'],
+     ['brand.topbarLogo','brand_topbar_logo_url']].forEach(([k,id])=>{
+        const v = localStorage.getItem(k); if(v) document.getElementById(id).value = v;
+     });
   }
+  function doLogout(){ location.href='index.html'; }
 
   applyTopbarLogo();
   hydrateBrandInputs();
+  // سماح تجاوز الدخول مؤقتاً أثناء التطوير
+  if(!localStorage.getItem('security.bypass')) localStorage.setItem('security.bypass','1');
 </script>
 </body>
 </html>
